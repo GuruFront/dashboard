@@ -24,10 +24,11 @@
     <style type="text/css">
         .grid-stack {
             padding-left: 0;
+            list-style: none;
         }
 
         #grid1 .grid-stack-item {
-            cursor:pointer;
+            cursor: pointer;
         }
 
         #grid1 {
@@ -39,7 +40,7 @@
         }
 
         .grid-stack-item-content {
-            border:1px solid red;
+            border: 1px solid red;
             color: #2c3e50;
             text-align: center;
             /*background-color: #18bc9c;*/
@@ -62,16 +63,13 @@
         .sidebar {
             background: rgba(0, 255, 0, 0.1);
             height: 150px;
-            padding: 25px 0;
+            padding: 15px;
             text-align: center;
         }
 
         .sidebar .grid-stack-item {
-            width: 200px;
-            height: 100px;
-            border: 2px dashed green;
+            width: 100%;
             text-align: center;
-            line-height: 100px;
             z-index: 10;
             background: rgba(0, 255, 0, 0.1);
             cursor: default;
@@ -82,125 +80,68 @@
             background: none;
         }
 
-        .grid-stack{
-            min-height:300px
+        .grid-stack {
+            min-height: 300px
         }
     </style>
 </head>
 <body>
 <div class="container-fluid">
-    <!--<div class="row">-->
-    <!--<div class="col-md-3">-->
-    <!--<div class="sidebar">-->
-    <!--<div class="grid-stack-item"><div class="grid-stack-item-content">Drag me</div></div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="col-md-9">-->
-    <!--<div class="trash">-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
     <div class="row">
         <div class="col-md-3">
-            <ul class="grid-stack grid-stack-6" id="grid1">
+            <div class="sidebar">
 
-            </ul>
+            </div>
         </div>
         <div class="col-md-9">
-            <div class="grid-stack grid-stack-6" id="grid2">
+            <div class="trash">
             </div>
         </div>
     </div>
+
+    <div class="grid-stack grid-stack-6" id="grid1"></div>
 </div>
 
 
 <script type="text/javascript">
     $(function () {
-        var options = {
+
+        var widgets = {
+                googleMap: {
+                    title: "Google map",
+                    body: "<div data-widget='custom' style='width: 100%; height: 100%'>Google map widget body</div>"
+                },
+                custom: {
+                    title: "Custom widget title",
+                    body: "<div data-widget='custom' style='width: 100%; height: 100%'>Custom widget body</div>"
+                }
+            },
+            widgetsNameList = Object.keys(widgets);
+
+        $('#grid1').gridstack({
             width: 6,
             float: true,
-            // removable: '.trash',
-            // removeTimeout: 100,
+            removable: '.trash',
+            removeTimeout: 100,
             acceptWidgets: '.grid-stack-item'
-        };
-
-
-        var options1 = {
-            width: 6,
-            float: false,
-            acceptWidgets: '.grid-stack-item',
-            disableResize: true
-        };
-
-        $('#grid1').gridstack(options1);
-
-        $('#grid2').gridstack(_.defaults({
-            float: true
-        }, options));
-
-        var items = [
-            {
-                autoPosition: false,
-                height: 1,
-                width: 6,
-                x: 0,
-                y: 1
-            }
-        ];
-
-        var items1 = [
-            {
-                autoPosition: false,
-                height: 1,
-                width: 6,
-                x: 0,
-                y: 1
-            },
-            {
-                autoPosition: false,
-                height: 1,
-                width: 6,
-                x: 0,
-                y: 2
-            }
-        ];
-
-
-        // debugger;
-        var itemsFromStore = localStorage.getItem('dashboardWidgetList');
-        if (itemsFromStore !== null) {
-            items1 = JSON.parse(itemsFromStore)
-        } else {
-            items1 = JSON.stringify(items1);
-            localStorage.setItem('dashboardWidgetList', items1);
-        }
-
-        var activeWidgetsFromStore = localStorage.getItem('dashboardActiveWidgets');
-        if (activeWidgetsFromStore !== null) {
-            items = JSON.parse(activeWidgetsFromStore)
-        } else {
-            items = JSON.stringify(items);
-            localStorage.setItem('dashboardActiveWidgets', items);
-        }
-
-
-        $('#grid1').each(function () {
-            var grid = $(this).data('gridstack');
-            _.each(items1, function (node) {
-                grid.addWidget($('<div><div class="grid-stack-item-content">Widget</div><div/>'),
-                    node.x, node.y, node.width, node.height);
-            }, this);
         });
 
+        // var items = [
+        //     {x: 0, y: 0, width: 2, height: 2}
+        // ];
+        //
+        // $('.grid-stack').each(function () {
+        //     var grid = $(this).data('gridstack');
+        //     _.each(items, function (node) {
+        //         grid.addWidget($('<div class="grid-stack-item"><div class="grid-stack-item-content" /><div/>'),
+        //             node.x, node.y, node.width, node.height);
+        //     }, this);
+        // });
 
-        $('#grid2').each(function () {
-            var grid = $(this).data('gridstack');
-            _.each(items, function (node) {
-                grid.addWidget($('<div><div class="grid-stack-item-content" /><div/> </div>'),
-                    node.x, node.y, node.width, node.height);
-            }, this);
-        });
+        var item = '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="googleMap">Google map</div></div>';
+        var item2 = '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="custom">Custom widget title</div></div>';
+        $('.sidebar').append(item);
+        $('.sidebar').append(item2);
 
         $('.sidebar .grid-stack-item').draggable({
             revert: 'invalid',
@@ -209,66 +150,49 @@
             appendTo: 'body'
         });
 
-
-        $('#grid2').on('added', function (event, items) {
-            for (var i = 0; i < items.length; i++) {
-                // console.log('item added');
-                // console.log(items[i]);$
+        $('#grid1').on('removed', function (event, items) {
+            var gridNode = $("#grid1").data("gridstack").grid.nodes;
+            var gridNodesArr = [];
+            for (var i = 0; gridNode.length > i; i++) {
+                gridNodesArr.push(gridNode[i].el[0].children[0].dataset.widget);
             }
+
+            function arrayDiff(a, b) {
+                return a.filter((n) => b.indexOf(n) === -1);
+            }
+
+            var deleted = arrayDiff(widgetsNameList, gridNodesArr);
+
+            var item = '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="' + deleted[0] + '">' + widgets[deleted[0]].title + '</div></div>';
+            $('.sidebar').append(item);
+
+            $('.sidebar .grid-stack-item').draggable({
+                revert: 'invalid',
+                handle: '.grid-stack-item-content',
+                scroll: false,
+                appendTo: 'body'
+            });
         });
 
+        $('#grid1').on('added', function (event, items) {
+            for (var i = 0; i < items.length; i++) {
+                console.log('item added', items[i]);
 
-        $('#grid2').on('change', function (event, items) {
-            var grid2Items = $('#grid2').data().gridstack.grid.nodes;
-            var grid1Items = $('#grid1').data().gridstack.grid.nodes;
-            for (var i = 0; grid2Items.length > i; i++) {
-                if (typeof grid2Items[i]._added !== 'undefined' && grid2Items[i]._added === true) {
+                var widgetName = items[i].el[0].children[0].getAttribute('data-widget');
+                items[i].el[0].children[0].innerHTML = widgets[widgetName].body;
 
-                    var copyItem = grid2Items[i];
-                    $('#grid1').data('gridstack').removeWidget(grid2Items[i].el, true);
-                    $('#grid2').data('gridstack').removeWidget(grid2Items[i].el, true);
-
-                    console.log(grid2Items[i].el);
-
-
-                    $('#grid2').data('gridstack').addWidget($('<div id="custom"><div class="grid-stack-item-content" /><div/></div>'),
-                        copyItem.x, copyItem.y, copyItem.width, copyItem.height, true);
-
-                    var arr1 = $('#grid1').data("gridstack").grid.nodes;
-                    if (arr1.length > 0) {
-                        for (var i = 0; arr1.length > i; i++) {
-                            arr1[i] = {
-                                autoPosition: arr1[i].autoPosition,
-                                x: arr1[i].x,
-                                y: arr1[i].y,
-                                height: arr1[i].height,
-                                width: arr1[i].width
-                            }
-                        }
-                        localStorage.setItem('dashboardWidgetList', JSON.stringify(arr1));
-                    }
-                    var arr2 = $('#grid2').data("gridstack").grid.nodes;
-                    if (arr2.length > 0) {
-                        for (var i = 0; arr2.length > i; i++) {
-                            arr2[i] = {
-                                autoPosition: arr2[i].autoPosition,
-                                x: arr2[i].x,
-                                y: arr2[i].y,
-                                height: arr2[i].height,
-                                width: arr2[i].width
-                            }
-                        }
-
-                        localStorage.setItem('dashboardActiveWidgets', JSON.stringify(arr2));
-                    }
-                    console.log(arr1, arr2);
+                if (widgets[widgetName].hasOwnProperty('init')) {
+                    widgets[widgetName].init();
                 }
             }
-            // console.log(grid2Items);
         });
 
-
     });
+
+
 </script>
+
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&callback=myMap"></script>-->
+
 </body>
 </html>
