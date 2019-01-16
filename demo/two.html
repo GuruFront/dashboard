@@ -153,7 +153,6 @@
             $('.sidebar').append(sidebarItem(key, widgets[key].title))
         }
 
-
         // activation of widget list items
         function widgetListCall() {
             $('.sidebar .grid-stack-item').draggable({
@@ -172,23 +171,23 @@
                 gridItem = $("#grid1").data("gridstack").grid.nodes,
                 gridAllItems = [];
 
-            console.log(items);
-            console.log(event);
             for (var i = 0; gridItem.length > i; i++) {
                 gridAllItems.push(gridItem[i].el[0].children[0].dataset.widget);
             }
 
-            function arrayDiff(a, b) {
-                return a.filter((n) => b.indexOf(n) === -1);
+            var sidebarItems = $('.sidebar').children(),
+                sidebarItemsKeys = [];
+
+            for(var i =0; sidebarItems.length > i; i++){
+                sidebarItemsKeys.push(sidebarItems[i].children[0].dataset.widget);
             }
 
-            var sidebarItems = $('.sidebar').children();
-            console.log('sidebarItems',sidebarItems);
-            var
-                deleted = arrayDiff(widgetsNameList, gridAllItems),
-                $item = sidebarItem(deleted[0], widgets[deleted[0]].title);
+            console.log(sidebarItemsKeys, gridAllItems);
 
-                console.log('gridAllItems', gridAllItems);
+
+            // var
+            //     deleted = arrayDiff(gridAllItems, sidebarItemsKeys ),
+            //     $item = sidebarItem(key, title);
 
             $('.sidebar').append($item);
 
