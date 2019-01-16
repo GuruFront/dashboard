@@ -89,16 +89,12 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
-            <div class="sidebar">
-
-            </div>
+            <div class="sidebar"></div>
         </div>
         <div class="col-md-9">
-            <div class="trash">
-            </div>
+            <div class="trash"></div>
         </div>
     </div>
-
     <div class="grid-stack grid-stack-6" id="grid1"></div>
 </div>
 
@@ -106,18 +102,25 @@
 <script type="text/javascript">
     $(function () {
 
-        var widgets = {
+        // data
+        var
+            widgets = {
                 googleMap: {
                     title: "Google map",
-                    body: "<div data-widget='custom' style='width: 100%; height: 100%'>Google map widget body</div>"
+                    body: "<div>Google map widget body</div>"
                 },
                 custom: {
                     title: "Custom widget title",
-                    body: "<div data-widget='custom' style='width: 100%; height: 100%'>Custom widget body</div>"
+                    body: "<div>Custom widget body</div>"
+                },
+                custom2: {
+                    title: "Custom2 widget title",
+                    body: "<div>Custom2 widget body</div>"
                 }
             },
             widgetsNameList = Object.keys(widgets);
 
+        // dashboard activation
         $('#grid1').gridstack({
             width: 6,
             float: true,
@@ -126,6 +129,8 @@
             acceptWidgets: '.grid-stack-item'
         });
 
+
+        // render active widgets
         // var items = [
         //     {x: 0, y: 0, width: 2, height: 2}
         // ];
@@ -138,55 +143,65 @@
         //     }, this);
         // });
 
-        var item = '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="googleMap">Google map</div></div>';
-        var item2 = '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="custom">Custom widget title</div></div>';
-        $('.sidebar').append(item);
-        $('.sidebar').append(item2);
 
-        $('.sidebar .grid-stack-item').draggable({
-            revert: 'invalid',
-            handle: '.grid-stack-item-content',
-            scroll: false,
-            appendTo: 'body'
-        });
+        // render widget list
+        var sidebarItem = function (dataAttr, title) {
+            return '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="' + dataAttr + '">' + title + '</div></div>'
+        };
 
-        $('#grid1').on('removed', function (event, items) {
-            var gridNode = $("#grid1").data("gridstack").grid.nodes;
-            var gridNodesArr = [];
-            for (var i = 0; gridNode.length > i; i++) {
-                gridNodesArr.push(gridNode[i].el[0].children[0].dataset.widget);
-            }
+        for (var key in widgets) {
+            $('.sidebar').append(sidebarItem(key, widgets[key].title))
+        }
 
-            function arrayDiff(a, b) {
-                return a.filter((n) => b.indexOf(n) === -1);
-            }
 
-            var deleted = arrayDiff(widgetsNameList, gridNodesArr);
-
-            var item = '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="' + deleted[0] + '">' + widgets[deleted[0]].title + '</div></div>';
-            $('.sidebar').append(item);
-
+        // activation of widget list items
+        function widgetListCall() {
             $('.sidebar .grid-stack-item').draggable({
                 revert: 'invalid',
                 handle: '.grid-stack-item-content',
                 scroll: false,
                 appendTo: 'body'
             });
+        }
+
+        widgetListCall();
+
+        $('#grid1').on('removed', function (event, items) {
+
+            var
+                gridItem = $("#grid1").data("gridstack").grid.nodes,
+                gridAllItems = [];
+
+            console.log(items);
+            console.log(event);
+            for (var i = 0; gridItem.length > i; i++) {
+                gridAllItems.push(gridItem[i].el[0].children[0].dataset.widget);
+            }
+
+            function arrayDiff(a, b) {
+                return a.filter((n) => b.indexOf(n) === -1);
+            }
+
+            var sidebarItems = $('.sidebar').children();
+            console.log('sidebarItems',sidebarItems);
+            var
+                deleted = arrayDiff(widgetsNameList, gridAllItems),
+                $item = sidebarItem(deleted[0], widgets[deleted[0]].title);
+
+                console.log('gridAllItems', gridAllItems);
+
+            $('.sidebar').append($item);
+
+            // activation new widget list items
+            widgetListCall();
         });
 
         $('#grid1').on('added', function (event, items) {
             for (var i = 0; i < items.length; i++) {
-                console.log('item added', items[i]);
-
                 var widgetName = items[i].el[0].children[0].getAttribute('data-widget');
                 items[i].el[0].children[0].innerHTML = widgets[widgetName].body;
-
-                if (widgets[widgetName].hasOwnProperty('init')) {
-                    widgets[widgetName].init();
-                }
             }
         });
-
     });
 
 
