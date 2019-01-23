@@ -114,36 +114,33 @@
         // data
         var
             isEditMode = false,
-            widgets = {
+            widgetConfig = {
                 googleMap: {
+                    id:"googleMap",
                     title: "Google map",
                     html: "<div><div>Google map widget body </div><img style='width: 100%' src='http://dl4.joxi.net/drive/2019/01/17/0026/1286/1754374/74/43cadc5766.jpg' alt=''></div>",
-                    params: {
-                        minWidth: 2,
-                        minHeight: 2,
-                        resize: false
-                    }
+                    minWidth: 2,
+                    minHeight: 2,
+                    isResizable: false
                 },
                 yandexMap2: {
                     title: "Yandex map",
                     html: "<div><div>yandexMap2 map widget body </div><img style='width: 100%' src='http://dl4.joxi.net/drive/2019/01/17/0026/1286/1754374/74/43cadc5766.jpg' alt=''></div>",
-                    params: {
-                        minWidth: 2,
-                        minHeight: 2
-                    }
+                    minWidth: 2,
+                    minHeight: 2
                 },
                 custom: {
                     title: "Custom widget title",
-                    html: "<div>Custom widget body</div>",
-                    params: {}
+                    html: "<div>Custom widget body</div>"
+
                 },
                 custom2: {
                     title: "Custom2 widget title",
-                    html: "<div>Custom2 widget body</div>",
-                    params: {}
+                    html: "<div>Custom2 widget body</div>"
+
                 }
             },
-            widgetsNameList = Object.keys(widgets),
+            widgetsNameList = Object.keys(widgetConfig),
             mainGrid = $('#grid1'),
             localStorage = window.localStorage,
             widgetsToSave = {
@@ -173,8 +170,8 @@
         // first render
         function renderAfterReload() {
             if (localStorage.getItem('widgets') === null || JSON.parse(localStorage.getItem('widgets')).length === 0) {
-                for (var key in widgets) {
-                    $('.sidebar').append(gridItem(key, widgets[key].title))
+                for (var key in widgetConfig) {
+                    $('.sidebar').append(gridItem(key, widgetConfig[key].title))
                 }
             } else {
                 var widgetsFromStore = JSON.parse(localStorage.getItem('widgets')),
@@ -183,13 +180,13 @@
 
                 if (typeof list !== 'undefined' && list.length > 0) {
                     list.forEach(function (key) {
-                        $('.sidebar').append(gridItem(key, widgets[key].title))
+                        $('.sidebar').append(gridItem(key, widgetConfig[key].title))
                     });
                 }
                 if (typeof activeWidgets !== 'undefined' && activeWidgets.length > 0) {
                     activeWidgets.forEach(function (key) {
                         var activeParams = key[Object.keys(key)[0]].locationAndSize,
-                            localParams = widgets[[Object.keys(key)[0]]].params;
+                            localParams = widgetConfig[[Object.keys(key)[0]]];
                         var minWidth, minHeight, maxWidth, maxHeight;
 
                         if (typeof localParams.minWidth !== "undefined") {
@@ -205,7 +202,7 @@
                             maxHeight = localParams.maxHeight;
                         }
                         var newItem = mainGrid.data("gridstack").addWidget(
-                            gridItem(Object.keys(key)[0], widgets[Object.keys(key)[0]].title),
+                            gridItem(Object.keys(key)[0], widgetConfig[Object.keys(key)[0]].title),
                             activeParams.x,
                             activeParams.y,
                             activeParams.width,
@@ -218,9 +215,9 @@
                             true
                         );
 
-                        newItem[0].children[0].innerHTML = widgets[[Object.keys(key)[0]]].html;
-                        if (typeof localParams.resize !== 'undefined' && !localParams.resize) {
-                            mainGrid.data("gridstack").resizable(newItem, localParams.resize);
+                        newItem[0].children[0].innerHTML = widgetConfig[[Object.keys(key)[0]]].html;
+                        if (typeof localParams.isResizable !== 'undefined' && !localParams.isResizable) {
+                            mainGrid.data("gridstack").resizable(newItem, localParams.isResizable);
                         }
 
                     });
@@ -260,7 +257,7 @@
             if(grid.grid && grid.grid.nodes.length > 0){
                 for (var i = 0; grid.grid.nodes.length > i; i++) {
                     var widgetName = grid.grid.nodes[i].el[0].children[0].dataset.widget;
-                    if (typeof widgets[widgetName].params.resize === 'undefined' || widgets[widgetName].params.resize){
+                    if (typeof widgetConfig[widgetName].isResizable === 'undefined' || widgetConfig[widgetName].isResizable){
                         mainGrid.data('gridstack').resizable(grid.grid.nodes[i].el[0], mode);
                     }
 
@@ -301,7 +298,7 @@
             mainGrid.on('removed', function () {
                 var
                     deleted = _.difference(widgetsNameList, getWidgetList().concat(getActiveWidgets())),
-                    $item = gridItem(deleted[0], widgets[deleted[0]].title);
+                    $item = gridItem(deleted[0], widgetConfig[deleted[0]].title);
                 $('.sidebar').append($item);
 
                 // make draggable new appended item in the widget list
@@ -319,35 +316,35 @@
                     for (var i = 0; i < items.length; i++) {
                         var el = items[i].el[0],
                             widgetName = el.children[0].getAttribute('data-widget'),
-                            minWidth = widgets[widgetName].params.minWidth,
-                            maxWidth = widgets[widgetName].params.maxWidth,
-                            minHeight = widgets[widgetName].params.minHeight,
-                            maxHeight = widgets[widgetName].params.maxHeight;
+                            minWidth = widgetConfig[widgetName].minWidth,
+                            maxWidth = widgetConfig[widgetName].maxWidth,
+                            minHeight = widgetConfig[widgetName].minHeight,
+                            maxHeight = widgetConfig[widgetName].maxHeight;
 
                         if (typeof minWidth !== 'undefined' && typeof minHeight !== 'undefined') {
                             grid.update(
                                 el,
                                 el.dataset.gsX,
                                 el.dataset.gsY,
-                                widgets[widgetName].params.minWidth,
-                                widgets[widgetName].params.minHeight
+                                widgetConfig[widgetName].minWidth,
+                                widgetConfig[widgetName].minHeight
                             );
-                            grid.minWidth(el, widgets[widgetName].params.minWidth);
-                            grid.minHeight(el, widgets[widgetName].params.minHeight);
+                            grid.minWidth(el, widgetConfig[widgetName].minWidth);
+                            grid.minHeight(el, widgetConfig[widgetName].minHeight);
                         }
 
-                        if (typeof widgets[widgetName].params.resize !== 'undefined' && !widgets[widgetName].params.resize) {
-                            grid.resizable(el, widgets[widgetName].params.resize);
+                        if (typeof widgetConfig[widgetName].isResizable !== 'undefined' && !widgetConfig[widgetName].isResizable) {
+                            grid.resizable(el, widgetConfig[widgetName].isResizable);
                         }
 
                         if (typeof maxHeight !== 'undefined') {
-                            grid.maxHeight(el, widgets[widgetName].params.maxHeight);
+                            grid.maxHeight(el, widgetConfig[widgetName].maxHeight);
                         }
                         if (typeof maxWidth !== 'undefined') {
-                            grid.maxWidth(el, widgets[widgetName].params.maxWidth);
+                            grid.maxWidth(el, widgetConfig[widgetName].maxWidth);
                         }
-                        if (widgets[widgetName]) {
-                            el.children[0].innerHTML = widgets[widgetName].html;
+                        if (widgetConfig[widgetName]) {
+                            el.children[0].innerHTML = widgetConfig[widgetName].html;
                         }
                     }
                     saveWidgetItems();
