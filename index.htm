@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Two grids demo</title>
-
+    <meta name="viewport" content="width=device-width"/>
+    <title>Widgets Demo</title>
+    <!-- <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../dist/gridstack.min.css"/>
-    <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/>
+    <link rel="stylesheet" href="css/gridstack.min.css"/>
+    <link rel="stylesheet" href="css/gridstack-extra.min.css"/>
+    <link rel="stylesheet" href="css/dashboard.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
-    <script src="../dist/gridstack.min.js"></script>
-    <script src="../dist/gridstack.jQueryUI.min.js"></script>
-
+    <script src="libs/gridstack.min.js"></script>
+    <script src="libs/gridstack.jQueryUI.min.js"></script>
+    <script src="scripts/script.js"></script>
     <style type="text/css">
-        .dashboardEditPanel{
+        .dashboardEditPanel {
             display: none;
         }
+
+        .grid-stack-item {
+            background-color: #bbb;
+        }
+
         .grid-stack {
             padding-left: 0;
             list-style: none;
@@ -47,7 +51,8 @@
             text-align: center;
             /*background-color: #18bc9c;*/
         }
-        #grid1 .grid-stack-item-content{
+
+        #grid1 .grid-stack-item-content {
             border: 1px solid red;
         }
 
@@ -90,6 +95,7 @@
         }
     </style>
 </head>
+
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -105,7 +111,7 @@
             <div class="trash"></div>
         </div>
     </div>
-    <div class="grid-stack grid-stack-6" id="grid1"></div>
+    <div class="grid-stack grid-stack-12" id="grid1"></div>
 </div>
 
 <script type="text/javascript">
@@ -114,25 +120,45 @@
         var
             isEditMode = false,
             widgetConfig = {
-                googleMap: {
-                    id:"googleMap",
-                    title: "Google map",
+                imageWidget: {
+                    id: "imageWidget",
                     minWidth: 2,
-                    minHeight: 2,
-                    isResizable: false
+                    minHeight: 1,
+                    title: 'Techfinity Logo',
+                    isResizable: false,
+                    defaultWidget: true,
+                    x: 2,
+                    y: 2
                 },
-                yandexMap2: {
-                    title: "Yandex map",
-                    minWidth: 2,
+                clockWidget: {
+                    id: "clockWidget",
+                    title: 'Clock',
+                    minWidth: 4,
                     minHeight: 2
                 },
-                custom: {
-                    title: "Custom widget title"
-
+                workCountByActivityAndStatusWidget1: {
+                    id: "workCountByActivityAndStatusWidget",
+                    title: 'Pre-departure',
+                    activityTypeId: 12,
+                    workStatusId: 3,
+                    minWidth: 4,
+                    minHeight: 2
                 },
-                custom2: {
-                    title: "Custom2 widget title"
-
+                workCountByActivityAndStatusWidget2: {
+                    id: "workCountByActivityAndStatusWidget",
+                    title: 'Deliveries',
+                    activityTypeId: 15,
+                    workStatusId: 3,
+                    minWidth: 4,
+                    minHeight: 2
+                },
+                workCountByActivityAndStatusWidget: {
+                    id: "workCountByActivityAndStatusWidget",
+                    title: 'Collections',
+                    activityTypeId: 19,
+                    workStatusId: 3,
+                    minWidth: 4,
+                    minHeight: 2
                 }
             },
             widgetsNameList = Object.keys(widgetConfig),
@@ -142,32 +168,93 @@
                 activeWidgetList: [],
                 activeWidgets: []
             };
-
         // dashboard activation
         mainGrid.gridstack({
-            width: 6,
+            width: 12,
             float: true,
             removable: '.trash',
             removeTimeout: 0,
             acceptWidgets: '.grid-stack-item'
         });
-
-
         renderAfterReload();
         widgetListCall();
-        handleEvents();
         allowMoveAndResizeItems(isEditMode);
-
+        handleEvents();
         // item for render
         function gridItem(dataAttr, title) {
-            return '<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="' + dataAttr + '">' + title + '</div></div>'
+            return $('<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="' + dataAttr + '"><div class="widget-content">' + title + '</div>' +
+                '</div></div></div></div></div></div>');
+        }
+        // renderActiveWidgets
+        function renderActiveWidgets(activeWidgets) {
+            activeWidgets.forEach(function (key) {
+                var activeParams = key[Object.keys(key)[0]],
+                    localParams = widgetConfig[[Object.keys(key)[0]]],
+                    el = gridItem(Object.keys(key), widgetConfig[Object.keys(key)].title);
+
+                if(typeof widgetConfig[Object.keys(key)].defaultWidget !== 'undefined' && widgetConfig[Object.keys(key)].defaultWidget){
+                    localParams = activeParams;
+                }
+
+                var minWidth, minHeight, maxWidth, maxHeight;
+                if (typeof localParams.minWidth !== "undefined") {
+                    minWidth = localParams.minWidth;
+                }
+                if (typeof localParams.minHeight !== "undefined") {
+                    minHeight = localParams.minHeight;
+                }
+                if (typeof localParams.maxWidth !== "undefined") {
+                    maxWidth = localParams.maxWidth;
+                }
+                if (typeof localParams.maxHeight !== "undefined") {
+                    maxHeight = localParams.maxHeight;
+                }
+                var newItem = mainGrid.data("gridstack").addWidget(
+                    el,
+                    activeParams.x,
+                    activeParams.y,
+                    activeParams.width,
+                    activeParams.height,
+                    false,
+                    minWidth,
+                    maxWidth,
+                    minHeight,
+                    maxHeight,
+                    true
+                );
+
+                if (typeof localParams.isResizable !== 'undefined' && !localParams.isResizable) {
+                    mainGrid.data("gridstack").resizable(newItem, localParams.isResizable);
+                }
+                el[0].children[0].children[0].innerHTML = '<div class="widget-loading-container"><div class="widget-loading">' +
+                    '<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>';
+
+                // init
+                for (var itemName in widgetConfig) {
+                    if (itemName === Object.keys(key)[0]) {
+                        Widget.widgetInitializer(widgetConfig[itemName]).init(el[0].children[0].children[0]);
+                    }
+                }
+            });
         }
         // first render
         function renderAfterReload() {
             if (localStorage.getItem('widgets') === null || JSON.parse(localStorage.getItem('widgets')).length === 0) {
+                var widgetsDefault = [];
                 for (var key in widgetConfig) {
-                    $('.sidebar').append(gridItem(key, widgetConfig[key].title))
+                    // render default widgets
+                    if (typeof widgetConfig[key].defaultWidget !== "undefined" && widgetConfig[key].defaultWidget) {
+                        widgetsDefault.push({[key] : widgetConfig[key]});
+                    } else{
+                        // if not default, add to widgets list
+                        $('.sidebar').append(gridItem(key, widgetConfig[key].title));
+                    }
                 }
+
+                if (widgetsDefault.length > 0) {
+                    renderActiveWidgets(widgetsDefault);
+                }
+
             } else {
                 var widgetsFromStore = JSON.parse(localStorage.getItem('widgets')),
                     list = widgetsFromStore.activeWidgetList,
@@ -179,42 +266,7 @@
                     });
                 }
                 if (typeof activeWidgets !== 'undefined' && activeWidgets.length > 0) {
-                    activeWidgets.forEach(function (key) {
-                        var activeParams = key[Object.keys(key)[0]].locationAndSize,
-                            localParams = widgetConfig[[Object.keys(key)[0]]];
-                        var minWidth, minHeight, maxWidth, maxHeight;
-
-                        if (typeof localParams.minWidth !== "undefined") {
-                            minWidth = localParams.minWidth;
-                        }
-                        if (typeof localParams.minHeight !== "undefined") {
-                            minHeight = localParams.minHeight;
-                        }
-                        if (typeof localParams.maxWidth !== "undefined") {
-                            maxWidth = localParams.maxWidth;
-                        }
-                        if (typeof localParams.maxHeight !== "undefined") {
-                            maxHeight = localParams.maxHeight;
-                        }
-                        var newItem = mainGrid.data("gridstack").addWidget(
-                            gridItem(Object.keys(key)[0], widgetConfig[Object.keys(key)[0]].title),
-                            activeParams.x,
-                            activeParams.y,
-                            activeParams.width,
-                            activeParams.height,
-                            false,
-                            minWidth,
-                            maxWidth,
-                            minHeight,
-                            maxHeight,
-                            true
-                        );
-
-                        if (typeof localParams.isResizable !== 'undefined' && !localParams.isResizable) {
-                            mainGrid.data("gridstack").resizable(newItem, localParams.isResizable);
-                        }
-
-                    });
+                    renderActiveWidgets(activeWidgets);
                 }
             }
         }
@@ -229,12 +281,10 @@
                     if (typeof widgetName !== 'undefined') {
                         var newWidget = {
                             [widgetName]: {
-                                locationAndSize: {
-                                    width: itemData.gsWidth,
-                                    height: itemData.gsHeight,
-                                    x: itemData.gsX,
-                                    y: itemData.gsY
-                                }
+                                width: itemData.gsWidth,
+                                height: itemData.gsHeight,
+                                x: itemData.gsX,
+                                y: itemData.gsY
                             }
                         };
                         activeWidgets.push(newWidget);
@@ -248,10 +298,10 @@
         }
         function allowMoveAndResizeItems(mode) {
             var grid = mainGrid.data('gridstack');
-            if(grid.grid && grid.grid.nodes.length > 0){
+            if (grid.grid && grid.grid.nodes.length > 0) {
                 for (var i = 0; grid.grid.nodes.length > i; i++) {
                     var widgetName = grid.grid.nodes[i].el[0].children[0].dataset.widget;
-                    if (typeof widgetConfig[widgetName].isResizable === 'undefined' || widgetConfig[widgetName].isResizable){
+                    if (typeof widgetConfig[widgetName].isResizable === 'undefined' || widgetConfig[widgetName].isResizable) {
                         mainGrid.data('gridstack').resizable(grid.grid.nodes[i].el[0], mode);
                     }
 
@@ -323,6 +373,7 @@
                                 widgetConfig[widgetName].minWidth,
                                 widgetConfig[widgetName].minHeight
                             );
+
                             grid.minWidth(el, widgetConfig[widgetName].minWidth);
                             grid.minHeight(el, widgetConfig[widgetName].minHeight);
                         }
@@ -338,6 +389,18 @@
                             grid.maxWidth(el, widgetConfig[widgetName].maxWidth);
                         }
                     }
+
+                    el.children[0].children[0].innerHTML = '<div class="widget-loading-container"><div class="widget-loading">' +
+                        '<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>';
+
+                    // init
+                    for (var key in widgetConfig) {
+                        if (key === widgetName) {
+                            Widget.widgetInitializer(widgetConfig[widgetName]).init(el.children[0].children[0]);
+                        }
+                    }
+
+
                     saveWidgetItems();
                 } else {
                     grid.removeWidget(items[0].el[0], true)
@@ -351,8 +414,6 @@
         }
     });
 </script>
-
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&callback=myMap"></script>-->
-
 </body>
+
 </html>

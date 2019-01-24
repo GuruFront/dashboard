@@ -1,0 +1,18 @@
+﻿.work-count-widget {
+    color: rgba(255,255,255,0.9);
+    font-family: 'Open Sans', MS, Arial, sans-serif;
+    text-align: center;
+    line-height: normal;
+
+    justify-content: center;
+    flex-direction: column;
+
+    .title {
+        font-size: 16pt;
+    }
+
+    .counter {        
+        font-weight: 700;
+        font-size: 52pt;
+    }
+}
