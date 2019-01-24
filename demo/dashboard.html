@@ -110,7 +110,6 @@
 
 <script type="text/javascript">
     $(function () {
-
         // data
         var
             isEditMode = false,
@@ -118,25 +117,21 @@
                 googleMap: {
                     id:"googleMap",
                     title: "Google map",
-                    html: "<div><div>Google map widget body </div><img style='width: 100%' src='http://dl4.joxi.net/drive/2019/01/17/0026/1286/1754374/74/43cadc5766.jpg' alt=''></div>",
                     minWidth: 2,
                     minHeight: 2,
                     isResizable: false
                 },
                 yandexMap2: {
                     title: "Yandex map",
-                    html: "<div><div>yandexMap2 map widget body </div><img style='width: 100%' src='http://dl4.joxi.net/drive/2019/01/17/0026/1286/1754374/74/43cadc5766.jpg' alt=''></div>",
                     minWidth: 2,
                     minHeight: 2
                 },
                 custom: {
-                    title: "Custom widget title",
-                    html: "<div>Custom widget body</div>"
+                    title: "Custom widget title"
 
                 },
                 custom2: {
-                    title: "Custom2 widget title",
-                    html: "<div>Custom2 widget body</div>"
+                    title: "Custom2 widget title"
 
                 }
             },
@@ -215,7 +210,6 @@
                             true
                         );
 
-                        newItem[0].children[0].innerHTML = widgetConfig[[Object.keys(key)[0]]].html;
                         if (typeof localParams.isResizable !== 'undefined' && !localParams.isResizable) {
                             mainGrid.data("gridstack").resizable(newItem, localParams.isResizable);
                         }
@@ -342,9 +336,6 @@
                         }
                         if (typeof maxWidth !== 'undefined') {
                             grid.maxWidth(el, widgetConfig[widgetName].maxWidth);
-                        }
-                        if (widgetConfig[widgetName]) {
-                            el.children[0].innerHTML = widgetConfig[widgetName].html;
                         }
                     }
                     saveWidgetItems();
