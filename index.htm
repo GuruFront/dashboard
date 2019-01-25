@@ -20,6 +20,20 @@
     <script src="libs/gridstack.jQueryUI.min.js"></script>
     <script src="scripts/script.js"></script>
     <style type="text/css">
+        .sidebar .widget-content:after {
+            content: attr(data-widget-count);
+            margin-left: 5px;
+            display: inline-flex;
+            padding: 1px;
+            border-radius: 100px;
+            min-width: 18px;
+            height: 18px;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
         .dashboardEditPanel {
             display: none;
         }
@@ -33,7 +47,7 @@
             list-style: none;
         }
 
-        #grid1 .grid-stack-item {
+        .sidebar .grid-stack-item {
             cursor: pointer;
         }
 
@@ -82,7 +96,6 @@
             text-align: center;
             z-index: 10;
             background: rgba(0, 255, 0, 0.1);
-            cursor: default;
             display: inline-block;
         }
 
@@ -115,22 +128,11 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
+    $(() => {
         // data
-        var
+        let
             isEditMode = false,
             widgetConfig = [
-                {
-                    widget: "imageWidget",
-                    id: "imageWidget",
-                    minWidth: 2,
-                    minHeight: 1,
-                    title: 'Techfinity Logo',
-                    isResizable: false,
-                    defaultWidget: true,
-                    x: 2,
-                    y: 2
-                },
                 {
                     widget: "clockWidget",
                     id: "clockWidget",
@@ -146,9 +148,28 @@
                     workStatusId: 3,
                     minWidth: 4,
                     minHeight: 2
+                },
+                {
+                    widget: "imageWidget1",
+                    id: "imageWidget",
+                    minWidth: 2,
+                    minHeight: 1,
+                    title: 'Techfinity Logo',
+                    isResizable: false,
+                    defaultWidget: true,
+                    x: 6,
+                    y: 2
+                },
+                {
+                    widget: "imageWidget2",
+                    id: "imageWidget",
+                    minWidth: 2,
+                    minHeight: 1,
+                    title: 'Several images',
+                    count: 2
                 }
             ],
-            widgetsNameList = widgetConfig.map(function (item) {
+            widgetsNameList = widgetConfig.map((item)=>{
                 return item.widget
             }),
             mainGrid = $('#grid1'),
@@ -156,7 +177,8 @@
             widgetsToSave = {
                 activeWidgetList: [],
                 activeWidgets: []
-            };
+            },
+            widgetsBeforeRemove = [];
 
         // dashboard activation
         mainGrid.gridstack({
@@ -172,24 +194,75 @@
         handleEvents();
 
         // item for render
-        function gridItem(dataAttr, title) {
-            return $('<div class="grid-stack-item"><div class="grid-stack-item-content" data-widget="' + dataAttr + '"><div class="widget-content">' + title + '</div>' +
+        function gridItem(dataAttr, title, count = '') {
+            return $('<div class="grid-stack-item" data-widget="' + dataAttr + '"><div class="grid-stack-item-content" data-widget="' + dataAttr + '"><div class="widget-content"  data-widget-count="' + count + '">' + title + '</div>' +
                 '</div></div></div></div></div></div>');
         }
 
+        //count of active instances
+        function getCountActiveIstances(widget) {
+            return getActiveWidgets().filter((item) => {
+                return item === widget
+            }).length;
+        }
+
+        // first render
+        function renderAfterReload() {
+            if (localStorage.getItem('widgets') === null || JSON.parse(localStorage.getItem('widgets')).length === 0) {
+                let widgetsDefault = [];
+                widgetConfig.forEach((item) => {
+                    // render default widgets
+                    if (typeof item.defaultWidget !== "undefined" && item.defaultWidget) {
+                        widgetsDefault.push(item);
+                    } else {
+                        // if not default, add to widgets list
+                        if (typeof item.count !== 'undefined' && item.count > 0) {
+                            let count = item.count;
+                            for (let i = 1; count > i; i++) {
+                                $('.sidebar').append(gridItem(item.widget, item.title, count));
+                            }
+                        } else {
+                            $('.sidebar').append(gridItem(item.widget, item.title));
+                        }
+
+                    }
+                });
+                if (widgetsDefault.length > 0) {
+                    renderActiveWidgets(widgetsDefault);
+                }
+            } else {
+                let widgetsFromStore = JSON.parse(localStorage.getItem('widgets')),
+                    list = widgetsFromStore.activeWidgetList,
+                    activeWidgets = widgetsFromStore.activeWidgets;
+
+                if (typeof list !== 'undefined' && list.length > 0) {
+                    list.forEach((key) => {
+                        widgetConfig.forEach((item) => {
+                            if (item.widget === key) {
+                                $('.sidebar').append(gridItem(key, item.title))
+                            }
+                        });
+
+                    });
+                }
+                if (typeof activeWidgets !== 'undefined' && activeWidgets.length > 0) {
+                    renderActiveWidgets(activeWidgets);
+                }
+            }
+        }
         // renderActiveWidgets
         function renderActiveWidgets(activeWidgets) {
-            activeWidgets.forEach(function (key) {
-                var activeParams = key,
-                    localParams = widgetConfig.filter(function (item) {
-                        return item.id === key.id
+            activeWidgets.forEach((key) => {
+                let activeParams = key,
+                    localParams = widgetConfig.filter((item) => {
+                        return item.widget === key.widget
                     })[0],
-                    el = gridItem(key.id, key.title);
+                    el = gridItem(key.widget, key.title);
                 if (typeof activeParams.defaultWidget !== 'undefined' && activeParams.defaultWidget) {
                     activeParams = localParams;
                 }
 
-                var minWidth, minHeight, maxWidth, maxHeight;
+                let minWidth, minHeight, maxWidth, maxHeight;
 
                 if (typeof localParams.minWidth !== "undefined") {
                     minWidth = localParams.minWidth;
@@ -203,7 +276,7 @@
                 if (typeof localParams.maxHeight !== "undefined") {
                     maxHeight = localParams.maxHeight;
                 }
-                var newItem = mainGrid.data("gridstack").addWidget(
+                let newItem = mainGrid.data("gridstack").addWidget(
                     el,
                     activeParams.x,
                     activeParams.y,
@@ -225,61 +298,24 @@
 
                 // init
                 widgetConfig.forEach((itemName) => {
-                    if (itemName.id === key.id) {
+                    if (itemName.widget === key.widget) {
                         Widget.widgetInitializer(itemName).init(el[0].children[0].children[0]);
                     }
                 });
             });
         }
-        // first render
-        function renderAfterReload() {
-            if (localStorage.getItem('widgets') === null || JSON.parse(localStorage.getItem('widgets')).length === 0) {
-                var widgetsDefault = [];
-                widgetConfig.forEach(function (item) {
-                    // render default widgets
-                    if (typeof item.defaultWidget !== "undefined" && item.defaultWidget) {
-                        widgetsDefault.push(item);
-                    } else {
-                        // if not default, add to widgets list
-                        $('.sidebar').append(gridItem(item.widget, item.title));
-                    }
-                });
 
-                if (widgetsDefault.length > 0) {
-                    renderActiveWidgets(widgetsDefault);
-                }
-
-            } else {
-                var widgetsFromStore = JSON.parse(localStorage.getItem('widgets')),
-                    list = widgetsFromStore.activeWidgetList,
-                    activeWidgets = widgetsFromStore.activeWidgets;
-
-                if (typeof list !== 'undefined' && list.length > 0) {
-                    list.forEach(function (key) {
-                        widgetConfig.forEach((item)=>{
-                            if(item.id === key ){
-                                $('.sidebar').append(gridItem(key, item.title))
-                            }
-                        });
-
-                    });
-                }
-                if (typeof activeWidgets !== 'undefined' && activeWidgets.length > 0) {
-                    renderActiveWidgets(activeWidgets);
-                }
-            }
-        }
         function saveWidgetItems() {
-            var grid = mainGrid.data("gridstack").grid,
+            let grid = mainGrid.data("gridstack").grid,
                 activeWidgets = [];
-            setTimeout(function () {
-                for (var i = 0; grid.nodes.length > i; i++) {
-                    var
-                        widgetName = grid.nodes[i].el[0].children[0].dataset.widget,
+            setTimeout(() => {
+                for (let i = 0; grid.nodes.length > i; i++) {
+                    let
+                        widgetId = grid.nodes[i].el[0].children[0].dataset.widget,
                         itemData = grid.nodes[i].el[0].dataset;
-                    if (typeof widgetName !== 'undefined') {
-                        var newWidget = {
-                            id: widgetName,
+                    if (typeof widgetId !== 'undefined') {
+                        let newWidget = {
+                            widget: widgetId,
                             width: itemData.gsWidth,
                             height: itemData.gsHeight,
                             x: itemData.gsX,
@@ -294,13 +330,14 @@
             }, 0);
 
         }
+
         function allowMoveAndResizeItems(mode) {
-            var grid = mainGrid.data('gridstack');
+            let grid = mainGrid.data('gridstack');
             if (grid.grid && grid.grid.nodes.length > 0) {
-                for (var i = 0; grid.grid.nodes.length > i; i++) {
-                    var widgetName = grid.grid.nodes[i].el[0].children[0].dataset.widget;
+                for (let i = 0; grid.grid.nodes.length > i; i++) {
+                    let widgetName = grid.grid.nodes[i].el[0].children[0].dataset.widget;
                     widgetConfig.forEach((item) => {
-                        if (widgetName === item.id && (typeof item.isResizable === 'undefined' || !item.isResizable && !mode)) {
+                        if (widgetName === item.widget && (typeof item.isResizable === 'undefined' || !item.isResizable && !mode)) {
                             mainGrid.data('gridstack').resizable(grid.grid.nodes[i].el[0], mode);
                         }
                     });
@@ -308,6 +345,7 @@
                 }
             }
         }
+
         // make draggable items in the widget list
         function widgetListCall() {
             $('.sidebar .grid-stack-item').draggable({
@@ -317,58 +355,78 @@
                 appendTo: 'body'
             });
         }
+
         function getWidgetList() {
-            var sidebarItems = $('.sidebar').children(),
+            let sidebarItems = $('.sidebar').children(),
                 sidebarItemsKeys = [];
             if (sidebarItems && sidebarItems.length > 0) {
-                for (var i = 0; sidebarItems.length > i; i++) {
+                for (let i = 0; sidebarItems.length > i; i++) {
                     sidebarItemsKeys.push(sidebarItems[i].children[0].dataset.widget);
                 }
             }
             return sidebarItemsKeys;
         }
+
         function getActiveWidgets() {
-            var
+            let
                 gridItem = mainGrid.data("gridstack").grid.nodes,
                 gridAllItems = [];
-            for (var i = 0; gridItem.length > i; i++) {
+            for (let i = 0; gridItem.length > i; i++) {
                 gridAllItems.push(gridItem[i].el[0].children[0].dataset.widget);
             }
             return gridAllItems;
         }
-        function handleEvents() {
-            mainGrid.on('removed', function () {
-                var
-                    deleted = _.difference(widgetsNameList, getWidgetList().concat(getActiveWidgets())),
-                    widget = widgetConfig.filter((item) => {
-                        return deleted[0] === item.id
-                    })[0],
-                    $item = gridItem(widget.id, widget.title);
-                $('.sidebar').append($item);
 
+        function handleEvents() {
+            mainGrid.on('removed', (e, items) => {
+                let
+                    deleted = _.difference(widgetsNameList, getWidgetList().concat(widgetsBeforeRemove))[0],
+                    widget = widgetConfig.filter((item) => {
+                        return deleted === item.widget
+                    })[0];
+
+                if(typeof widget !== "undefined"){
+                    $('.sidebar').append(gridItem(widget.widget, widget.title));
+
+                } else {
+                    console.log('multiple');
+                }
                 // make draggable new appended item in the widget list
                 widgetListCall();
             });
-            mainGrid.on('dragstop', function () {
-                saveWidgetItems();
-            });
-            mainGrid.on('gsresizestop', function () {
-                saveWidgetItems();
-            });
-            mainGrid.on('added', function (event, items) {
-                var grid = mainGrid.data('gridstack');
-                if (isEditMode) {
-                    for (var i = 0; i < items.length; i++) {
 
-                        var el = items[i].el[0],
+            mainGrid.on('dragstart', () => {
+                widgetsBeforeRemove = mainGrid.data('gridstack').grid.nodes.map((item)=>{
+                    return item.el[0].children[0].dataset.widget
+                });
+            });
+
+            mainGrid.on('dragstop', () => {
+                saveWidgetItems();
+            });
+            mainGrid.on('gsresizestop', () => {
+                saveWidgetItems();
+            });
+            mainGrid.on('added', (event, items) => {
+                let grid = mainGrid.data('gridstack');
+                if (isEditMode) {
+                    for (let i = 0; i < items.length; i++) {
+                        let el = items[i].el[0],
                             widgetName = el.children[0].getAttribute('data-widget'),
+                            widgetsCount = el.children[0].children[0].getAttribute('data-widget-count'),
                             widget = widgetConfig.filter((item) => {
-                                return item.id === widgetName
+                                return item.widget === widgetName
                             })[0],
                             minWidth = widget.minWidth,
                             maxWidth = widget.maxWidth,
                             minHeight = widget.minHeight,
                             maxHeight = widget.maxHeight;
+
+                        if (typeof widgetsCount !== "undefined" && widgetsCount > 1) {
+                            widgetsCount -= 1;
+                            $('.sidebar').append(gridItem(widget.widget, widget.title, widgetsCount));
+                            widgetListCall();
+                        }
 
                         if (typeof minWidth !== 'undefined' && typeof minHeight !== 'undefined') {
                             grid.update(
@@ -382,35 +440,33 @@
                             grid.minWidth(el, widget.minWidth);
                             grid.minHeight(el, widget.minHeight);
                         }
-
                         if (typeof widget.isResizable !== 'undefined' && !widget.isResizable) {
                             grid.resizable(el, widget.isResizable);
                         }
-
                         if (typeof maxHeight !== 'undefined') {
                             grid.maxHeight(el, widget.maxHeight);
                         }
                         if (typeof maxWidth !== 'undefined') {
                             grid.maxWidth(el, widget.maxWidth);
                         }
+                        el.children[0].children[0].innerHTML = '<div class="widget-loading-container"><div class="widget-loading">' +
+                            '<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>';
+
+                        // init
+                        widgetConfig.forEach((item) => {
+                            if (item.widget === widget.widget) {
+                                Widget.widgetInitializer(widget).init(el.children[0].children[0]);
+                            }
+                        });
                     }
 
-                    el.children[0].children[0].innerHTML = '<div class="widget-loading-container"><div class="widget-loading">' +
-                        '<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>';
-
-                    // init
-                    widgetConfig.forEach((item) => {
-                        if (item.id === widget.id) {
-                            Widget.widgetInitializer(widget).init(el.children[0].children[0]);
-                        }
-                    });
                     saveWidgetItems();
                 } else {
                     grid.removeWidget(items[0].el[0], true)
                 }
             });
-            $('#editMode').on('change', function () {
-                isEditMode = $(this).is(':checked');
+            $('#editMode').on('change', (e) => {
+                isEditMode = $(e.target).is(':checked');
                 allowMoveAndResizeItems(isEditMode);
                 $("#dashboardEditPanel").css('display', isEditMode ? 'block' : 'none');
             });
