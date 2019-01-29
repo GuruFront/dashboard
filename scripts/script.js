@@ -140,11 +140,15 @@ var Widget = (function () {
         body.appendChild(popupDiv);
         return container;
     };
-    Widget.prototype.renderForm = function (settings) {
+    Widget.prototype.renderForm = function (settings, widgetTitle) {
         var _this = this;
         var popupContainer = this.openWidgetSettings(), widgetWrap = document.createElement('div');
         widgetWrap.setAttribute("class", "widget-settings-wrap");
         popupContainer.appendChild(widgetWrap);
+        var title = document.createElement("strong");
+        title.setAttribute("class", "widget-settings-title");
+        title.innerText = widgetTitle;
+        widgetWrap.appendChild(title);
         var form = document.createElement('form');
         form.setAttribute("action", "console.log(data)");
         form.setAttribute("method", 'POST');
@@ -269,6 +273,7 @@ var ClockWidget = (function (_super) {
         _this.withDate = options.withDate != null ? options.withDate : true;
         _this.withDatePicker = options.withDatePicker != null ? options.withDatePicker : true;
         _this.dateFormat = 12;
+        _this.widgetTitle = "Clock Widget";
         return _this;
     }
     ClockWidget.prototype.init = function (element) {
@@ -294,6 +299,10 @@ var ClockWidget = (function (_super) {
         var _this = this;
         el.addEventListener('click', function (e) {
             var isEditButton = e.target.classList[0] === 'widget-icon-edit';
+            var activeSettings = document.getElementsByClassName("grid-item-popup");
+            for (var i = 0; activeSettings.length > i; i++) {
+                activeSettings[i].remove();
+            }
             if (isEditButton) {
                 _this.setSettings();
             }
@@ -326,7 +335,7 @@ var ClockWidget = (function (_super) {
                 placeholder: "Test input placeholder"
             }
         ];
-        this.renderForm(widgetSettings);
+        this.renderForm(widgetSettings, this.widgetTitle);
     };
     ClockWidget.prototype.applyNewSettings = function (data) {
         var data = data.split('&'), result = {};

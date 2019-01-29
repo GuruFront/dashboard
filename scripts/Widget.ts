@@ -127,13 +127,18 @@ abstract class Widget {
         return container;
     }
 
-    protected renderForm(settings: IWidgetEditSettings[]) {
+    protected renderForm(settings: IWidgetEditSettings[], widgetTitle: string) {
         let
             popupContainer: HTMLElement = this.openWidgetSettings(),
             widgetWrap: HTMLElement = document.createElement('div');
 
         widgetWrap.setAttribute("class", "widget-settings-wrap");
         popupContainer.appendChild(widgetWrap);
+
+        let title = document.createElement("strong");
+        title.setAttribute("class", "widget-settings-title");
+        title.innerText = widgetTitle;
+        widgetWrap.appendChild(title);
 
         let form = document.createElement('form');
         form.setAttribute("action", "console.log(data)");

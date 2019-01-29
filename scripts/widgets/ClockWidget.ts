@@ -6,6 +6,7 @@ class ClockWidget extends Widget {
     private withDatePicker: boolean;
     private dateFormat: number;
     private dateTimezone: string;
+    private widgetTitle: string;
     private isRemovable: boolean;
 
     private clockElement: HTMLElement;
@@ -33,6 +34,7 @@ class ClockWidget extends Widget {
         this.withDate = options.withDate != null ? options.withDate : true;
         this.withDatePicker = options.withDatePicker != null ? options.withDatePicker : true;
         this.dateFormat = 12;
+        this.widgetTitle = "Clock Widget";
     }
 
     init(element: HTMLElement) {
@@ -63,6 +65,10 @@ class ClockWidget extends Widget {
     private handleConfigurableMode(el): void {
         el.addEventListener('click', (e) => {
             let isEditButton = e.target.classList[0] === 'widget-icon-edit';
+            let activeSettings = document.getElementsByClassName("grid-item-popup");
+            for (let i = 0; activeSettings.length > i; i++){
+                activeSettings[i].remove();
+            }
             if (isEditButton) {
                 this.setSettings();
             }
@@ -98,7 +104,7 @@ class ClockWidget extends Widget {
                 }
 
             ];
-        this.renderForm(widgetSettings);
+        this.renderForm(widgetSettings, this.widgetTitle);
     }
 
     protected applyNewSettings(data) {
