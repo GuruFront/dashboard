@@ -5,8 +5,8 @@ class ClockWidget extends Widget {
     private withDate: boolean;
     private withDatePicker: boolean;
     private dateFormat: number;
+    private dateTimezone: string;
     private isRemovable: boolean;
-
 
     private clockElement: HTMLElement;
     private dateElement: HTMLElement;
@@ -50,17 +50,13 @@ class ClockWidget extends Widget {
         this.clockElement = this.createClockElement(element);
         this.startClock();
         this.handleConfigurableMode(element);
+
     }
 
-    private reInit(){
-
-
+    private reInit() {
         this.stopClock();
         this.clockElement.remove();
-        console.log(this.cellElement);
-
         this.clockElement = this.createClockElement(this.cellElement);
-
         this.startClock();
     }
 
@@ -74,24 +70,44 @@ class ClockWidget extends Widget {
     }
 
     private setSettings(): void {
-        let widgetSettings: IWidgetEditSettings[] = [
-            {
-                name: "dataType",
-                inputType: "radio",
-                title: "Choose data type",
-                values: [12, 24]
-            }
-        ];
+        let
+            widgetSettings: IWidgetEditSettings[] = [
+                {
+                    name: "dateType",
+                    inputType: "radio",
+                    title: "Choose data type",
+                    values: [12, 24]
+                },
+                {
+                    name: "dateTimezone",
+                    inputType: "select",
+                    title: "Choose timezone",
+                    values: moment.tz.names()
+                }
+
+            ];
         this.renderForm(widgetSettings);
     }
 
-    protected applyNewSettings(result: object) {
+    protected applyNewSettings(data) {
+        let data = data.split('&'),
+            result = {};
+
+        data.forEach((item) => {
+            item = item.split("=");
+            result[item[0]] = decodeURIComponent(item[1])
+        });
+
         for (let key in result) {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
-                    case 'dataType' :
+                    case 'dateType' :
                         this.dateFormat = result[key];
                         console.log("dateFormat -->", this.dateFormat);
+                        break;
+                    case 'dateTimezone' :
+                        this.dateTimezone = result[key];
+                        console.log("dateTimezone -->", result[key]);
                         break;
                     default :
                         console.log("Unknown data from form");
@@ -183,19 +199,24 @@ class ClockWidget extends Widget {
     }
 
     private getTimeString(): string {
-        if (this.dateFormat == 12) {
-            let time = new Date().toLocaleTimeString('it-IT', {hour12: true});
-            return time;
-        } else if (this.dateFormat == 24) {
-            let time = new Date().toLocaleTimeString('it-IT');
-            return time;
+        let options = {};
+
+        // dateTimezone
+        if (typeof this.dateTimezone !== "undefined") {
+            options.timeZone = this.dateTimezone
         }
+        // dateFormat
+        if (this.dateFormat == 12) {
+            options.hour12 = true;
+        } else if (this.dateFormat == 24) {
+            options.hour12 = false;
+        }
+        return new Date().toLocaleTimeString('it-IT', options);
     }
 
     private getDateString(date?: Date): string {
         date = date || new Date();
         var options = {weekday: 'short', year: 'numeric', month: 'short', day: '2-digit'};
-
         return date.toLocaleDateString('en-GB', options);
     }
 }

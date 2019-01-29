@@ -154,6 +154,9 @@ var Widget = (function () {
                 case 'radio':
                     renderInputRadio(inputEl);
                     break;
+                case 'select':
+                    renderSelect(inputEl);
+                    break;
                 default:
                     console.log('Input type not found');
                     break;
@@ -170,14 +173,9 @@ var Widget = (function () {
         formButtonsWrap.appendChild(btnCancel);
         form.appendChild(formButtonsWrap);
         form.addEventListener("submit", function (e) {
-            var data = Array.from(new FormData(form), function (e) { return e.map(encodeURIComponent).join('='); }).join('&'), result = {};
-            data = data.split('&');
-            data.forEach(function (item) {
-                item = item.split("=");
-                result[item[0]] = item[1];
-            });
+            var data = Array.from(new FormData(form), function (e) { return e.map(encodeURIComponent).join('='); }).join('&');
             e.preventDefault();
-            _this.applyNewSettings(result);
+            _this.applyNewSettings(data);
         });
         btnCancel.addEventListener("click", function (e) {
             var allSettings = document.getElementsByClassName('grid-item-popup');
@@ -203,6 +201,23 @@ var Widget = (function () {
                 label.appendChild(input);
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
+            });
+        }
+        function renderSelect(inputEl) {
+            var values = inputEl.values, name = inputEl.name, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+            var select = document.createElement('select');
+            select.setAttribute("name", name);
+            inputWrap.appendChild(select);
+            values.forEach(function (val) {
+                var option = document.createElement("option");
+                option.setAttribute('value', val);
+                option.innerText = val;
+                select.appendChild(option);
             });
         }
     };
@@ -252,7 +267,6 @@ var ClockWidget = (function (_super) {
     ClockWidget.prototype.reInit = function () {
         this.stopClock();
         this.clockElement.remove();
-        console.log(this.cellElement);
         this.clockElement = this.createClockElement(this.cellElement);
         this.startClock();
     };
@@ -268,21 +282,36 @@ var ClockWidget = (function (_super) {
     ClockWidget.prototype.setSettings = function () {
         var widgetSettings = [
             {
-                name: "dataType",
+                name: "dateType",
                 inputType: "radio",
                 title: "Choose data type",
                 values: [12, 24]
+            },
+            {
+                name: "dateTimezone",
+                inputType: "select",
+                title: "Choose timezone",
+                values: moment.tz.names()
             }
         ];
         this.renderForm(widgetSettings);
     };
-    ClockWidget.prototype.applyNewSettings = function (result) {
+    ClockWidget.prototype.applyNewSettings = function (data) {
+        var data = data.split('&'), result = {};
+        data.forEach(function (item) {
+            item = item.split("=");
+            result[item[0]] = decodeURIComponent(item[1]);
+        });
         for (var key in result) {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
-                    case 'dataType':
+                    case 'dateType':
                         this.dateFormat = result[key];
                         console.log("dateFormat -->", this.dateFormat);
+                        break;
+                    case 'dateTimezone':
+                        this.dateTimezone = result[key];
+                        console.log("dateTimezone -->", result[key]);
                         break;
                     default:
                         console.log("Unknown data from form");
@@ -365,14 +394,17 @@ var ClockWidget = (function (_super) {
         }, 1000);
     };
     ClockWidget.prototype.getTimeString = function () {
+        var options = {};
+        if (typeof this.dateTimezone !== "undefined") {
+            options.timeZone = this.dateTimezone;
+        }
         if (this.dateFormat == 12) {
-            var time = new Date().toLocaleTimeString('it-IT', { hour12: true });
-            return time;
+            options.hour12 = true;
         }
         else if (this.dateFormat == 24) {
-            var time = new Date().toLocaleTimeString('it-IT');
-            return time;
+            options.hour12 = false;
         }
+        return new Date().toLocaleTimeString('it-IT', options);
     };
     ClockWidget.prototype.getDateString = function (date) {
         date = date || new Date();

@@ -3,10 +3,11 @@ abstract class Widget {
     public readonly id: number;
     public readonly config: IWidgetConfiguration;
 
-    protected cellElement:HTMLElement;
+    protected cellElement: HTMLElement;
     public isInEditMode: boolean;
 
     abstract init(element: HTMLElement);
+
     abstract reInit();
 
     protected dataSource: DataSource;
@@ -25,12 +26,8 @@ abstract class Widget {
         if (this.config.isRemovable) {
             this.enableRemoveIcon(element);
         }
-
         this.init(element);
     }
-
-
-
 
 
     private subscribeToDateChangedEvent() {
@@ -148,6 +145,9 @@ abstract class Widget {
                 case 'radio':
                     renderInputRadio(inputEl);
                     break;
+                case 'select':
+                    renderSelect(inputEl);
+                    break;
                 default:
                     console.log('Input type not found');
                     break;
@@ -172,17 +172,11 @@ abstract class Widget {
 
         // Get new widget settings
         form.addEventListener("submit", (e) => {
-            let data = Array.from(new FormData(form), e => e.map(encodeURIComponent).join('=')).join('&'),
-                result = {};
-            data = data.split('&');
-            data.forEach((item) => {
-                item = item.split("=");
-                result[item[0]] = item[1]
-            });
+            let data = Array.from(new FormData(form), e => e.map(encodeURIComponent).join('=')).join('&');
             e.preventDefault();
 
 
-            this.applyNewSettings(result);
+            this.applyNewSettings(data);
         });
 
         // Cancel/Remove Popup
@@ -229,6 +223,31 @@ abstract class Widget {
             });
 
 
+        }
+        function renderSelect(inputEl: IWidgetEditSettings) {
+            let
+                values: Array<string | number> = inputEl.values,
+                name: string = inputEl.name,
+                titleHtml: HTMLElement = document.createElement('strong'),
+                inputWrap = document.createElement('div');
+
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+
+            let select = document.createElement('select');
+            select.setAttribute("name", name);
+            inputWrap.appendChild(select);
+
+            values.forEach((val: string | number) => {
+                let option = document.createElement("option");
+                option.setAttribute('value', val);
+                option.innerText = val;
+                select.appendChild(option);
+            });
         }
 
 
