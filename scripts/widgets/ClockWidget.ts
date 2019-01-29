@@ -34,10 +34,21 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                 values: [12, 24],
                 value: config.dateFormat
             }, {
+                name: "testCheckBox",
+                inputType: "checkbox",
+                title: "Test CheckBox",
+                values: ["Foo"]
+            }, {
                 name: "dateTimezone",
                 inputType: "select",
                 title: "Choose timezone",
                 values: moment.tz.names()
+            },
+            {
+                name: "testInputText",
+                inputType: "inputText",
+                title: "Test input text",
+                placeholder: "Test input placeholder"
             }];
 
         super(config, clientId, widgetSettings);
@@ -81,8 +92,14 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                     case 'dateTimezone':
                         this.config.dateTimezone = result[key];
                         // TODO: it must be changed
-                        this.widgetSettings[1].value = this.config.dateFormat;
+                        this.widgetSettings[2].value = this.config.dateTimezone;
                         console.log("dateTimezone -->", result[key]);
+                        break;
+                    case 'testInputText':
+                        console.log("testInputText -->", result[key]);
+                        break;
+                    case 'testCheckBox':
+                        console.log("testCheckBox -->", result[key]);
                         break;
                     default:
                         console.log("Unknown data from form");

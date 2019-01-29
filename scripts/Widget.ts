@@ -172,13 +172,20 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
         //form.setAttribute("method", 'POST');
         widgetWrap.appendChild(form);
 
+        // define input type and call render function
         settings.forEach((inputEl) => {
             switch (inputEl.inputType) {
                 case 'radio':
-                    renderInputRadio(inputEl);
+                    renderInputCheck(inputEl);
+                    break;
+                case 'checkbox':
+                    renderInputCheck(inputEl);
                     break;
                 case 'select':
                     renderSelect(inputEl);
+                    break;
+                case 'inputText':
+                    renderInputText(inputEl);
                     break;
                 default:
                     console.log('Input type not found');
@@ -221,8 +228,8 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
             }
         });
 
-        // input radio inputs
-        function renderInputRadio(inputEl: IWidgetEditSettings) {
+        // render input radio
+        function renderInputCheck(inputEl: IWidgetEditSettings) {
             let
                 values: Array<string | number> = inputEl.values,
                 type: string = inputEl.inputType,
@@ -257,6 +264,8 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
                 inputWrap.appendChild(label);
             });
         }
+
+        // render select
         function renderSelect(inputEl: IWidgetEditSettings) {
             let
                 values: Array<string | number> = inputEl.values,
@@ -283,6 +292,31 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
                 select.appendChild(option);
             });
         }
+
+        // render input text
+        function renderInputText(inputEl: IWidgetEditSettings) {
+            let
+                name: string = inputEl.name,
+                placeholder: string = inputEl.placeholder,
+                titleHtml: HTMLElement = document.createElement('strong'),
+                inputWrap = document.createElement('div');
+
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+
+            let input = document.createElement("input");
+            input.setAttribute("name", name);
+            if (typeof placeholder !== "undefined") {
+                input.setAttribute("placeholder", placeholder);
+            }
+            inputWrap.appendChild(input);
+        }
+
+
     }
 
     protected applyNewSettings(result: object) {

@@ -160,10 +160,16 @@ var Widget = (function () {
         settings.forEach(function (inputEl) {
             switch (inputEl.inputType) {
                 case 'radio':
-                    renderInputRadio(inputEl);
+                    renderInputCheck(inputEl);
+                    break;
+                case 'checkbox':
+                    renderInputCheck(inputEl);
                     break;
                 case 'select':
                     renderSelect(inputEl);
+                    break;
+                case 'inputText':
+                    renderInputText(inputEl);
                     break;
                 default:
                     console.log('Input type not found');
@@ -194,7 +200,7 @@ var Widget = (function () {
                 allSettings[i].remove();
             }
         });
-        function renderInputRadio(inputEl) {
+        function renderInputCheck(inputEl) {
             var values = inputEl.values, type = inputEl.inputType, name = inputEl.name, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
             titleHtml.setAttribute('class', 'settings-input-title');
             titleHtml.innerText = inputEl.title;
@@ -232,6 +238,20 @@ var Widget = (function () {
                 option.selected = val == inputEl.value;
                 select.appendChild(option);
             });
+        }
+        function renderInputText(inputEl) {
+            var name = inputEl.name, placeholder = inputEl.placeholder, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+            var input = document.createElement("input");
+            input.setAttribute("name", name);
+            if (typeof placeholder !== "undefined") {
+                input.setAttribute("placeholder", placeholder);
+            }
+            inputWrap.appendChild(input);
         }
     };
     Widget.prototype.applyNewSettings = function (result) {
@@ -284,10 +304,21 @@ var ClockWidget = (function (_super) {
                 values: [12, 24],
                 value: config.dateFormat
             }, {
+                name: "testCheckBox",
+                inputType: "checkbox",
+                title: "Test CheckBox",
+                values: ["Foo"]
+            }, {
                 name: "dateTimezone",
                 inputType: "select",
                 title: "Choose timezone",
                 values: moment.tz.names()
+            },
+            {
+                name: "testInputText",
+                inputType: "inputText",
+                title: "Test input text",
+                placeholder: "Test input placeholder"
             }
         ];
         _this = _super.call(this, config, clientId, widgetSettings) || this;
@@ -322,8 +353,14 @@ var ClockWidget = (function (_super) {
                         break;
                     case 'dateTimezone':
                         this.config.dateTimezone = result[key];
-                        this.widgetSettings[1].value = this.config.dateFormat;
+                        this.widgetSettings[2].value = this.config.dateTimezone;
                         console.log("dateTimezone -->", result[key]);
+                        break;
+                    case 'testInputText':
+                        console.log("testInputText -->", result[key]);
+                        break;
+                    case 'testCheckBox':
+                        console.log("testCheckBox -->", result[key]);
                         break;
                     default:
                         console.log("Unknown data from form");
