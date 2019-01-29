@@ -1,27 +1,52 @@
-/// <reference path="datasources/WorkCompletedDataSource.ts" />
-abstract class Widget {
+/**
+ * TConfiguration is a type of configuration settings(must be derived from IWidgetConfiguration).
+ * So each widget has all properties from IWidgetConfiguration and might have it's own additional 
+ * properties which also available via this.config
+ * */
+abstract class Widget<TConfiguration extends IWidgetConfiguration> {
     public readonly id: number;
-    public readonly config: IWidgetConfiguration;
+    public readonly config: TConfiguration;
 
-    protected cellElement:HTMLElement;
+    protected cellElement: HTMLElement;
+
     public isInEditMode: boolean;
 
-    abstract init(element: HTMLElement);
-    abstract reInit();
+    protected isGridInEditMode: boolean;
 
-    protected dataSource: DataSource;
+    protected isDisplayed: boolean;
 
-    protected constructor(config: IWidgetConfiguration) {
+    protected currentClientId: number;
+
+    protected readonly widgetSettings: IWidgetEditSettings[];
+
+
+    protected constructor(config: TConfiguration, clientId: number, widgetSettings?: IWidgetEditSettings[]) {
         this.config = config;
         this.id = Math.random();
+        this.currentClientId = clientId;
+        this.widgetSettings = widgetSettings || [];
+
         this.subscribeToDateChangedEvent();
+        this.subscribeToClientChangedEvent();
+        this.subscribeToGridEditingEvents();
     }
+
+
+    protected abstract init(element: HTMLElement);
+
+    protected abstract reDraw();
+
+    protected abstract handleClientChange(clientId: number);
+
 
     public initBase(element: HTMLElement) {
         this.cellElement = element;
-        if (this.config.isConfigurable) {
+        this.isDisplayed = true;
+
+        if (this.config.isConfigurable && this.widgetSettings) {
             this.enableEditIcon(element);
         }
+
         if (this.config.isRemovable) {
             this.enableRemoveIcon(element);
         }
@@ -29,9 +54,9 @@ abstract class Widget {
         this.init(element);
     }
 
-
-
-
+    protected destroy() {
+        this.isDisplayed = false;
+    }
 
     private subscribeToDateChangedEvent() {
         if (this.config.isTimeDependant) {
@@ -43,43 +68,51 @@ abstract class Widget {
         }
     }
 
-    protected handleDateChange(newDate: Date, isToday: boolean) {
+    protected handleDateChange(newDate: Date, isToday: boolean) { }
+
+    private subscribeToClientChangedEvent() {
+        document.addEventListener('client_changed', (ev: CustomEvent) => {
+            this.handleClientChangeBase(ev.detail.clientId);
+        }, false);
     }
 
+    private subscribeToGridEditingEvents() {
+        document.addEventListener('grid_editing_started', (ev: CustomEvent) => {
+            this.isGridInEditMode = true;
+            this.handleStartGridEditing(ev);
+        }, false);
 
-    protected hideSpinner(element: HTMLElement) {
-        const spinner = element.getElementsByClassName("widget-loading-container")[0] as HTMLElement;
+        document.addEventListener('grid_editing_finished', (ev: CustomEvent) => {
+            this.handleFinishGridEditing(ev);
+            this.isGridInEditMode = false;
+        }, false);
+    }
+
+    protected handleStartGridEditing(e: CustomEvent) {
+        console.log('grid started editing');
+    }
+
+    protected handleFinishGridEditing(e: CustomEvent) {
+        console.log('grid finished editing');
+    }
+
+    protected handleClientChangeBase(clientId: number) {
+        this.currentClientId = clientId;
+        this.handleClientChange(clientId);
+    }
+
+    protected showSpinner() {
+        const spinner = this.cellElement.getElementsByClassName("widget-loading-container")[0] as HTMLElement;
+        spinner.style.display = 'flex';
+    }
+
+    protected hideSpinner() {
+        const spinner = this.cellElement.getElementsByClassName("widget-loading-container")[0] as HTMLElement;
         spinner.style.display = 'none';
     }
 
-    // public toVueGridModel(): IVueGridModel {
-    //     let result: IVueGridModel = {
-    //         i: this.id,
-    //         x: this.config.x,
-    //         y: this.config.y,
-    //         w: this.config.width,
-    //         h: this.config.height,
-    //         isResizable: this.config.isResizable,
-    //         minH: this.config.minHeight,
-    //         maxH: this.config.maxHeight,
-    //         minW: this.config.minWidth,
-    //         maxW: this.config.maxWidth
-    //     };
-
-    //     return result;
-    // }
-
-    protected getDataSourceId(): string {
-        return null;
-    }
-
-    private static _dataSources: { [key: string]: DataSource } = {
-        [WorkCompletedDataSource.id]: new WorkCompletedDataSource()
-    };
-
-
-    static widgetInitializer(options: IWidgetOptions) {
-        let widget: Widget;
+    static widgetInitializer(options: IWidgetConfiguration) {
+        let widget: Widget<IWidgetConfiguration>;
 
         switch (options.id) {
             case ImageWidget.id:
@@ -89,33 +122,30 @@ abstract class Widget {
                 widget = new ClockWidget(options);
                 break;
             case WorkCountByActivityAndStatusWidget.id:
-                widget = new WorkCountByActivityAndStatusWidget(options as IWorkCountByActivityAndStatusWidgetOptions);
+                widget = new WorkCountByActivityAndStatusWidget(options as IWorkCountByActivityAndStatusWidgetConfiguration);
                 break;
             default:
                 return null;
         }
 
-        if (widget) {
-            let dataSourceId = widget.getDataSourceId();
-            if (dataSourceId) {
-                widget.dataSource = Widget._dataSources[dataSourceId];
-            }
-        }
         return widget;
     }
 
-    private enableRemoveIcon(el): void {
+    private enableRemoveIcon(el: HTMLElement): void {
         let icon: HTMLElement = document.createElement("div");
         icon.setAttribute('class', 'widget-icon-delete');
         el.appendChild(icon);
     }
 
-    private enableEditIcon(el): void {
+    private enableEditIcon(el: HTMLElement): void {
         let icon: HTMLElement = document.createElement("div");
         icon.setAttribute('class', 'widget-icon-edit');
         el.appendChild(icon);
+
+        icon.addEventListener('click', ev => this.renderForm(this.widgetSettings), false);
     }
 
+    // TODO: maybe it's better to just show/hide panle section instead of creating/destroying it?
     protected openWidgetSettings(): HTMLElement {
         let
             body: HTMLElement = document.getElementsByTagName('body')[0],
@@ -138,9 +168,9 @@ abstract class Widget {
         widgetWrap.setAttribute("class", "widget-settings-wrap");
         popupContainer.appendChild(widgetWrap);
 
-        let form = document.createElement('form');
-        form.setAttribute("action", "console.log(data)");
-        form.setAttribute("method", 'POST');
+        let form = document.createElement('form') as HTMLFormElement;
+        //form.setAttribute("action", "console.log(data)");
+        //form.setAttribute("method", 'POST');
         widgetWrap.appendChild(form);
 
         settings.forEach((inputEl) => {
@@ -171,16 +201,11 @@ abstract class Widget {
         form.appendChild(formButtonsWrap);
 
         // Get new widget settings
-        form.addEventListener("submit", (e) => {
-            let data = Array.from(new FormData(form), e => e.map(encodeURIComponent).join('=')).join('&'),
-                result = {};
-            data = data.split('&');
-            data.forEach((item) => {
-                item = item.split("=");
-                result[item[0]] = item[1]
-            });
+        form.addEventListener("submit", (e) => {            
             e.preventDefault();
-
+            let result = {};
+            Array.from(new FormData(form), e => e.map(encodeURIComponent))
+                .forEach(pair => result[pair[0]] = pair[1]);             
 
             this.applyNewSettings(result);
         });
@@ -217,26 +242,25 @@ abstract class Widget {
                 label.setAttribute("class", "settings-label");
 
                 inputText.setAttribute("class", "settings-input-text");
-                inputText.innerText = val;
+                inputText.innerText = val.toString();
 
                 input.setAttribute('name', name);
                 input.setAttribute('type', type);
-                input.setAttribute('value', val);
+                input.setAttribute('value', val.toString());
+                input.checked = val == inputEl.value;
 
                 label.appendChild(input);
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
             });
-
-
         }
-
-
     }
 
     protected applyNewSettings(result: object) {
 
     }
+}
 
-
+function getValueOrDefault<T>(value: T, defaultValue: T) {
+    return value != null ? value : defaultValue;
 }

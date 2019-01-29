@@ -1,20 +1,22 @@
 interface IWidgetConfiguration {
     readonly minWidth?: number;
     readonly maxWidth?: number;
-    readonly width: number;
+    width: number;
 
     readonly minHeight?: number;
     readonly maxHeight?: number;
-    readonly height: number;
+    height: number;
 
     x: number;
     y: number;
 
-    isConfigurable: boolean;
-    isResizable: boolean;
-    isRemovable: boolean;
+    readonly isConfigurable: boolean;
+    readonly isResizable: boolean;
+    readonly isRemovable: boolean;
 
-    isTimeDependant: boolean;
+    readonly isTimeDependant: boolean;
 
     title: string;
+
+    readonly id: string;
 }

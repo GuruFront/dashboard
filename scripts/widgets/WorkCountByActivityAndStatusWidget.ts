@@ -1,19 +1,18 @@
 /// <reference path="../Widget.ts" />
-class WorkCountByActivityAndStatusWidget extends Widget {
+class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndStatusWidgetConfiguration> {
     public static readonly id = "workCountByActivityAndStatusWidget";
-    public static readonly dataSourceId = "workCompetedDataSource";
 
-    private readonly activityTypeId: number;
-    private readonly workStatusId: number;
+    private counterElement: HTMLElement;  
 
-    private counterElement: HTMLElement;    
+    private dataSource: DataSource;
 
-    constructor(options: IWorkCountByActivityAndStatusWidgetOptions) {
+    constructor(options: IWorkCountByActivityAndStatusWidgetConfiguration, clientId: number) {
 
-        const config: IWidgetConfiguration = {
-            isConfigurable: false,
-            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
-            isRemovable:  typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
+        const config: IWorkCountByActivityAndStatusWidgetConfiguration = {
+            ...options,
+            isConfigurable: getValueOrDefault( options.isConfigurable,  false),
+            isResizable: getValueOrDefault(options.isResizable, true),
+            isRemovable: getValueOrDefault(options.isRemovable, true),
             title: options.title || "Work Counter",
             width: options.width || 2,
             height: options.height || 2,
@@ -21,15 +20,12 @@ class WorkCountByActivityAndStatusWidget extends Widget {
             maxHeight: 3,
             minWidth: 1,
             maxWidth: 3,
-            x: options.x,
-            y: options.y,
             isTimeDependant: true
         };
 
-        super(config);
+        super(config, clientId); 
 
-        this.activityTypeId = options.activityTypeId;
-        this.workStatusId = options.workStatusId;
+        this.dataSource = new DataSource();
     }
 
     init(element: HTMLElement) {
@@ -44,13 +40,26 @@ class WorkCountByActivityAndStatusWidget extends Widget {
 
         this.dataSource.getData()
             .then(data => {
-                this.hideSpinner(element); 
+                this.hideSpinner(); 
 
                 this.counterElement.innerText = data.toString();
             });        
     }
 
-    private createTitleElement(element: HTMLInputElement) {
+    protected reDraw() {
+        this.showSpinner();
+
+        this.dataSource.getData()
+            .then(data => {
+                this.hideSpinner();
+
+                this.counterElement.innerText = data.toString();
+            }); 
+    }
+
+    protected handleClientChange(clientId: number) { }
+
+    private createTitleElement(element: HTMLElement) {
         const p = document.createElement('div');
         p.className = 'title';
         p.innerText = this.config.title;
@@ -64,14 +73,10 @@ class WorkCountByActivityAndStatusWidget extends Widget {
         element.appendChild(el);
 
         return el;
-    }
-
-    protected getDataSourceId() {
-        return WorkCompletedDataSource.id;
-    }
+    }    
 }
 
-interface IWorkCountByActivityAndStatusWidgetOptions extends IWidgetOptions {
+interface IWorkCountByActivityAndStatusWidgetConfiguration extends IWidgetConfiguration {
     activityTypeId: number;
     workStatusId: number;
 }

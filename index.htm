@@ -199,6 +199,7 @@
         // data
         let
             isEditMode = false,
+            clientId = 7,
             widgetConfig = [
                 {
                     widget: "clockWidget",
@@ -368,7 +369,7 @@
                 // init
                 widgetConfig.forEach((itemName) => {
                     if (itemName.widget === key.widget) {
-                        Widget.widgetInitializer(itemName).initBase(el[0].children[0].children[0]);
+                        Widget.widgetInitializer(itemName).initBase(el[0].children[0].children[0], clientId);
                     }
                 });
             });
@@ -497,7 +498,7 @@
                                 grid.minWidth(el, widgetProperties.config.minWidth);
                                 grid.minHeight(el, widgetProperties.config.minHeight);
                                 grid.resizable(el, widgetProperties.config.isResizable);
-                                widgetProperties.initBase(el.children[0].children[0]);
+                                widgetProperties.initBase(el.children[0].children[0], clientId);
                             }
                         });
                     }
@@ -512,7 +513,7 @@
                 $("#dashboardEditPanel").css('display', isEditMode ? 'block' : 'none');
                 $("#grid1").toggleClass('edit-mode-on');
                 $(".widget-icon-delete").css('display', isEditMode ? 'block' : 'none');
-
+                document.dispatchEvent(new CustomEvent( isEditMode ? 'grid_editing_started' : 'grid_editing_finished'));
             });
             // remove
             $('#grid1').on("click", (e) => {

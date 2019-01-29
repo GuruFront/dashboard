@@ -4,20 +4,30 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var DataSource = (function () {
     function DataSource() {
     }
-    DataSource.prototype.getData = function (from, to, fromServer) {
+    DataSource.prototype.getData = function () {
         var _this = this;
-        if (fromServer === void 0) { fromServer = false; }
-        if (this._data && !fromServer) {
+        if (this._data) {
             return new Promise(function (res, rej) {
                 res(_this._data);
             });
@@ -33,6 +43,182 @@ var DataSource = (function () {
     };
     return DataSource;
 }());
+var Widget = (function () {
+    function Widget(config, clientId, widgetSettings) {
+        this.config = config;
+        this.id = Math.random();
+        this.currentClientId = clientId;
+        this.widgetSettings = widgetSettings || [];
+        this.subscribeToDateChangedEvent();
+        this.subscribeToClientChangedEvent();
+        this.subscribeToGridEditingEvents();
+    }
+    Widget.prototype.initBase = function (element) {
+        this.cellElement = element;
+        this.isDisplayed = true;
+        if (this.config.isConfigurable && this.widgetSettings) {
+            this.enableEditIcon(element);
+        }
+        if (this.config.isRemovable) {
+            this.enableRemoveIcon(element);
+        }
+        this.init(element);
+    };
+    Widget.prototype.destroy = function () {
+        this.isDisplayed = false;
+    };
+    Widget.prototype.subscribeToDateChangedEvent = function () {
+        var _this = this;
+        if (this.config.isTimeDependant) {
+            document.addEventListener('date_changed', function (ev) {
+                var newDate = ev.detail.date;
+                var idToday = ev.detail.isToday;
+                _this.handleDateChange(newDate, idToday);
+            }, false);
+        }
+    };
+    Widget.prototype.handleDateChange = function (newDate, isToday) { };
+    Widget.prototype.subscribeToClientChangedEvent = function () {
+        var _this = this;
+        document.addEventListener('client_changed', function (ev) {
+            _this.handleClientChangeBase(ev.detail.clientId);
+        }, false);
+    };
+    Widget.prototype.subscribeToGridEditingEvents = function () {
+        var _this = this;
+        document.addEventListener('grid_editing_started', function (ev) {
+            _this.isGridInEditMode = true;
+            _this.handleStartGridEditing(ev);
+        }, false);
+        document.addEventListener('grid_editing_finished', function (ev) {
+            _this.handleFinishGridEditing(ev);
+            _this.isGridInEditMode = false;
+        }, false);
+    };
+    Widget.prototype.handleStartGridEditing = function (e) {
+        console.log('grid started editing');
+    };
+    Widget.prototype.handleFinishGridEditing = function (e) {
+        console.log('grid finished editing');
+    };
+    Widget.prototype.handleClientChangeBase = function (clientId) {
+        this.currentClientId = clientId;
+        this.handleClientChange(clientId);
+    };
+    Widget.prototype.showSpinner = function () {
+        var spinner = this.cellElement.getElementsByClassName("widget-loading-container")[0];
+        spinner.style.display = 'flex';
+    };
+    Widget.prototype.hideSpinner = function () {
+        var spinner = this.cellElement.getElementsByClassName("widget-loading-container")[0];
+        spinner.style.display = 'none';
+    };
+    Widget.widgetInitializer = function (options) {
+        var widget;
+        switch (options.id) {
+            case ImageWidget.id:
+                widget = new ImageWidget(options);
+                break;
+            case ClockWidget.id:
+                widget = new ClockWidget(options);
+                break;
+            case WorkCountByActivityAndStatusWidget.id:
+                widget = new WorkCountByActivityAndStatusWidget(options);
+                break;
+            default:
+                return null;
+        }
+        return widget;
+    };
+    Widget.prototype.enableRemoveIcon = function (el) {
+        var icon = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-delete');
+        el.appendChild(icon);
+    };
+    Widget.prototype.enableEditIcon = function (el) {
+        var _this = this;
+        var icon = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-edit');
+        el.appendChild(icon);
+        icon.addEventListener('click', function (ev) { return _this.renderForm(_this.widgetSettings); }, false);
+    };
+    Widget.prototype.openWidgetSettings = function () {
+        var body = document.getElementsByTagName('body')[0], popupDiv = document.createElement('div'), container = document.createElement('div');
+        popupDiv.setAttribute("class", "grid-item-popup");
+        container.setAttribute("class", "grid-item-popup__container");
+        popupDiv.appendChild(container);
+        body.appendChild(popupDiv);
+        return container;
+    };
+    Widget.prototype.renderForm = function (settings) {
+        var _this = this;
+        var popupContainer = this.openWidgetSettings(), widgetWrap = document.createElement('div');
+        widgetWrap.setAttribute("class", "widget-settings-wrap");
+        popupContainer.appendChild(widgetWrap);
+        var form = document.createElement('form');
+        widgetWrap.appendChild(form);
+        settings.forEach(function (inputEl) {
+            switch (inputEl.inputType) {
+                case 'radio':
+                    renderInputRadio(inputEl);
+                    break;
+                default:
+                    console.log('Input type not found');
+                    break;
+            }
+        });
+        var formButtonsWrap = document.createElement('div');
+        formButtonsWrap.setAttribute("class", "settings-form-btns");
+        var btnSave = document.createElement('button'), btnCancel = document.createElement('button');
+        btnSave.setAttribute("type", "submit");
+        btnSave.innerText = "Apply";
+        btnCancel.setAttribute("type", "button");
+        btnCancel.innerText = "Cancel";
+        formButtonsWrap.appendChild(btnSave);
+        formButtonsWrap.appendChild(btnCancel);
+        form.appendChild(formButtonsWrap);
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var result = {};
+            Array.from(new FormData(form), function (e) { return e.map(encodeURIComponent); })
+                .forEach(function (pair) { return result[pair[0]] = pair[1]; });
+            _this.applyNewSettings(result);
+        });
+        btnCancel.addEventListener("click", function (e) {
+            var allSettings = document.getElementsByClassName('grid-item-popup');
+            for (var i = 0; allSettings.length > i; i++) {
+                allSettings[i].remove();
+            }
+        });
+        function renderInputRadio(inputEl) {
+            var values = inputEl.values, type = inputEl.inputType, name = inputEl.name, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+            values.forEach(function (val) {
+                var label = document.createElement('label'), input = document.createElement('input'), inputText = document.createElement('span');
+                label.setAttribute("class", "settings-label");
+                inputText.setAttribute("class", "settings-input-text");
+                inputText.innerText = val.toString();
+                input.setAttribute('name', name);
+                input.setAttribute('type', type);
+                input.setAttribute('value', val.toString());
+                input.checked = val == inputEl.value;
+                label.appendChild(input);
+                label.appendChild(inputText);
+                inputWrap.appendChild(label);
+            });
+        }
+    };
+    Widget.prototype.applyNewSettings = function (result) {
+    };
+    return Widget;
+}());
+function getValueOrDefault(value, defaultValue) {
+    return value != null ? value : defaultValue;
+}
 var WorkCompletedDataSource = (function (_super) {
     __extends(WorkCompletedDataSource, _super);
     function WorkCompletedDataSource() {
@@ -63,226 +249,49 @@ var WorkCompletedDataSource = (function (_super) {
     WorkCompletedDataSource.id = "workCompletedDataSource";
     return WorkCompletedDataSource;
 }(DataSource));
-var _a;
-var Widget = (function () {
-    function Widget(config) {
-        this.config = config;
-        this.id = Math.random();
-        this.subscribeToDateChangedEvent();
-    }
-    Widget.prototype.initBase = function (element) {
-        this.cellElement = element;
-        if (this.config.isConfigurable) {
-            this.enableEditIcon(element);
-        }
-        if (this.config.isRemovable) {
-            this.enableRemoveIcon(element);
-        }
-        this.init(element);
-    };
-    Widget.prototype.subscribeToDateChangedEvent = function () {
-        var _this = this;
-        if (this.config.isTimeDependant) {
-            document.addEventListener('date_changed', function (ev) {
-                var newDate = ev.detail.date;
-                var idToday = ev.detail.isToday;
-                _this.handleDateChange(newDate, idToday);
-            }, false);
-        }
-    };
-    Widget.prototype.handleDateChange = function (newDate, isToday) {
-    };
-    Widget.prototype.hideSpinner = function (element) {
-        var spinner = element.getElementsByClassName("widget-loading-container")[0];
-        spinner.style.display = 'none';
-    };
-    Widget.prototype.getDataSourceId = function () {
-        return null;
-    };
-    Widget.widgetInitializer = function (options) {
-        var widget;
-        switch (options.id) {
-            case ImageWidget.id:
-                widget = new ImageWidget(options);
-                break;
-            case ClockWidget.id:
-                widget = new ClockWidget(options);
-                break;
-            case WorkCountByActivityAndStatusWidget.id:
-                widget = new WorkCountByActivityAndStatusWidget(options);
-                break;
-            default:
-                return null;
-        }
-        if (widget) {
-            var dataSourceId = widget.getDataSourceId();
-            if (dataSourceId) {
-                widget.dataSource = Widget._dataSources[dataSourceId];
-            }
-        }
-        return widget;
-    };
-    Widget.prototype.enableRemoveIcon = function (el) {
-        var icon = document.createElement("div");
-        icon.setAttribute('class', 'widget-icon-delete');
-        el.appendChild(icon);
-    };
-    Widget.prototype.enableEditIcon = function (el) {
-        var icon = document.createElement("div");
-        icon.setAttribute('class', 'widget-icon-edit');
-        el.appendChild(icon);
-    };
-    Widget.prototype.openWidgetSettings = function () {
-        var body = document.getElementsByTagName('body')[0], popupDiv = document.createElement('div'), container = document.createElement('div');
-        popupDiv.setAttribute("class", "grid-item-popup");
-        container.setAttribute("class", "grid-item-popup__container");
-        popupDiv.appendChild(container);
-        body.appendChild(popupDiv);
-        return container;
-    };
-    Widget.prototype.renderForm = function (settings) {
-        var _this = this;
-        var popupContainer = this.openWidgetSettings(), widgetWrap = document.createElement('div');
-        widgetWrap.setAttribute("class", "widget-settings-wrap");
-        popupContainer.appendChild(widgetWrap);
-        var form = document.createElement('form');
-        form.setAttribute("action", "console.log(data)");
-        form.setAttribute("method", 'POST');
-        widgetWrap.appendChild(form);
-        settings.forEach(function (inputEl) {
-            switch (inputEl.inputType) {
-                case 'radio':
-                    renderInputRadio(inputEl);
-                    break;
-                default:
-                    console.log('Input type not found');
-                    break;
-            }
-        });
-        var formButtonsWrap = document.createElement('div');
-        formButtonsWrap.setAttribute("class", "settings-form-btns");
-        var btnSave = document.createElement('button'), btnCancel = document.createElement('button');
-        btnSave.setAttribute("type", "submit");
-        btnSave.innerText = "Apply";
-        btnCancel.setAttribute("type", "button");
-        btnCancel.innerText = "Cancel";
-        formButtonsWrap.appendChild(btnSave);
-        formButtonsWrap.appendChild(btnCancel);
-        form.appendChild(formButtonsWrap);
-        form.addEventListener("submit", function (e) {
-            var data = Array.from(new FormData(form), function (e) { return e.map(encodeURIComponent).join('='); }).join('&'), result = {};
-            data = data.split('&');
-            data.forEach(function (item) {
-                item = item.split("=");
-                result[item[0]] = item[1];
-            });
-            e.preventDefault();
-            _this.applyNewSettings(result);
-        });
-        btnCancel.addEventListener("click", function (e) {
-            var allSettings = document.getElementsByClassName('grid-item-popup');
-            for (var i = 0; allSettings.length > i; i++) {
-                allSettings[i].remove();
-            }
-        });
-        function renderInputRadio(inputEl) {
-            var values = inputEl.values, type = inputEl.inputType, name = inputEl.name, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
-            titleHtml.setAttribute('class', 'settings-input-title');
-            titleHtml.innerText = inputEl.title;
-            inputWrap.setAttribute('class', 'settings-input-wrap');
-            inputWrap.appendChild(titleHtml);
-            form.appendChild(inputWrap);
-            values.forEach(function (val) {
-                var label = document.createElement('label'), input = document.createElement('input'), inputText = document.createElement('span');
-                label.setAttribute("class", "settings-label");
-                inputText.setAttribute("class", "settings-input-text");
-                inputText.innerText = val;
-                input.setAttribute('name', name);
-                input.setAttribute('type', type);
-                input.setAttribute('value', val);
-                label.appendChild(input);
-                label.appendChild(inputText);
-                inputWrap.appendChild(label);
-            });
-        }
-    };
-    Widget.prototype.applyNewSettings = function (result) {
-    };
-    Widget._dataSources = (_a = {},
-        _a[WorkCompletedDataSource.id] = new WorkCompletedDataSource(),
-        _a);
-    return Widget;
-}());
 var ClockWidget = (function (_super) {
     __extends(ClockWidget, _super);
-    function ClockWidget(options) {
+    function ClockWidget(options, clientId) {
         var _this = this;
-        var config = {
-            isConfigurable: true,
-            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
-            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
-            title: options.title || "Clock",
-            minWidth: options.minWidth || 2,
-            width: options.width || 4,
-            height: options.height || 2,
-            minHeight: options.minHeight || 2,
-            x: options.x,
-            y: options.y,
-            isTimeDependant: true
-        };
-        _this = _super.call(this, config) || this;
-        _this.withDate = options.withDate != null ? options.withDate : true;
-        _this.withDatePicker = options.withDatePicker != null ? options.withDatePicker : true;
-        _this.dateFormat = 12;
-        return _this;
-    }
-    ClockWidget.prototype.init = function (element) {
-        element.classList.add("clock-widget");
-        this.hideSpinner(element);
-        if (this.withDate) {
-            this.dateElement = this.createDateElement(element);
-            if (this.withDatePicker) {
-                this.datePickerElement = this.createDatePickerElement(element);
-            }
-        }
-        this.clockElement = this.createClockElement(element);
-        this.startClock();
-        this.handleConfigurableMode(element);
-    };
-    ClockWidget.prototype.reInit = function () {
-        this.stopClock();
-        this.clockElement.remove();
-        console.log(this.cellElement);
-        this.clockElement = this.createClockElement(this.cellElement);
-        this.startClock();
-    };
-    ClockWidget.prototype.handleConfigurableMode = function (el) {
-        var _this = this;
-        el.addEventListener('click', function (e) {
-            var isEditButton = e.target.classList[0] === 'widget-icon-edit';
-            if (isEditButton) {
-                _this.setSettings();
-            }
-        });
-    };
-    ClockWidget.prototype.setSettings = function () {
+        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, true), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Clock", minWidth: options.minWidth || 2, width: options.width || 4, height: options.height || 2, minHeight: options.minHeight || 2, isTimeDependant: true, withDate: getValueOrDefault(options.withDate, true), withDatePicker: getValueOrDefault(options.withDatePicker, true), dateFormat: getValueOrDefault(options.dateFormat, 12) });
         var widgetSettings = [
             {
                 name: "dataType",
                 inputType: "radio",
                 title: "Choose data type",
-                values: [12, 24]
+                values: [12, 24],
+                value: config.dateFormat
             }
         ];
-        this.renderForm(widgetSettings);
+        _this = _super.call(this, config, clientId, widgetSettings) || this;
+        return _this;
+    }
+    ClockWidget.prototype.init = function (element) {
+        element.classList.add("clock-widget");
+        this.hideSpinner();
+        if (this.config.withDate) {
+            this.dateElement = this.createDateElement(element);
+            if (this.config.withDatePicker) {
+                this.datePickerElement = this.createDatePickerElement(element);
+            }
+        }
+        this.clockElement = this.createClockElement(element);
+        this.startClock();
+    };
+    ClockWidget.prototype.reDraw = function () {
+        this.stopClock();
+        this.clockElement.remove();
+        this.clockElement = this.createClockElement(this.cellElement);
+        this.startClock();
     };
     ClockWidget.prototype.applyNewSettings = function (result) {
         for (var key in result) {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
                     case 'dataType':
-                        this.dateFormat = result[key];
-                        console.log("dateFormat -->", this.dateFormat);
+                        this.config.dateFormat = +result[key];
+                        this.widgetSettings[0].value = this.config.dateFormat;
+                        console.log("dateFormat -->", this.config.dateFormat);
                         break;
                     default:
                         console.log("Unknown data from form");
@@ -290,17 +299,18 @@ var ClockWidget = (function (_super) {
                 }
             }
         }
-        this.reInit();
+        this.reDraw();
     };
     ClockWidget.prototype.handleDateChange = function (newDate, isToday) {
         console.log(newDate, isToday);
     };
+    ClockWidget.prototype.handleClientChange = function (clientId) { };
     ClockWidget.prototype.createDateElement = function (element) {
         var _this = this;
         var dateElement = document.createElement('div');
         dateElement.className = "date";
         dateElement.innerText = this.getDateString();
-        if (this.withDatePicker) {
+        if (this.config.withDatePicker) {
             dateElement.onclick = function (ev) {
                 dateElement.style.display = 'none';
                 _this.datePickerElement.style.display = 'block';
@@ -359,20 +369,20 @@ var ClockWidget = (function (_super) {
         var _this = this;
         this.interval = setInterval(function () {
             _this.clockElement.innerText = _this.getTimeString();
-            if (_this.withDate) {
+            if (_this.config.withDate) {
                 _this.dateElement.innerText = _this.getDateString();
             }
         }, 1000);
     };
     ClockWidget.prototype.getTimeString = function () {
-        if (this.dateFormat == 12) {
-            var time = new Date().toLocaleTimeString('it-IT', { hour12: true });
-            return time;
+        var time = '';
+        if (this.config.dateFormat == 12) {
+            time = new Date().toLocaleTimeString('it-IT', { hour12: true });
         }
-        else if (this.dateFormat == 24) {
-            var time = new Date().toLocaleTimeString('it-IT');
-            return time;
+        else if (this.config.dateFormat == 24) {
+            time = new Date().toLocaleTimeString('it-IT');
         }
+        return time;
     };
     ClockWidget.prototype.getDateString = function (date) {
         date = date || new Date();
@@ -384,58 +394,30 @@ var ClockWidget = (function (_super) {
 }(Widget));
 var ImageWidget = (function (_super) {
     __extends(ImageWidget, _super);
-    function ImageWidget(options) {
+    function ImageWidget(options, clientId) {
         var _this = this;
-        var config = {
-            isConfigurable: false,
-            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
-            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
-            title: options.title || "Image",
-            width: options.width || 2,
-            height: options.height || 2,
-            minHeight: 1,
-            maxHeight: 3,
-            minWidth: 1,
-            maxWidth: 3,
-            x: options.x,
-            y: options.y,
-            isTimeDependant: false
-        };
-        _this = _super.call(this, config) || this;
-        _this.imageUrl = options.imageUrl || 'http://tf-dev01.cloudapp.net/Content/images/s2-header-logo-techfinity.png';
+        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, false), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Image", width: options.width || 2, height: options.height || 2, minHeight: 1, maxHeight: 3, minWidth: 1, maxWidth: 3, isTimeDependant: false, imageUrl: getValueOrDefault(options.imageUrl, 'http://tf-dev01.cloudapp.net/Content/images/s2-header-logo-techfinity.png') });
+        _this = _super.call(this, config, clientId) || this;
         return _this;
     }
     ImageWidget.prototype.init = function (element) {
-        this.hideSpinner(element);
-        element.style.backgroundImage = "url('" + this.imageUrl + "')";
+        this.hideSpinner();
+        element.style.backgroundImage = "url('" + this.config.imageUrl + "')";
         element.style.backgroundRepeat = "no-repeat";
         element.style.backgroundSize = "cover";
     };
+    ImageWidget.prototype.reDraw = function () { };
+    ImageWidget.prototype.handleClientChange = function (clientId) { };
     ImageWidget.id = "imageWidget";
     return ImageWidget;
 }(Widget));
 var WorkCountByActivityAndStatusWidget = (function (_super) {
     __extends(WorkCountByActivityAndStatusWidget, _super);
-    function WorkCountByActivityAndStatusWidget(options) {
+    function WorkCountByActivityAndStatusWidget(options, clientId) {
         var _this = this;
-        var config = {
-            isConfigurable: false,
-            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
-            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
-            title: options.title || "Work Counter",
-            width: options.width || 2,
-            height: options.height || 2,
-            minHeight: 1,
-            maxHeight: 3,
-            minWidth: 1,
-            maxWidth: 3,
-            x: options.x,
-            y: options.y,
-            isTimeDependant: true
-        };
-        _this = _super.call(this, config) || this;
-        _this.activityTypeId = options.activityTypeId;
-        _this.workStatusId = options.workStatusId;
+        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, false), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Work Counter", width: options.width || 2, height: options.height || 2, minHeight: 1, maxHeight: 3, minWidth: 1, maxWidth: 3, isTimeDependant: true });
+        _this = _super.call(this, config, clientId) || this;
+        _this.dataSource = new DataSource();
         return _this;
     }
     WorkCountByActivityAndStatusWidget.prototype.init = function (element) {
@@ -448,10 +430,20 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         }
         this.dataSource.getData()
             .then(function (data) {
-            _this.hideSpinner(element);
+            _this.hideSpinner();
             _this.counterElement.innerText = data.toString();
         });
     };
+    WorkCountByActivityAndStatusWidget.prototype.reDraw = function () {
+        var _this = this;
+        this.showSpinner();
+        this.dataSource.getData()
+            .then(function (data) {
+            _this.hideSpinner();
+            _this.counterElement.innerText = data.toString();
+        });
+    };
+    WorkCountByActivityAndStatusWidget.prototype.handleClientChange = function (clientId) { };
     WorkCountByActivityAndStatusWidget.prototype.createTitleElement = function (element) {
         var p = document.createElement('div');
         p.className = 'title';
@@ -465,11 +457,7 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         element.appendChild(el);
         return el;
     };
-    WorkCountByActivityAndStatusWidget.prototype.getDataSourceId = function () {
-        return WorkCompletedDataSource.id;
-    };
     WorkCountByActivityAndStatusWidget.id = "workCountByActivityAndStatusWidget";
-    WorkCountByActivityAndStatusWidget.dataSourceId = "workCompetedDataSource";
     return WorkCountByActivityAndStatusWidget;
 }(Widget));
 //# sourceMappingURL=script.js.map

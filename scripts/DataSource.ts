@@ -1,8 +1,8 @@
 ﻿class DataSource {
     protected _data: any;
 
-    public getData(from: Date, to: Date, fromServer = false): Promise<object> {
-        if (this._data && !fromServer) {
+    public getData(): Promise<object> {
+        if (this._data) {
             return new Promise((res, rej) => {
                 res(this._data);
             });

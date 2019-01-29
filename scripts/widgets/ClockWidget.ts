@@ -1,116 +1,100 @@
 /// <reference path="../Widget.ts" />
-class ClockWidget extends Widget {
+class ClockWidget extends Widget<IClockWidgetConfiguration> {
     public static readonly id = "clockWidget";
-
-    private withDate: boolean;
-    private withDatePicker: boolean;
-    private dateFormat: number;
-    private isRemovable: boolean;
-
 
     private clockElement: HTMLElement;
     private dateElement: HTMLElement;
     private datePickerElement: HTMLElement;
 
-    private interval: number;
+    private interval: number;    
 
-    constructor(options: IClockWidgetOptions) {
-        const config: IWidgetConfiguration = {
-            isConfigurable: true,
-            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
-            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
+    constructor(options: IClockWidgetConfiguration, clientId: number) {
+
+        const config: IClockWidgetConfiguration = {
+            ...options, // copy all other properties 
+            isConfigurable: getValueOrDefault(options.isConfigurable, true),
+            isResizable: getValueOrDefault(options.isResizable, true),
+            isRemovable: getValueOrDefault(options.isRemovable, true),
             title: options.title || "Clock",
             minWidth: options.minWidth || 2,
             width: options.width || 4,
             height: options.height || 2,
             minHeight: options.minHeight || 2,
-            x: options.x,
-            y: options.y,
-            isTimeDependant: true
+            isTimeDependant: true,
+            withDate: getValueOrDefault(options.withDate, true),
+            withDatePicker: getValueOrDefault(options.withDatePicker, true),
+            dateFormat: getValueOrDefault(options.dateFormat, 12)
         };
 
-        super(config);
-        this.withDate = options.withDate != null ? options.withDate : true;
-        this.withDatePicker = options.withDatePicker != null ? options.withDatePicker : true;
-        this.dateFormat = 12;
+        const widgetSettings = [
+            {
+                name: "dataType",
+                inputType: "radio",
+                title: "Choose data type",
+                values: [12, 24],
+                value: config.dateFormat
+            }];
+
+        super(config, clientId, widgetSettings);
     }
 
-    init(element: HTMLElement) {
+    protected init(element: HTMLElement) {
         //console.log('initializing a сlock', element);
 
         element.classList.add("clock-widget");
-        this.hideSpinner(element);
-        if (this.withDate) {
+        this.hideSpinner();
+
+        if (this.config.withDate) {
             this.dateElement = this.createDateElement(element);
-            if (this.withDatePicker) {
+            if (this.config.withDatePicker) {
                 this.datePickerElement = this.createDatePickerElement(element);
             }
         }
 
         this.clockElement = this.createClockElement(element);
         this.startClock();
-        this.handleConfigurableMode(element);
     }
 
-    private reInit(){
-
-
+    protected reDraw() {
         this.stopClock();
         this.clockElement.remove();
-        console.log(this.cellElement);
 
         this.clockElement = this.createClockElement(this.cellElement);
 
         this.startClock();
     }
-
-    private handleConfigurableMode(el): void {
-        el.addEventListener('click', (e) => {
-            let isEditButton = e.target.classList[0] === 'widget-icon-edit';
-            if (isEditButton) {
-                this.setSettings();
-            }
-        });
-    }
-
-    private setSettings(): void {
-        let widgetSettings: IWidgetEditSettings[] = [
-            {
-                name: "dataType",
-                inputType: "radio",
-                title: "Choose data type",
-                values: [12, 24]
-            }
-        ];
-        this.renderForm(widgetSettings);
-    }
-
+   
     protected applyNewSettings(result: object) {
         for (let key in result) {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
-                    case 'dataType' :
-                        this.dateFormat = result[key];
-                        console.log("dateFormat -->", this.dateFormat);
+                    case 'dataType':
+                        this.config.dateFormat = +result[key];
+                        // TODO: it must be changed
+                        this.widgetSettings[0].value = this.config.dateFormat;
+                        console.log("dateFormat -->", this.config.dateFormat);
                         break;
-                    default :
+                    default:
                         console.log("Unknown data from form");
                         break;
                 }
             }
         }
-        this.reInit();
+
+        this.reDraw();
     }
 
     protected handleDateChange(newDate: Date, isToday: boolean) {
         console.log(newDate, isToday);
     }
 
+    protected handleClientChange(clientId: number) { }
+
     private createDateElement(element: HTMLElement) {
         const dateElement = document.createElement('div');
         dateElement.className = "date";
         dateElement.innerText = this.getDateString();
-        if (this.withDatePicker) {
+        if (this.config.withDatePicker) {
             dateElement.onclick = (ev) => {
                 dateElement.style.display = 'none';
                 this.datePickerElement.style.display = 'block';
@@ -120,7 +104,7 @@ class ClockWidget extends Widget {
         return dateElement;
     }
 
-    private createDatePickerElement(element: HTMLInputElement) {
+    private createDatePickerElement(element: HTMLElement) {
         const datePickerElement = document.createElement('input');
         datePickerElement.type = 'date';
         datePickerElement.style.display = 'none';
@@ -129,7 +113,7 @@ class ClockWidget extends Widget {
         datePickerElement.max = today;
 
         datePickerElement.onchange = (ev) => {
-            const value = (ev.target as HTMLElement).value;
+            const value = (ev.target as HTMLInputElement).value;
             const isToday = new Date().toISOString().split("T")[0] === value;
 
             if (isToday) {
@@ -158,7 +142,7 @@ class ClockWidget extends Widget {
         return datePickerElement;
     }
 
-    private createClockElement(element: HTMLInputElement) {
+    private createClockElement(element: HTMLElement) {
         const clockElement = document.createElement('div');
         clockElement.className = "clock";
         clockElement.innerText = this.getTimeString();
@@ -176,32 +160,35 @@ class ClockWidget extends Widget {
     private startClock() {
         this.interval = setInterval(() => {
             this.clockElement.innerText = this.getTimeString();
-            if (this.withDate) {
+            if (this.config.withDate) {
                 this.dateElement.innerText = this.getDateString();
             }
         }, 1000);
     }
 
     private getTimeString(): string {
-        if (this.dateFormat == 12) {
-            let time = new Date().toLocaleTimeString('it-IT', {hour12: true});
-            return time;
-        } else if (this.dateFormat == 24) {
-            let time = new Date().toLocaleTimeString('it-IT');
-            return time;
+        let time = '';
+
+        if (this.config.dateFormat == 12) {
+            time = new Date().toLocaleTimeString('it-IT', { hour12: true });
         }
+        else if (this.config.dateFormat == 24) {
+            time = new Date().toLocaleTimeString('it-IT');
+        }
+
+        return time;
     }
 
     private getDateString(date?: Date): string {
         date = date || new Date();
-        var options = {weekday: 'short', year: 'numeric', month: 'short', day: '2-digit'};
+        var options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
 
         return date.toLocaleDateString('en-GB', options);
     }
 }
 
-interface IClockWidgetOptions extends IWidgetOptions {
+interface IClockWidgetConfiguration extends IWidgetConfiguration {
     withDate?: boolean;
     withDatePicker?: boolean;
-    dateFormat: boolean;
+    dateFormat?: number;
 }
