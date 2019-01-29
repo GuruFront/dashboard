@@ -6,7 +6,7 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
     private dateElement: HTMLElement;
     private datePickerElement: HTMLElement;
 
-    private interval: number;    
+    private interval: number;
 
     constructor(options: IClockWidgetConfiguration, clientId: number) {
 
@@ -33,6 +33,11 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                 title: "Choose data type",
                 values: [12, 24],
                 value: config.dateFormat
+            }, {
+                name: "dateTimezone",
+                inputType: "select",
+                title: "Choose timezone",
+                values: moment.tz.names()
             }];
 
         super(config, clientId, widgetSettings);
@@ -60,10 +65,9 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
         this.clockElement.remove();
 
         this.clockElement = this.createClockElement(this.cellElement);
-
         this.startClock();
     }
-   
+
     protected applyNewSettings(result: object) {
         for (let key in result) {
             if (result.hasOwnProperty(key)) {
@@ -73,6 +77,12 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                         // TODO: it must be changed
                         this.widgetSettings[0].value = this.config.dateFormat;
                         console.log("dateFormat -->", this.config.dateFormat);
+                        break;
+                    case 'dateTimezone':
+                        this.config.dateTimezone = result[key];
+                        // TODO: it must be changed
+                        this.widgetSettings[1].value = this.config.dateFormat;
+                        console.log("dateTimezone -->", result[key]);
                         break;
                     default:
                         console.log("Unknown data from form");
@@ -167,16 +177,23 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
     }
 
     private getTimeString(): string {
-        let time = '';
-
+        let options: {
+            hour12?: boolean,
+            timeZone?: string
+        } = {};
+        console.log(this.config.dateTimezone);
+        // dateTimezone
+        if (typeof this.config.dateTimezone !== "undefined") {
+            options.timeZone = this.config.dateTimezone;
+        }
+        // dateFormat
         if (this.config.dateFormat == 12) {
-            time = new Date().toLocaleTimeString('it-IT', { hour12: true });
-        }
-        else if (this.config.dateFormat == 24) {
-            time = new Date().toLocaleTimeString('it-IT');
+            options.hour12 = true;
+        } else if (this.config.dateFormat == 24) {
+            options.hour12 = false;
         }
 
-        return time;
+        return new Date().toLocaleTimeString('it-IT', options);
     }
 
     private getDateString(date?: Date): string {
@@ -191,4 +208,5 @@ interface IClockWidgetConfiguration extends IWidgetConfiguration {
     withDate?: boolean;
     withDatePicker?: boolean;
     dateFormat?: number;
+    dateTimezone?: string;
 }

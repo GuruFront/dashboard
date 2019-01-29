@@ -50,7 +50,6 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
         if (this.config.isRemovable) {
             this.enableRemoveIcon(element);
         }
-
         this.init(element);
     }
 
@@ -178,6 +177,9 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
                 case 'radio':
                     renderInputRadio(inputEl);
                     break;
+                case 'select':
+                    renderSelect(inputEl);
+                    break;
                 default:
                     console.log('Input type not found');
                     break;
@@ -204,8 +206,9 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
         form.addEventListener("submit", (e) => {            
             e.preventDefault();
             let result = {};
-            Array.from(new FormData(form), e => e.map(encodeURIComponent))
-                .forEach(pair => result[pair[0]] = pair[1]);             
+            new FormData(form).forEach((value, key) => {
+                result[key] = value;
+            });           
 
             this.applyNewSettings(result);
         });
@@ -252,6 +255,32 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
                 label.appendChild(input);
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
+            });
+        }
+        function renderSelect(inputEl: IWidgetEditSettings) {
+            let
+                values: Array<string | number> = inputEl.values,
+                name: string = inputEl.name,
+                titleHtml: HTMLElement = document.createElement('strong'),
+                inputWrap = document.createElement('div');
+
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+
+            let select = document.createElement('select');
+            select.setAttribute("name", name);
+            inputWrap.appendChild(select);
+
+            values.forEach((val: string | number) => {
+                let option = document.createElement("option");
+                option.setAttribute('value', val.toString());
+                option.innerText = val.toString();
+                option.selected = val == inputEl.value;
+                select.appendChild(option);
             });
         }
     }

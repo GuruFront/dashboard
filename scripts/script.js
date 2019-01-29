@@ -162,6 +162,9 @@ var Widget = (function () {
                 case 'radio':
                     renderInputRadio(inputEl);
                     break;
+                case 'select':
+                    renderSelect(inputEl);
+                    break;
                 default:
                     console.log('Input type not found');
                     break;
@@ -180,8 +183,9 @@ var Widget = (function () {
         form.addEventListener("submit", function (e) {
             e.preventDefault();
             var result = {};
-            Array.from(new FormData(form), function (e) { return e.map(encodeURIComponent); })
-                .forEach(function (pair) { return result[pair[0]] = pair[1]; });
+            new FormData(form).forEach(function (value, key) {
+                result[key] = value;
+            });
             _this.applyNewSettings(result);
         });
         btnCancel.addEventListener("click", function (e) {
@@ -209,6 +213,24 @@ var Widget = (function () {
                 label.appendChild(input);
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
+            });
+        }
+        function renderSelect(inputEl) {
+            var values = inputEl.values, name = inputEl.name, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+            var select = document.createElement('select');
+            select.setAttribute("name", name);
+            inputWrap.appendChild(select);
+            values.forEach(function (val) {
+                var option = document.createElement("option");
+                option.setAttribute('value', val.toString());
+                option.innerText = val.toString();
+                option.selected = val == inputEl.value;
+                select.appendChild(option);
             });
         }
     };
@@ -261,6 +283,11 @@ var ClockWidget = (function (_super) {
                 title: "Choose data type",
                 values: [12, 24],
                 value: config.dateFormat
+            }, {
+                name: "dateTimezone",
+                inputType: "select",
+                title: "Choose timezone",
+                values: moment.tz.names()
             }
         ];
         _this = _super.call(this, config, clientId, widgetSettings) || this;
@@ -292,6 +319,11 @@ var ClockWidget = (function (_super) {
                         this.config.dateFormat = +result[key];
                         this.widgetSettings[0].value = this.config.dateFormat;
                         console.log("dateFormat -->", this.config.dateFormat);
+                        break;
+                    case 'dateTimezone':
+                        this.config.dateTimezone = result[key];
+                        this.widgetSettings[1].value = this.config.dateFormat;
+                        console.log("dateTimezone -->", result[key]);
                         break;
                     default:
                         console.log("Unknown data from form");
@@ -375,14 +407,18 @@ var ClockWidget = (function (_super) {
         }, 1000);
     };
     ClockWidget.prototype.getTimeString = function () {
-        var time = '';
+        var options = {};
+        console.log(this.config.dateTimezone);
+        if (typeof this.config.dateTimezone !== "undefined") {
+            options.timeZone = this.config.dateTimezone;
+        }
         if (this.config.dateFormat == 12) {
-            time = new Date().toLocaleTimeString('it-IT', { hour12: true });
+            options.hour12 = true;
         }
         else if (this.config.dateFormat == 24) {
-            time = new Date().toLocaleTimeString('it-IT');
+            options.hour12 = false;
         }
-        return time;
+        return new Date().toLocaleTimeString('it-IT', options);
     };
     ClockWidget.prototype.getDateString = function (date) {
         date = date || new Date();
