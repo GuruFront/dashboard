@@ -70,6 +70,16 @@ var Widget = (function () {
         this.id = Math.random();
         this.subscribeToDateChangedEvent();
     }
+    Widget.prototype.initBase = function (element) {
+        this.cellElement = element;
+        if (this.config.isConfigurable) {
+            this.enableEditIcon(element);
+        }
+        if (this.config.isRemovable) {
+            this.enableRemoveIcon(element);
+        }
+        this.init(element);
+    };
     Widget.prototype.subscribeToDateChangedEvent = function () {
         var _this = this;
         if (this.config.isTimeDependant) {
@@ -80,12 +90,15 @@ var Widget = (function () {
             }, false);
         }
     };
-    Widget.prototype.handleDateChange = function (newDate, isToday) { };
+    Widget.prototype.handleDateChange = function (newDate, isToday) {
+    };
     Widget.prototype.hideSpinner = function (element) {
         var spinner = element.getElementsByClassName("widget-loading-container")[0];
         spinner.style.display = 'none';
     };
-    Widget.prototype.getDataSourceId = function () { return null; };
+    Widget.prototype.getDataSourceId = function () {
+        return null;
+    };
     Widget.widgetInitializer = function (options) {
         var widget;
         switch (options.id) {
@@ -109,6 +122,92 @@ var Widget = (function () {
         }
         return widget;
     };
+    Widget.prototype.enableRemoveIcon = function (el) {
+        var icon = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-delete');
+        el.appendChild(icon);
+    };
+    Widget.prototype.enableEditIcon = function (el) {
+        var icon = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-edit');
+        el.appendChild(icon);
+    };
+    Widget.prototype.openWidgetSettings = function () {
+        var body = document.getElementsByTagName('body')[0], popupDiv = document.createElement('div'), container = document.createElement('div');
+        popupDiv.setAttribute("class", "grid-item-popup");
+        container.setAttribute("class", "grid-item-popup__container");
+        popupDiv.appendChild(container);
+        body.appendChild(popupDiv);
+        return container;
+    };
+    Widget.prototype.renderForm = function (settings) {
+        var _this = this;
+        var popupContainer = this.openWidgetSettings(), widgetWrap = document.createElement('div');
+        widgetWrap.setAttribute("class", "widget-settings-wrap");
+        popupContainer.appendChild(widgetWrap);
+        var form = document.createElement('form');
+        form.setAttribute("action", "console.log(data)");
+        form.setAttribute("method", 'POST');
+        widgetWrap.appendChild(form);
+        settings.forEach(function (inputEl) {
+            switch (inputEl.inputType) {
+                case 'radio':
+                    renderInputRadio(inputEl);
+                    break;
+                default:
+                    console.log('Input type not found');
+                    break;
+            }
+        });
+        var formButtonsWrap = document.createElement('div');
+        formButtonsWrap.setAttribute("class", "settings-form-btns");
+        var btnSave = document.createElement('button'), btnCancel = document.createElement('button');
+        btnSave.setAttribute("type", "submit");
+        btnSave.innerText = "Apply";
+        btnCancel.setAttribute("type", "button");
+        btnCancel.innerText = "Cancel";
+        formButtonsWrap.appendChild(btnSave);
+        formButtonsWrap.appendChild(btnCancel);
+        form.appendChild(formButtonsWrap);
+        form.addEventListener("submit", function (e) {
+            var data = Array.from(new FormData(form), function (e) { return e.map(encodeURIComponent).join('='); }).join('&'), result = {};
+            data = data.split('&');
+            data.forEach(function (item) {
+                item = item.split("=");
+                result[item[0]] = item[1];
+            });
+            e.preventDefault();
+            _this.applyNewSettings(result);
+        });
+        btnCancel.addEventListener("click", function (e) {
+            var allSettings = document.getElementsByClassName('grid-item-popup');
+            for (var i = 0; allSettings.length > i; i++) {
+                allSettings[i].remove();
+            }
+        });
+        function renderInputRadio(inputEl) {
+            var values = inputEl.values, type = inputEl.inputType, name = inputEl.name, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+            values.forEach(function (val) {
+                var label = document.createElement('label'), input = document.createElement('input'), inputText = document.createElement('span');
+                label.setAttribute("class", "settings-label");
+                inputText.setAttribute("class", "settings-input-text");
+                inputText.innerText = val;
+                input.setAttribute('name', name);
+                input.setAttribute('type', type);
+                input.setAttribute('value', val);
+                label.appendChild(input);
+                label.appendChild(inputText);
+                inputWrap.appendChild(label);
+            });
+        }
+    };
+    Widget.prototype.applyNewSettings = function (result) {
+    };
     Widget._dataSources = (_a = {},
         _a[WorkCompletedDataSource.id] = new WorkCompletedDataSource(),
         _a);
@@ -119,11 +218,14 @@ var ClockWidget = (function (_super) {
     function ClockWidget(options) {
         var _this = this;
         var config = {
-            isConfigurable: false,
-            isResizable: false,
+            isConfigurable: true,
+            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
+            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
             title: options.title || "Clock",
-            width: options.width || 2,
-            height: options.height || 1,
+            minWidth: options.minWidth || 2,
+            width: options.width || 4,
+            height: options.height || 2,
+            minHeight: options.minHeight || 2,
             x: options.x,
             y: options.y,
             isTimeDependant: true
@@ -131,6 +233,7 @@ var ClockWidget = (function (_super) {
         _this = _super.call(this, config) || this;
         _this.withDate = options.withDate != null ? options.withDate : true;
         _this.withDatePicker = options.withDatePicker != null ? options.withDatePicker : true;
+        _this.dateFormat = 12;
         return _this;
     }
     ClockWidget.prototype.init = function (element) {
@@ -144,6 +247,50 @@ var ClockWidget = (function (_super) {
         }
         this.clockElement = this.createClockElement(element);
         this.startClock();
+        this.handleConfigurableMode(element);
+    };
+    ClockWidget.prototype.reInit = function () {
+        this.stopClock();
+        this.clockElement.remove();
+        console.log(this.cellElement);
+        this.clockElement = this.createClockElement(this.cellElement);
+        this.startClock();
+    };
+    ClockWidget.prototype.handleConfigurableMode = function (el) {
+        var _this = this;
+        el.addEventListener('click', function (e) {
+            var isEditButton = e.target.classList[0] === 'widget-icon-edit';
+            if (isEditButton) {
+                _this.setSettings();
+            }
+        });
+    };
+    ClockWidget.prototype.setSettings = function () {
+        var widgetSettings = [
+            {
+                name: "dataType",
+                inputType: "radio",
+                title: "Choose data type",
+                values: [12, 24]
+            }
+        ];
+        this.renderForm(widgetSettings);
+    };
+    ClockWidget.prototype.applyNewSettings = function (result) {
+        for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+                switch (key) {
+                    case 'dataType':
+                        this.dateFormat = result[key];
+                        console.log("dateFormat -->", this.dateFormat);
+                        break;
+                    default:
+                        console.log("Unknown data from form");
+                        break;
+                }
+            }
+        }
+        this.reInit();
     };
     ClockWidget.prototype.handleDateChange = function (newDate, isToday) {
         console.log(newDate, isToday);
@@ -218,7 +365,14 @@ var ClockWidget = (function (_super) {
         }, 1000);
     };
     ClockWidget.prototype.getTimeString = function () {
-        return new Date().toLocaleTimeString('it-IT');
+        if (this.dateFormat == 12) {
+            var time = new Date().toLocaleTimeString('it-IT', { hour12: true });
+            return time;
+        }
+        else if (this.dateFormat == 24) {
+            var time = new Date().toLocaleTimeString('it-IT');
+            return time;
+        }
     };
     ClockWidget.prototype.getDateString = function (date) {
         date = date || new Date();
@@ -233,8 +387,9 @@ var ImageWidget = (function (_super) {
     function ImageWidget(options) {
         var _this = this;
         var config = {
-            isConfigurable: options.isConfigurable != null ? options.isConfigurable : false,
-            isResizable: options.isResizable != null ? options.isResizable : true,
+            isConfigurable: false,
+            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
+            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
             title: options.title || "Image",
             width: options.width || 2,
             height: options.height || 2,
@@ -264,10 +419,11 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
     function WorkCountByActivityAndStatusWidget(options) {
         var _this = this;
         var config = {
-            isConfigurable: options.isConfigurable != null ? options.isConfigurable : false,
-            isResizable: options.isResizable != null ? options.isResizable : true,
+            isConfigurable: false,
+            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
+            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
             title: options.title || "Work Counter",
-            width: options.width || 1,
+            width: options.width || 2,
             height: options.height || 2,
             minHeight: 1,
             maxHeight: 3,

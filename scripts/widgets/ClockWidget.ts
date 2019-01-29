@@ -4,6 +4,9 @@ class ClockWidget extends Widget {
 
     private withDate: boolean;
     private withDatePicker: boolean;
+    private dateFormat: number;
+    private isRemovable: boolean;
+
 
     private clockElement: HTMLElement;
     private dateElement: HTMLElement;
@@ -13,45 +16,97 @@ class ClockWidget extends Widget {
 
     constructor(options: IClockWidgetOptions) {
         const config: IWidgetConfiguration = {
-            isConfigurable: false,
-            isResizable: false,
+            isConfigurable: true,
+            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
+            isRemovable: typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
             title: options.title || "Clock",
-            width: options.width || 2,
-            height: options.height || 1,
+            minWidth: options.minWidth || 2,
+            width: options.width || 4,
+            height: options.height || 2,
+            minHeight: options.minHeight || 2,
             x: options.x,
             y: options.y,
             isTimeDependant: true
         };
 
         super(config);
-
         this.withDate = options.withDate != null ? options.withDate : true;
         this.withDatePicker = options.withDatePicker != null ? options.withDatePicker : true;
+        this.dateFormat = 12;
     }
 
-    init(element: HTMLInputElement) {
+    init(element: HTMLElement) {
         //console.log('initializing a сlock', element);
+
         element.classList.add("clock-widget");
         this.hideSpinner(element);
-
         if (this.withDate) {
             this.dateElement = this.createDateElement(element);
-
             if (this.withDatePicker) {
                 this.datePickerElement = this.createDatePickerElement(element);
             }
         }
 
         this.clockElement = this.createClockElement(element);
+        this.startClock();
+        this.handleConfigurableMode(element);
+    }
+
+    private reInit(){
+
+
+        this.stopClock();
+        this.clockElement.remove();
+        console.log(this.cellElement);
+
+        this.clockElement = this.createClockElement(this.cellElement);
 
         this.startClock();
     }
 
-    protected handleDateChange(newDate: Date, isToday: boolean) {       
+    private handleConfigurableMode(el): void {
+        el.addEventListener('click', (e) => {
+            let isEditButton = e.target.classList[0] === 'widget-icon-edit';
+            if (isEditButton) {
+                this.setSettings();
+            }
+        });
+    }
+
+    private setSettings(): void {
+        let widgetSettings: IWidgetEditSettings[] = [
+            {
+                name: "dataType",
+                inputType: "radio",
+                title: "Choose data type",
+                values: [12, 24]
+            }
+        ];
+        this.renderForm(widgetSettings);
+    }
+
+    protected applyNewSettings(result: object) {
+        for (let key in result) {
+            if (result.hasOwnProperty(key)) {
+                switch (key) {
+                    case 'dataType' :
+                        this.dateFormat = result[key];
+                        console.log("dateFormat -->", this.dateFormat);
+                        break;
+                    default :
+                        console.log("Unknown data from form");
+                        break;
+                }
+            }
+        }
+        this.reInit();
+    }
+
+    protected handleDateChange(newDate: Date, isToday: boolean) {
         console.log(newDate, isToday);
     }
 
-    private createDateElement(element: HTMLInputElement) {
+    private createDateElement(element: HTMLElement) {
         const dateElement = document.createElement('div');
         dateElement.className = "date";
         dateElement.innerText = this.getDateString();
@@ -62,7 +117,6 @@ class ClockWidget extends Widget {
             };
         }
         element.appendChild(dateElement);
-
         return dateElement;
     }
 
@@ -75,7 +129,7 @@ class ClockWidget extends Widget {
         datePickerElement.max = today;
 
         datePickerElement.onchange = (ev) => {
-            const value = (ev.target as HTMLInputElement).value; 
+            const value = (ev.target as HTMLElement).value;
             const isToday = new Date().toISOString().split("T")[0] === value;
 
             if (isToday) {
@@ -95,14 +149,12 @@ class ClockWidget extends Widget {
                 }
             });
             document.dispatchEvent(event);
-
             datePickerElement.style.display = 'none';
             this.dateElement.style.display = 'block';
             this.dateElement.innerText = this.getDateString(date);
         };
 
         element.appendChild(datePickerElement);
-
         return datePickerElement;
     }
 
@@ -131,12 +183,18 @@ class ClockWidget extends Widget {
     }
 
     private getTimeString(): string {
-        return new Date().toLocaleTimeString('it-IT');
+        if (this.dateFormat == 12) {
+            let time = new Date().toLocaleTimeString('it-IT', {hour12: true});
+            return time;
+        } else if (this.dateFormat == 24) {
+            let time = new Date().toLocaleTimeString('it-IT');
+            return time;
+        }
     }
 
     private getDateString(date?: Date): string {
         date = date || new Date();
-        var options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+        var options = {weekday: 'short', year: 'numeric', month: 'short', day: '2-digit'};
 
         return date.toLocaleDateString('en-GB', options);
     }
@@ -145,4 +203,5 @@ class ClockWidget extends Widget {
 interface IClockWidgetOptions extends IWidgetOptions {
     withDate?: boolean;
     withDatePicker?: boolean;
+    dateFormat: boolean;
 }

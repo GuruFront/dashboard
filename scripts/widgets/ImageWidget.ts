@@ -4,7 +4,7 @@ class ImageWidget extends Widget {
 
     private readonly imageUrl: string;
 
-    init(element: HTMLInputElement) {
+    init(element: HTMLElement) {
         this.hideSpinner(element);
         element.style.backgroundImage = "url('" + this.imageUrl + "')";
         element.style.backgroundRepeat = "no-repeat";
@@ -17,8 +17,9 @@ class ImageWidget extends Widget {
     constructor(options: IImageWidgetOptions) {
 
         const config: IWidgetConfiguration = {
-            isConfigurable: options.isConfigurable != null ? options.isConfigurable : false,
-            isResizable: options.isResizable != null ? options.isResizable : true,
+            isConfigurable: false,
+            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
+            isRemovable:  typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
             title: options.title || "Image",
             width: options.width || 2,
             height: options.height || 2,

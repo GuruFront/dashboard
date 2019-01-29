@@ -12,6 +12,7 @@ interface IWidgetConfiguration {
 
     isConfigurable: boolean;
     isResizable: boolean;
+    isRemovable: boolean;
 
     isTimeDependant: boolean;
 

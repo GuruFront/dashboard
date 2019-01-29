@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="css/gridstack.min.css"/>
     <link rel="stylesheet" href="css/gridstack-extra.min.css"/>
     <link rel="stylesheet" href="css/dashboard.min.css">
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
@@ -21,23 +20,73 @@
     <script src="scripts/script.js"></script>
     <style type="text/css">
 
+        /* Settings*/
+        .settings-label {
+            display: block;
+        }
 
-        .grid-item-icon-delete {
-            position: absolute;
-            right: 15px;
-            top: 5px;
-            width: 15px;
-            height: 15px;
-            background: url('icons/close.svg') #ffffff no-repeat center;
-            -webkit-background-size: cover;
-            background-size: 9px;
+        .settings-label .settings-input-text {
+            display: inline-block;
+            padding-left: 5px;
+        }
+
+        .settings-input-title {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .settings-input-wrap {
+            margin-bottom: 15px;
+        }
+
+        .grid-item-popup {
+            padding: 20px 0;
+        }
+
+        .grid-item-popup__container {
+            padding: 0 15px;
+            width: 100%;
+        }
+
+        .grid-item-popup {
+            position: fixed;
+            overflow: auto;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 500px;
+            background-color: #dbdbdb;
+            z-index: 1000;
+        }
+
+        .widget-icon-edit,
+        .widget-icon-delete {
             cursor: pointer;
             z-index: -1;
             opacity: 0;
             transition: opacity .3s ease;
+            width: 15px;
+            height: 15px;
+            position: absolute;
         }
 
-        .edit-mode-on .grid-stack-item:hover .grid-item-icon-delete {
+        .widget-icon-delete {
+            left: 5px;
+            top: 5px;
+            background: url('icons/close.svg') #ffffff no-repeat center;
+            -webkit-background-size: cover;
+            background-size: 9px;
+        }
+
+        .widget-icon-edit {
+            right: 5px;
+            top: 5px;
+            background: url('icons/widget-edit-icon.svg') #ffffff no-repeat center;
+            -webkit-background-size: cover;
+            background-size: 9px;
+        }
+
+        .edit-mode-on .grid-stack-item:hover [class^="widget-icon"] {
             z-index: 1;
             opacity: 1;
         }
@@ -145,7 +194,6 @@
     </div>
     <div class="grid-stack grid-stack-12" id="grid1"></div>
 </div>
-
 <script type="text/javascript">
     $(() => {
         // data
@@ -156,25 +204,22 @@
                     widget: "clockWidget",
                     id: "clockWidget",
                     title: 'Clock',
-                    minWidth: 4,
-                    minHeight: 2
+                    withDatePicker: false,
+                    isConfigurable: true
                 },
                 {
                     widget: "imageWidget2",
                     id: "imageWidget",
-                    minWidth: 2,
-                    minHeight: 1,
                     title: 'Several images',
-                    count: 3
+                    imageUrl: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+                    count: "unlimited"  // number or string = "unlimited"
                 },
                 {
                     widget: "workCountByActivityAndStatusWidget",
                     id: "workCountByActivityAndStatusWidget",
                     title: 'Collections',
                     activityTypeId: 19,
-                    workStatusId: 3,
-                    minWidth: 4,
-                    minHeight: 2
+                    workStatusId: 3
                 },
                 {
                     widget: "imageWidget1",
@@ -186,7 +231,7 @@
                     defaultWidget: true,
                     x: 6,
                     y: 2,
-                    removable: false
+                    isRemovable: false
                 }
             ],
             mainGrid = $('#grid1'),
@@ -203,6 +248,7 @@
             float: true,
             acceptWidgets: '.grid-stack-item'
         });
+
         renderAfterReload();
         widgetListCall();
         allowMoveAndResizeItems(isEditMode);
@@ -210,6 +256,11 @@
 
         // item for render
         function gridItem(dataAttr, title, count = '') {
+
+            if (count === "unlimited") {
+                count = ''
+            }
+
             return $('<div class="grid-stack-item" data-widget="' + dataAttr + '"><div class="grid-stack-item-content" data-widget="' + dataAttr + '"><div class="widget-content"  data-widget-count="' + count + '">' + title + '</div>' +
                 '</div></div></div></div></div></div>');
         }
@@ -236,7 +287,6 @@
                         } else {
                             $('.sidebar').append(gridItem(item.widget, item.title));
                         }
-
                     }
                 });
                 if (widgetsDefault.length > 0) {
@@ -255,7 +305,6 @@
                     list.forEach((key) => {
                         widgetConfig.forEach((item) => {
                             if (item.widget === key) {
-
                                 if (typeof item.count !== 'undefined' && item.count > 0) {
                                     $('.sidebar').append(gridItem(key, item.title, item.count - getCountActiveIstances(item.widget)))
                                 } else {
@@ -315,15 +364,11 @@
                 el[0].children[0].children[0].innerHTML = '<div class="widget-loading-container"><div class="widget-loading">' +
                     '<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>';
 
-                if (typeof localParams.removable === "undefined" || localParams.removable) {
-                    let deleteIcon = $('<div class="grid-item-icon-delete"></div>');
-                    deleteIcon.appendTo(el[0]);
-                }
 
                 // init
                 widgetConfig.forEach((itemName) => {
                     if (itemName.widget === key.widget) {
-                        Widget.widgetInitializer(itemName).init(el[0].children[0].children[0]);
+                        Widget.widgetInitializer(itemName).initBase(el[0].children[0].children[0]);
                     }
                 });
             });
@@ -422,55 +467,40 @@
                             widget = widgetConfig.filter((item) => {
                                 return item.widget === widgetId
                             })[0],
-                            widgetsCount = el.children[0].children[0].getAttribute('data-widget-count'),
-                            minWidth = widget.minWidth,
-                            maxWidth = widget.maxWidth,
-                            minHeight = widget.minHeight,
-                            maxHeight = widget.maxHeight;
+                            widgetsCount = widget.count;
 
-                        if (typeof widgetsCount !== "undefined" && widgetsCount > 1) {
-
+                        // if multiple instances
+                        if (typeof widgetsCount === "number" && widgetsCount > 1) {
                             $('.sidebar').append(gridItem(widget.widget, widget.title, (widgetsCount - 1)));
+                            widgetListCall();
+                        } else if (typeof widgetsCount === "string" && widgetsCount === "unlimited") {
+                            $('.sidebar').append(gridItem(widget.widget, widget.title));
                             widgetListCall();
                         }
 
-                        if (typeof minWidth !== 'undefined' && typeof minHeight !== 'undefined') {
-                            grid.update(
-                                el,
-                                el.dataset.gsX,
-                                el.dataset.gsY,
-                                widget.minWidth,
-                                widget.minHeight
-                            );
 
-                            grid.minWidth(el, widget.minWidth);
-                            grid.minHeight(el, widget.minHeight);
-                        }
-                        if (typeof widget.isResizable !== 'undefined' && !widget.isResizable) {
-                            grid.resizable(el, widget.isResizable);
-                        }
-                        if (typeof maxHeight !== 'undefined') {
-                            grid.maxHeight(el, widget.maxHeight);
-                        }
-                        if (typeof maxWidth !== 'undefined') {
-                            grid.maxWidth(el, widget.maxWidth);
-                        }
                         el.children[0].children[0].innerHTML = '<div class="widget-loading-container"><div class="widget-loading">' +
                             '<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div>';
 
-                        if (typeof widget.removable === "undefined" || widget.removable) {
-                            let deleteIcon = $('<div class="grid-item-icon-delete"></div>');
-                            deleteIcon.appendTo(el);
-                        }
 
                         // init
                         widgetConfig.forEach((item) => {
                             if (item.widget === widget.widget) {
-                                Widget.widgetInitializer(widget).init(el.children[0].children[0]);
+                                let widgetProperties = Widget.widgetInitializer(widget);
+                                grid.update(
+                                    el,
+                                    el.dataset.gsX,
+                                    el.dataset.gsY,
+                                    widgetProperties.config.width,
+                                    widgetProperties.config.height
+                                );
+                                grid.minWidth(el, widgetProperties.config.minWidth);
+                                grid.minHeight(el, widgetProperties.config.minHeight);
+                                grid.resizable(el, widgetProperties.config.isResizable);
+                                widgetProperties.initBase(el.children[0].children[0]);
                             }
                         });
                     }
-
                     saveWidgetItems();
                 } else {
                     grid.removeWidget(items[0].el[0], true)
@@ -481,31 +511,39 @@
                 allowMoveAndResizeItems(isEditMode);
                 $("#dashboardEditPanel").css('display', isEditMode ? 'block' : 'none');
                 $("#grid1").toggleClass('edit-mode-on');
-                $(".grid-item-icon-delete").css('display', isEditMode ? 'block' : 'none');
+                $(".widget-icon-delete").css('display', isEditMode ? 'block' : 'none');
 
             });
+            // remove
             $('#grid1').on("click", (e) => {
-                if (e.target.classList[0] === $('div.grid-item-icon-delete')[0].classList[0]) {
+                if (e.target.classList[0] === $('div.widget-icon-delete')[0].classList[0]) {
                     let deletedWidget = $(e.target).parents('.grid-stack-item')[0].dataset.widget;
                     mainGrid.data("gridstack").removeWidget(
                         $(e.target).parents('.grid-stack-item')[0]
                     );
                     widgetConfig.forEach((item) => {
-                        if (deletedWidget === item.widget && typeof item.count !== "undefined" && item.count >= 1) {
-                            if (getCountActiveIstances(item.widget) < item.count && (item.count - getCountActiveIstances(item.widget)) !== 1) {
-                                let sidebarItems = $('.sidebar').children();
-                                if (sidebarItems && sidebarItems.length > 0) {
-                                    for (let i = 0; sidebarItems.length > i; i++) {
-                                        if (sidebarItems[i].children[0].dataset.widget === deletedWidget) {
-                                            sidebarItems[i].children[0].children[0].dataset.widgetCount = item.count - getCountActiveIstances(item.widget);
+                        if (deletedWidget === item.widget) {
+                            if (typeof item.count === "number" && item.count >= 1) {
+                                let
+                                    isAddDataCount = getCountActiveIstances(item.widget) < item.count && (item.count - getCountActiveIstances(item.widget)) !== 1,
+                                    isAddFirstItem = (item.count - getCountActiveIstances(item.widget)) === 1;
+
+                                if (isAddDataCount) {
+                                    let sidebarItems = $('.sidebar').children();
+                                    if (sidebarItems && sidebarItems.length > 0) {
+                                        for (let i = 0; sidebarItems.length > i; i++) {
+                                            if (sidebarItems[i].children[0].dataset.widget === deletedWidget) {
+                                                sidebarItems[i].children[0].children[0].dataset.widgetCount = item.count - getCountActiveIstances(item.widget);
+                                            }
                                         }
                                     }
+                                } else if (isAddFirstItem) {
+                                    $('.sidebar').append(gridItem(item.widget, item.title));
                                 }
-                            } else if((item.count - getCountActiveIstances(item.widget)) === 1) {
-                                $('.sidebar').append(gridItem(item.widget, item.title, 1));
+                            } else if (typeof item.count === "string" && item.count === "unlimited") {
+                            } else {
+                                $('.sidebar').append(gridItem(item.widget, item.title));
                             }
-                        } else if (deletedWidget === item.widget) {
-                            $('.sidebar').append(gridItem(item.widget, item.title));
                         }
                     });
                     saveWidgetItems();
@@ -514,7 +552,6 @@
                 }
 
             });
-
         }
     });
 </script>

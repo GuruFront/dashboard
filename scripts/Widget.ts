@@ -3,18 +3,35 @@ abstract class Widget {
     public readonly id: number;
     public readonly config: IWidgetConfiguration;
 
+    protected cellElement:HTMLElement;
     public isInEditMode: boolean;
 
-    abstract init(element: HTMLInputElement);
+    abstract init(element: HTMLElement);
+    abstract reInit();
 
     protected dataSource: DataSource;
 
     protected constructor(config: IWidgetConfiguration) {
         this.config = config;
         this.id = Math.random();
-
         this.subscribeToDateChangedEvent();
     }
+
+    public initBase(element: HTMLElement) {
+        this.cellElement = element;
+        if (this.config.isConfigurable) {
+            this.enableEditIcon(element);
+        }
+        if (this.config.isRemovable) {
+            this.enableRemoveIcon(element);
+        }
+
+        this.init(element);
+    }
+
+
+
+
 
     private subscribeToDateChangedEvent() {
         if (this.config.isTimeDependant) {
@@ -26,7 +43,8 @@ abstract class Widget {
         }
     }
 
-    protected handleDateChange(newDate: Date, isToday: boolean) { }
+    protected handleDateChange(newDate: Date, isToday: boolean) {
+    }
 
 
     protected hideSpinner(element: HTMLElement) {
@@ -51,11 +69,14 @@ abstract class Widget {
     //     return result;
     // }
 
-    protected getDataSourceId(): string { return null; }
+    protected getDataSourceId(): string {
+        return null;
+    }
 
     private static _dataSources: { [key: string]: DataSource } = {
         [WorkCompletedDataSource.id]: new WorkCompletedDataSource()
     };
+
 
     static widgetInitializer(options: IWidgetOptions) {
         let widget: Widget;
@@ -82,5 +103,140 @@ abstract class Widget {
         }
         return widget;
     }
+
+    private enableRemoveIcon(el): void {
+        let icon: HTMLElement = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-delete');
+        el.appendChild(icon);
+    }
+
+    private enableEditIcon(el): void {
+        let icon: HTMLElement = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-edit');
+        el.appendChild(icon);
+    }
+
+    protected openWidgetSettings(): HTMLElement {
+        let
+            body: HTMLElement = document.getElementsByTagName('body')[0],
+            popupDiv: HTMLElement = document.createElement('div'),
+            container: HTMLElement = document.createElement('div');
+
+        popupDiv.setAttribute("class", "grid-item-popup");
+        container.setAttribute("class", "grid-item-popup__container");
+        popupDiv.appendChild(container);
+
+        body.appendChild(popupDiv);
+        return container;
+    }
+
+    protected renderForm(settings: IWidgetEditSettings[]) {
+        let
+            popupContainer: HTMLElement = this.openWidgetSettings(),
+            widgetWrap: HTMLElement = document.createElement('div');
+
+        widgetWrap.setAttribute("class", "widget-settings-wrap");
+        popupContainer.appendChild(widgetWrap);
+
+        let form = document.createElement('form');
+        form.setAttribute("action", "console.log(data)");
+        form.setAttribute("method", 'POST');
+        widgetWrap.appendChild(form);
+
+        settings.forEach((inputEl) => {
+            switch (inputEl.inputType) {
+                case 'radio':
+                    renderInputRadio(inputEl);
+                    break;
+                default:
+                    console.log('Input type not found');
+                    break;
+            }
+        });
+
+        let formButtonsWrap: HTMLElement = document.createElement('div');
+        formButtonsWrap.setAttribute("class", "settings-form-btns");
+
+        let
+            btnSave: HTMLElement = document.createElement('button'),
+            btnCancel: HTMLElement = document.createElement('button');
+
+        btnSave.setAttribute("type", "submit");
+        btnSave.innerText = "Apply";
+        btnCancel.setAttribute("type", "button");
+        btnCancel.innerText = "Cancel";
+
+        formButtonsWrap.appendChild(btnSave);
+        formButtonsWrap.appendChild(btnCancel);
+        form.appendChild(formButtonsWrap);
+
+        // Get new widget settings
+        form.addEventListener("submit", (e) => {
+            let data = Array.from(new FormData(form), e => e.map(encodeURIComponent).join('=')).join('&'),
+                result = {};
+            data = data.split('&');
+            data.forEach((item) => {
+                item = item.split("=");
+                result[item[0]] = item[1]
+            });
+            e.preventDefault();
+
+
+            this.applyNewSettings(result);
+        });
+
+        // Cancel/Remove Popup
+        btnCancel.addEventListener("click", (e) => {
+            let allSettings = document.getElementsByClassName('grid-item-popup');
+            for (let i = 0; allSettings.length > i; i++) {
+                allSettings[i].remove();
+            }
+        });
+
+        // input radio inputs
+        function renderInputRadio(inputEl: IWidgetEditSettings) {
+            let
+                values: Array<string | number> = inputEl.values,
+                type: string = inputEl.inputType,
+                name: string = inputEl.name,
+                titleHtml: HTMLElement = document.createElement('strong'),
+                inputWrap = document.createElement('div');
+
+            titleHtml.setAttribute('class', 'settings-input-title');
+            titleHtml.innerText = inputEl.title;
+
+            inputWrap.setAttribute('class', 'settings-input-wrap');
+            inputWrap.appendChild(titleHtml);
+            form.appendChild(inputWrap);
+
+            values.forEach((val: string | number) => {
+                let label = document.createElement('label'),
+                    input = document.createElement('input'),
+                    inputText = document.createElement('span');
+
+                label.setAttribute("class", "settings-label");
+
+                inputText.setAttribute("class", "settings-input-text");
+                inputText.innerText = val;
+
+                input.setAttribute('name', name);
+                input.setAttribute('type', type);
+                input.setAttribute('value', val);
+
+                label.appendChild(input);
+                label.appendChild(inputText);
+                inputWrap.appendChild(label);
+            });
+
+
+        }
+
+
+    }
+
+    protected applyNewSettings(result: object) {
+
+    }
+
 
 }

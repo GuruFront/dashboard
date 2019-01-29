@@ -11,10 +11,11 @@ class WorkCountByActivityAndStatusWidget extends Widget {
     constructor(options: IWorkCountByActivityAndStatusWidgetOptions) {
 
         const config: IWidgetConfiguration = {
-            isConfigurable: options.isConfigurable != null ? options.isConfigurable : false,
-            isResizable: options.isResizable != null ? options.isResizable : true,
+            isConfigurable: false,
+            isResizable: typeof options.isResizable !== "undefined" ? options.isResizable : true,
+            isRemovable:  typeof options.isRemovable !== "undefined" ? options.isRemovable : true,
             title: options.title || "Work Counter",
-            width: options.width || 1,
+            width: options.width || 2,
             height: options.height || 2,
             minHeight: 1,
             maxHeight: 3,
@@ -31,7 +32,7 @@ class WorkCountByActivityAndStatusWidget extends Widget {
         this.workStatusId = options.workStatusId;
     }
 
-    init(element: HTMLInputElement) {
+    init(element: HTMLElement) {
         element.classList.add("work-count-widget");
         
         this.createTitleElement(element);
@@ -56,7 +57,7 @@ class WorkCountByActivityAndStatusWidget extends Widget {
         element.appendChild(p);
     }
 
-    private createCounterElement(element: HTMLInputElement) {
+    private createCounterElement(element: HTMLElement) {
         const el = document.createElement('div');
         el.className = 'counter';
         el.innerHTML = '&nbsp;';
