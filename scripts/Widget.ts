@@ -248,7 +248,6 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
             inputWrap.setAttribute('class', 'settings-input-wrap');
             inputWrap.appendChild(titleHtml);
             form.appendChild(inputWrap);
-
             values.forEach((val: string | number) => {
                 let label = document.createElement('label'),
                     input = document.createElement('input'),
@@ -264,12 +263,12 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
                 input.setAttribute('value', val.toString());
                 input.checked = val == inputEl.value;
 
+
                 label.appendChild(input);
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
             });
         }
-
         // render select
         function renderSelect(inputEl: IWidgetEditSettings) {
             let
@@ -297,7 +296,6 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
                 select.appendChild(option);
             });
         }
-
         // render input text
         function renderInputText(inputEl: IWidgetEditSettings) {
             let

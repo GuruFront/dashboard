@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -299,7 +299,7 @@ var ClockWidget = (function (_super) {
     __extends(ClockWidget, _super);
     function ClockWidget(options, clientId) {
         var _this = this;
-        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, true), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Clock", minWidth: options.minWidth || 2, width: options.width || 4, height: options.height || 2, minHeight: options.minHeight || 2, isTimeDependant: true, withDate: getValueOrDefault(options.withDate, true), withDatePicker: getValueOrDefault(options.withDatePicker, true), dateFormat: getValueOrDefault(options.dateFormat, 12) });
+        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, true), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Clock", minWidth: options.minWidth || 2, width: options.width || 6, height: options.height || 2, minHeight: options.minHeight || 2, isTimeDependant: true, withDate: getValueOrDefault(options.withDate, true), withDatePicker: getValueOrDefault(options.withDatePicker, true), dateFormat: getValueOrDefault(options.dateFormat, 12) });
         var widgetSettings = [
             {
                 name: "dataType",
@@ -307,12 +307,14 @@ var ClockWidget = (function (_super) {
                 title: "Choose data type",
                 values: [12, 24],
                 value: config.dateFormat
-            }, {
+            },
+            {
                 name: "testCheckBox",
                 inputType: "checkbox",
                 title: "Test CheckBox",
                 values: ["Foo"]
-            }, {
+            },
+            {
                 name: "dateTimezone",
                 inputType: "select",
                 title: "Choose timezone",
@@ -377,7 +379,8 @@ var ClockWidget = (function (_super) {
     ClockWidget.prototype.handleDateChange = function (newDate, isToday) {
         console.log(newDate, isToday);
     };
-    ClockWidget.prototype.handleClientChange = function (clientId) { };
+    ClockWidget.prototype.handleClientChange = function (clientId) {
+    };
     ClockWidget.prototype.createDateElement = function (element) {
         var _this = this;
         var dateElement = document.createElement('div');

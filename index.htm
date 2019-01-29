@@ -26,12 +26,13 @@
     <style type="text/css">
 
         /* Settings*/
-        .widget-settings-title{
+        .widget-settings-title {
             font-size: 20px;
             margin-bottom: 15px;
             display: block;
             text-align: center;
         }
+
         .settings-label {
             display: block;
         }
@@ -224,14 +225,15 @@
                     id: "imageWidget",
                     title: 'Unlim images',
                     imageUrl: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
-                    count: "unlimited"  // number or string = "unlimited"
+                    count: 3  // number or string = "unlimited"
                 },
                 {
                     widget: "workCountByActivityAndStatusWidget",
                     id: "workCountByActivityAndStatusWidget",
                     title: 'Collections',
                     activityTypeId: 19,
-                    workStatusId: 3
+                    workStatusId: 3,
+                    count: "unlimited"
                 },
                 {
                     widget: "imageWidget1",
@@ -482,8 +484,10 @@
                             widgetsCount = widget.count;
 
                         // if multiple instances
-                        if (typeof widgetsCount === "number" && widgetsCount > 1) {
-                            $('.sidebar').append(gridItem(widget.widget, widget.title, (widgetsCount - 1)));
+                        let showInSidebarWithCount = typeof widgetsCount === "number" && widgetsCount > 1 && widgetsCount - getCountActiveIstances(widget.widget) > 0;
+
+                        if (showInSidebarWithCount) {
+                            $('.sidebar').append(gridItem(widget.widget, widget.title, (widgetsCount - getCountActiveIstances(widget.widget))));
                             widgetListCall();
                         } else if (typeof widgetsCount === "string" && widgetsCount === "unlimited") {
                             $('.sidebar').append(gridItem(widget.widget, widget.title));
@@ -524,7 +528,7 @@
                 $("#dashboardEditPanel").css('display', isEditMode ? 'block' : 'none');
                 $("#grid1").toggleClass('edit-mode-on');
                 $(".widget-icon-delete").css('display', isEditMode ? 'block' : 'none');
-                document.dispatchEvent(new CustomEvent( isEditMode ? 'grid_editing_started' : 'grid_editing_finished'));
+                document.dispatchEvent(new CustomEvent(isEditMode ? 'grid_editing_started' : 'grid_editing_finished'));
             });
             // remove
             $('#grid1').on("click", (e) => {
@@ -538,7 +542,7 @@
                             if (typeof item.count === "number" && item.count >= 1) {
                                 let
                                     isAddDataCount = getCountActiveIstances(item.widget) < item.count && (item.count - getCountActiveIstances(item.widget)) !== 1,
-                                    isAddFirstItem =  (item.count - getCountActiveIstances(item.widget) ===  1);
+                                    isAddFirstItem = (item.count - getCountActiveIstances(item.widget) === 1);
 
                                 if (isAddDataCount) {
                                     let sidebarItems = $('.sidebar').children();

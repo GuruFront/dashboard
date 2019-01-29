@@ -17,7 +17,7 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
             isRemovable: getValueOrDefault(options.isRemovable, true),
             title: options.title || "Clock",
             minWidth: options.minWidth || 2,
-            width: options.width || 4,
+            width: options.width || 6,
             height: options.height || 2,
             minHeight: options.minHeight || 2,
             isTimeDependant: true,
@@ -33,12 +33,14 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                 title: "Choose data type",
                 values: [12, 24],
                 value: config.dateFormat
-            }, {
+            },
+            {
                 name: "testCheckBox",
                 inputType: "checkbox",
                 title: "Test CheckBox",
                 values: ["Foo"]
-            }, {
+            },
+            {
                 name: "dateTimezone",
                 inputType: "select",
                 title: "Choose timezone",
@@ -49,7 +51,8 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                 inputType: "inputText",
                 title: "Test input text",
                 placeholder: "Test input placeholder"
-            }];
+            }
+        ];
 
         super(config, clientId, widgetSettings);
     }
@@ -115,7 +118,8 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
         console.log(newDate, isToday);
     }
 
-    protected handleClientChange(clientId: number) { }
+    protected handleClientChange(clientId: number) {
+    }
 
     private createDateElement(element: HTMLElement) {
         const dateElement = document.createElement('div');
@@ -215,7 +219,7 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
 
     private getDateString(date?: Date): string {
         date = date || new Date();
-        var options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+        var options = {weekday: 'short', year: 'numeric', month: 'short', day: '2-digit'};
 
         return date.toLocaleDateString('en-GB', options);
     }
