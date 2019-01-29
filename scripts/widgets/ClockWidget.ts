@@ -198,7 +198,7 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
             hour12?: boolean,
             timeZone?: string
         } = {};
-        console.log(this.config.dateTimezone);
+
         // dateTimezone
         if (typeof this.config.dateTimezone !== "undefined") {
             options.timeZone = this.config.dateTimezone;

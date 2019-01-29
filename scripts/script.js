@@ -155,6 +155,10 @@ var Widget = (function () {
         var popupContainer = this.openWidgetSettings(), widgetWrap = document.createElement('div');
         widgetWrap.setAttribute("class", "widget-settings-wrap");
         popupContainer.appendChild(widgetWrap);
+        var title = document.createElement("strong");
+        title.setAttribute("class", "widget-settings-title");
+        title.innerText = this.config.title;
+        widgetWrap.appendChild(title);
         var form = document.createElement('form');
         widgetWrap.appendChild(form);
         settings.forEach(function (inputEl) {
@@ -445,7 +449,6 @@ var ClockWidget = (function (_super) {
     };
     ClockWidget.prototype.getTimeString = function () {
         var options = {};
-        console.log(this.config.dateTimezone);
         if (typeof this.config.dateTimezone !== "undefined") {
             options.timeZone = this.config.dateTimezone;
         }

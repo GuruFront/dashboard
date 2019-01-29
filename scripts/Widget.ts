@@ -167,7 +167,12 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
         widgetWrap.setAttribute("class", "widget-settings-wrap");
         popupContainer.appendChild(widgetWrap);
 
-        let form = document.createElement('form') as HTMLFormElement;
+        let title = document.createElement("strong");
+        title.setAttribute("class", "widget-settings-title");
+        title.innerText = this.config.title;
+        widgetWrap.appendChild(title);
+
+        let form = document.createElement('form');
         //form.setAttribute("action", "console.log(data)");
         //form.setAttribute("method", 'POST');
         widgetWrap.appendChild(form);
@@ -210,12 +215,12 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
         form.appendChild(formButtonsWrap);
 
         // Get new widget settings
-        form.addEventListener("submit", (e) => {            
+        form.addEventListener("submit", (e) => {
             e.preventDefault();
             let result = {};
             new FormData(form).forEach((value, key) => {
                 result[key] = value;
-            });           
+            });
 
             this.applyNewSettings(result);
         });
@@ -315,8 +320,6 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
             }
             inputWrap.appendChild(input);
         }
-
-
     }
 
     protected applyNewSettings(result: object) {
