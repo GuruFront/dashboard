@@ -79,10 +79,22 @@ class ClockWidget extends Widget {
                     values: [12, 24]
                 },
                 {
+                    name: "testCheckBox",
+                    inputType: "checkbox",
+                    title: "Test CheckBox",
+                    values: ["Foo"]
+                },
+                {
                     name: "dateTimezone",
                     inputType: "select",
                     title: "Choose timezone",
                     values: moment.tz.names()
+                },
+                {
+                    name: "testInputText",
+                    inputType: "inputText",
+                    title: "Test input text",
+                    placeholder: "Test input placeholder"
                 }
 
             ];
@@ -108,6 +120,12 @@ class ClockWidget extends Widget {
                     case 'dateTimezone' :
                         this.dateTimezone = result[key];
                         console.log("dateTimezone -->", result[key]);
+                        break;
+                    case 'testInputText' :
+                        console.log("testInputText -->", result[key]);
+                        break;
+                    case 'testCheckBox' :
+                        console.log("testCheckBox -->", result[key]);
                         break;
                     default :
                         console.log("Unknown data from form");
