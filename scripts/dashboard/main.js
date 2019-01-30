@@ -539,4 +539,4 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
     WorkCountByActivityAndStatusWidget.id = "workCountByActivityAndStatusWidget";
     return WorkCountByActivityAndStatusWidget;
 }(Widget));
-//# sourceMappingURL=script.js.map
+//# sourceMappingURL=main.js.map
