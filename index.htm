@@ -30,8 +30,6 @@
 </head>
 
 <body>
-
-
 <div class="dashboard">
     <label>Edit <input type="checkbox" id="editMode"></label>
     <div class="dashboardEditPanel" id="dashboardEditPanel">
@@ -39,7 +37,6 @@
     </div>
     <div class="grid-stack grid-stack-12" id="grid1"></div>
 </div>
-
 
 <script type="text/javascript">
     $(() => {
@@ -248,7 +245,6 @@
             }, 0);
 
         }
-
         function allowMoveAndResizeItems(mode) {
             let grid = mainGrid.data('gridstack');
             if (grid.grid && grid.grid.nodes.length > 0) {
