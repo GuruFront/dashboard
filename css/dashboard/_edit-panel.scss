@@ -23,12 +23,6 @@
   margin-bottom: 15px;
 }
 
-.grid-item-popup {
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-}
-
 .grid-item-popup__container {
   padding: 0 15px;
   width: 100%;
@@ -44,4 +38,7 @@
   max-width: 350px;
   background-color: $widget-popup-bg;
   z-index: 1000;
+  padding: 20px 0;
+  display: none;
+  flex-direction: column;
 }

@@ -77,7 +77,8 @@ var Widget = (function () {
             }, false);
         }
     };
-    Widget.prototype.handleDateChange = function (newDate, isToday) { };
+    Widget.prototype.handleDateChange = function (newDate, isToday) {
+    };
     Widget.prototype.subscribeToClientChangedEvent = function () {
         var _this = this;
         document.addEventListener('client_changed', function (ev) {
@@ -142,17 +143,24 @@ var Widget = (function () {
         el.appendChild(icon);
         icon.addEventListener('click', function (ev) { return _this.renderForm(_this.widgetSettings); }, false);
     };
-    Widget.prototype.openWidgetSettings = function () {
-        var body = document.getElementsByTagName('body')[0], popupDiv = document.createElement('div'), container = document.createElement('div');
-        popupDiv.setAttribute("class", "grid-item-popup");
-        container.setAttribute("class", "grid-item-popup__container");
-        popupDiv.appendChild(container);
-        body.appendChild(popupDiv);
-        return container;
+    Widget.prototype.handleDisplayPopup = function (show) {
+        var popup = document.getElementById("widget-popup"), popupContainer = document.getElementById("widget-popup-container");
+        if (popup && popupContainer) {
+            while (popupContainer.firstChild) {
+                popupContainer.removeChild(popupContainer.firstChild);
+            }
+            if (show) {
+                popup.style.display = "flex";
+                return popupContainer;
+            }
+            else {
+                popup.style.display = "none";
+            }
+        }
     };
     Widget.prototype.renderForm = function (settings) {
         var _this = this;
-        var popupContainer = this.openWidgetSettings(), widgetWrap = document.createElement('div');
+        var popupContainer = this.handleDisplayPopup(true), widgetWrap = document.createElement('div');
         widgetWrap.setAttribute("class", "widget-settings-wrap");
         popupContainer.appendChild(widgetWrap);
         var title = document.createElement("strong");
@@ -160,6 +168,7 @@ var Widget = (function () {
         title.innerText = this.config.title;
         widgetWrap.appendChild(title);
         var form = document.createElement('form');
+        form.setAttribute("action", ".");
         widgetWrap.appendChild(form);
         settings.forEach(function (inputEl) {
             switch (inputEl.inputType) {
@@ -198,11 +207,8 @@ var Widget = (function () {
             });
             _this.applyNewSettings(result);
         });
-        btnCancel.addEventListener("click", function (e) {
-            var allSettings = document.getElementsByClassName('grid-item-popup');
-            for (var i = 0; allSettings.length > i; i++) {
-                allSettings[i].remove();
-            }
+        btnCancel.addEventListener("click", function () {
+            _this.handleDisplayPopup(false);
         });
         function renderInputCheck(inputEl) {
             var values = inputEl.values, type = inputEl.inputType, name = inputEl.name, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');

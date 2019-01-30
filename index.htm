@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/libs/gridstack.min.css"/>
     <link rel="stylesheet" href="css/libs/gridstack-extra.min.css"/>
     <!--our styles for dashboard and widgets-->
-    <link rel="stylesheet" href="css/dashboard/dashboard.min.css">
+    <link rel="stylesheet" href="css/dashboard/main.min.css">
     <!--grid require-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
@@ -38,6 +38,12 @@
     <div class="grid-stack grid-stack-12" id="grid1"></div>
 </div>
 
+<div class="grid-item-popup" id="widget-popup">
+    <div class="grid-item-popup__container" id="widget-popup-container">
+
+    </div>
+</div>
+
 <script type="text/javascript">
     $(() => {
         // data
@@ -50,7 +56,8 @@
                     id: "clockWidget",
                     title: 'Clock',
                     withDatePicker: false,
-                    isConfigurable: true
+                    isConfigurable: true,
+                    count: 2
                 },
                 {
                     widget: "imageWidget2",
@@ -245,6 +252,7 @@
             }, 0);
 
         }
+
         function allowMoveAndResizeItems(mode) {
             let grid = mainGrid.data('gridstack');
             if (grid.grid && grid.grid.nodes.length > 0) {

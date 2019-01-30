@@ -57,9 +57,8 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
         super(config, clientId, widgetSettings);
     }
 
-    protected init(element: HTMLElement) {
-        //console.log('initializing a сlock', element);
 
+    protected init(element: HTMLElement) {
         element.classList.add("clock-widget");
         this.hideSpinner();
 
