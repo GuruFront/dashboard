@@ -1,29 +1,36 @@
 /// <reference path="../Widget.ts" />
-class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndStatusWidgetConfiguration> {
+class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndStatusWidgetOptions> {
     public static readonly id = "workCountByActivityAndStatusWidget";
 
     private counterElement: HTMLElement;  
 
     private dataSource: DataSource;
 
-    constructor(options: IWorkCountByActivityAndStatusWidgetConfiguration, clientId: number) {
+    public static sidebarSettings: ISideBarSettings = {
+        title: 'Work Counter',
+        description: 'Work Counter',
+        category: 'General',
+        icon: '',
+        defaultWidth: 2,
+        defaultHeight: 2,
+        maxCount: 2,
+    }; 
 
-        const config: IWorkCountByActivityAndStatusWidgetConfiguration = {
-            ...options,
-            isConfigurable: getValueOrDefault( options.isConfigurable,  false),
-            isResizable: getValueOrDefault(options.isResizable, true),
-            isRemovable: getValueOrDefault(options.isRemovable, true),
-            title: options.title || "Work Counter",
-            width: options.width || 2,
-            height: options.height || 2,
+    constructor(clientId: number, options: IOptions<IWorkCountByActivityAndStatusWidgetOptions>) {
+
+        const config: IWidgetConfiguration = {
+            isConfigurable: false,
+            isResizable: true,
+            isRemovable: true,            
             minHeight: 1,
             maxHeight: 3,
             minWidth: 1,
             maxWidth: 3,
-            isTimeDependant: true
+            isTimeDependant: true,
+            maxInstanceCount: 2,
         };
 
-        super(config, clientId); 
+        super(config, clientId, options); 
 
         this.dataSource = new DataSource();
     }
@@ -62,7 +69,7 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
     private createTitleElement(element: HTMLElement) {
         const p = document.createElement('div');
         p.className = 'title';
-        p.innerText = this.config.title;
+        p.innerText = WorkCountByActivityAndStatusWidget.sidebarSettings.title;
         element.appendChild(p);
     }
 
@@ -76,7 +83,7 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
     }    
 }
 
-interface IWorkCountByActivityAndStatusWidgetConfiguration extends IWidgetConfiguration {
+interface IWorkCountByActivityAndStatusWidgetOptions {
     activityTypeId: number;
     workStatusId: number;
 }

@@ -11,17 +11,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var DataSource = (function () {
     function DataSource() {
     }
@@ -44,14 +33,20 @@ var DataSource = (function () {
     return DataSource;
 }());
 var Widget = (function () {
-    function Widget(config, clientId, widgetSettings) {
+    function Widget(config, clientId, options, widgetSettings) {
         this.config = config;
+        this.options = options.options;
+        this.size = {
+            width: options.width,
+            height: options.height,
+        };
+        this.position = {
+            x: options.x,
+            y: options.y,
+        };
         this.id = Math.random();
         this.currentClientId = clientId;
         this.widgetSettings = widgetSettings || [];
-        this.subscribeToDateChangedEvent();
-        this.subscribeToClientChangedEvent();
-        this.subscribeToGridEditingEvents();
     }
     Widget.prototype.initBase = function (element) {
         this.cellElement = element;
@@ -62,6 +57,9 @@ var Widget = (function () {
         if (this.config.isRemovable) {
             this.enableRemoveIcon(element);
         }
+        this.subscribeToDateChangedEvent();
+        this.subscribeToClientChangedEvent();
+        this.subscribeToGridEditingEvents();
         this.init(element);
     };
     Widget.prototype.destroy = function () {
@@ -113,22 +111,29 @@ var Widget = (function () {
         var spinner = this.cellElement.getElementsByClassName("widget-loading-container")[0];
         spinner.style.display = 'none';
     };
-    Widget.widgetInitializer = function (options) {
-        var widget;
-        switch (options.id) {
+    Widget.widgetInitializer = function (id, clientId, options) {
+        switch (id) {
             case ImageWidget.id:
-                widget = new ImageWidget(options);
-                break;
+                return new ImageWidget(clientId, options);
             case ClockWidget.id:
-                widget = new ClockWidget(options);
-                break;
+                return new ClockWidget(clientId, options);
             case WorkCountByActivityAndStatusWidget.id:
-                widget = new WorkCountByActivityAndStatusWidget(options);
-                break;
+                return new WorkCountByActivityAndStatusWidget(clientId, options);
             default:
                 return null;
         }
-        return widget;
+    };
+    Widget.getSidebarSettings = function (id) {
+        switch (id) {
+            case ImageWidget.id:
+                return ImageWidget.sidebarSettings;
+            case ClockWidget.id:
+                return ClockWidget.sidebarSettings;
+            case WorkCountByActivityAndStatusWidget.id:
+                return WorkCountByActivityAndStatusWidget.sidebarSettings;
+            default:
+                return null;
+        }
     };
     Widget.prototype.enableRemoveIcon = function (el) {
         var icon = document.createElement("div");
@@ -157,7 +162,7 @@ var Widget = (function () {
         popupContainer.appendChild(widgetWrap);
         var title = document.createElement("strong");
         title.setAttribute("class", "widget-settings-title");
-        title.innerText = this.config.title;
+        title.innerText = Widget.sidebarSettings.title;
         widgetWrap.appendChild(title);
         var form = document.createElement('form');
         widgetWrap.appendChild(form);
@@ -297,16 +302,24 @@ var WorkCompletedDataSource = (function (_super) {
 }(DataSource));
 var ClockWidget = (function (_super) {
     __extends(ClockWidget, _super);
-    function ClockWidget(options, clientId) {
+    function ClockWidget(clientId, options) {
         var _this = this;
-        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, true), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Clock", minWidth: options.minWidth || 2, width: options.width || 4, height: options.height || 2, minHeight: options.minHeight || 2, isTimeDependant: true, withDate: getValueOrDefault(options.withDate, true), withDatePicker: getValueOrDefault(options.withDatePicker, true), dateFormat: getValueOrDefault(options.dateFormat, 12) });
+        var config = {
+            isConfigurable: true,
+            isResizable: true,
+            isRemovable: true,
+            minWidth: 2,
+            minHeight: 2,
+            isTimeDependant: true,
+            maxInstanceCount: 1,
+        };
         var widgetSettings = [
             {
                 name: "dataType",
                 inputType: "radio",
                 title: "Choose data type",
                 values: [12, 24],
-                value: config.dateFormat
+                value: 12
             }, {
                 name: "testCheckBox",
                 inputType: "checkbox",
@@ -325,18 +338,13 @@ var ClockWidget = (function (_super) {
                 placeholder: "Test input placeholder"
             }
         ];
-        _this = _super.call(this, config, clientId, widgetSettings) || this;
+        _this = _super.call(this, config, clientId, options, widgetSettings) || this;
         return _this;
     }
     ClockWidget.prototype.init = function (element) {
         element.classList.add("clock-widget");
         this.hideSpinner();
-        if (this.config.withDate) {
-            this.dateElement = this.createDateElement(element);
-            if (this.config.withDatePicker) {
-                this.datePickerElement = this.createDatePickerElement(element);
-            }
-        }
+        this.dateElement = this.createDateElement(element);
         this.clockElement = this.createClockElement(element);
         this.startClock();
     };
@@ -351,13 +359,13 @@ var ClockWidget = (function (_super) {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
                     case 'dataType':
-                        this.config.dateFormat = +result[key];
-                        this.widgetSettings[0].value = this.config.dateFormat;
-                        console.log("dateFormat -->", this.config.dateFormat);
+                        this.options.dateFormat = +result[key];
+                        this.widgetSettings[0].value = this.options.dateFormat;
+                        console.log("dateFormat -->", this.options.dateFormat);
                         break;
                     case 'dateTimezone':
-                        this.config.dateTimezone = result[key];
-                        this.widgetSettings[2].value = this.config.dateTimezone;
+                        this.options.dateTimezone = result[key];
+                        this.widgetSettings[2].value = this.options.dateTimezone;
                         console.log("dateTimezone -->", result[key]);
                         break;
                     case 'testInputText':
@@ -379,52 +387,11 @@ var ClockWidget = (function (_super) {
     };
     ClockWidget.prototype.handleClientChange = function (clientId) { };
     ClockWidget.prototype.createDateElement = function (element) {
-        var _this = this;
         var dateElement = document.createElement('div');
         dateElement.className = "date";
         dateElement.innerText = this.getDateString();
-        if (this.config.withDatePicker) {
-            dateElement.onclick = function (ev) {
-                dateElement.style.display = 'none';
-                _this.datePickerElement.style.display = 'block';
-            };
-        }
         element.appendChild(dateElement);
         return dateElement;
-    };
-    ClockWidget.prototype.createDatePickerElement = function (element) {
-        var _this = this;
-        var datePickerElement = document.createElement('input');
-        datePickerElement.type = 'date';
-        datePickerElement.style.display = 'none';
-        var today = new Date().toISOString().split("T")[0];
-        datePickerElement.value = today;
-        datePickerElement.max = today;
-        datePickerElement.onchange = function (ev) {
-            var value = ev.target.value;
-            var isToday = new Date().toISOString().split("T")[0] === value;
-            if (isToday) {
-                _this.clockElement.innerText = _this.getTimeString();
-                _this.startClock();
-            }
-            else {
-                _this.stopClock();
-                _this.clockElement.innerText = '23:59:59';
-            }
-            var date = new Date(value);
-            var event = new CustomEvent('date_changed', {
-                detail: {
-                    date: date,
-                    isToday: isToday
-                }
-            });
-            document.dispatchEvent(event);
-            datePickerElement.style.display = 'none';
-            _this.dateElement.style.display = 'block';
-            _this.dateElement.innerText = _this.getDateString(date);
-        };
-        element.appendChild(datePickerElement);
-        return datePickerElement;
     };
     ClockWidget.prototype.createClockElement = function (element) {
         var clockElement = document.createElement('div');
@@ -442,20 +409,18 @@ var ClockWidget = (function (_super) {
         var _this = this;
         this.interval = setInterval(function () {
             _this.clockElement.innerText = _this.getTimeString();
-            if (_this.config.withDate) {
-                _this.dateElement.innerText = _this.getDateString();
-            }
+            _this.dateElement.innerText = _this.getDateString();
         }, 1000);
     };
     ClockWidget.prototype.getTimeString = function () {
         var options = {};
-        if (typeof this.config.dateTimezone !== "undefined") {
-            options.timeZone = this.config.dateTimezone;
+        if (typeof this.options.dateTimezone !== "undefined") {
+            options.timeZone = this.options.dateTimezone;
         }
-        if (this.config.dateFormat == 12) {
+        if (this.options.dateFormat == 12) {
             options.hour12 = true;
         }
-        else if (this.config.dateFormat == 24) {
+        else if (this.options.dateFormat == 24) {
             options.hour12 = false;
         }
         return new Date().toLocaleTimeString('it-IT', options);
@@ -466,33 +431,70 @@ var ClockWidget = (function (_super) {
         return date.toLocaleDateString('en-GB', options);
     };
     ClockWidget.id = "clockWidget";
+    ClockWidget.sidebarSettings = {
+        title: 'Clock',
+        description: 'Clock widget with format and timezone',
+        category: 'General',
+        icon: '',
+        defaultWidth: 4,
+        defaultHeight: 2,
+        maxCount: 1,
+    };
     return ClockWidget;
 }(Widget));
 var ImageWidget = (function (_super) {
     __extends(ImageWidget, _super);
-    function ImageWidget(options, clientId) {
+    function ImageWidget(clientId, options) {
         var _this = this;
-        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, false), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Image", width: options.width || 2, height: options.height || 2, minHeight: 1, maxHeight: 3, minWidth: 1, maxWidth: 3, isTimeDependant: false, imageUrl: getValueOrDefault(options.imageUrl, 'http://tf-dev01.cloudapp.net/Content/images/s2-header-logo-techfinity.png') });
-        _this = _super.call(this, config, clientId) || this;
+        var config = {
+            isConfigurable: false,
+            isResizable: true,
+            isRemovable: true,
+            minHeight: 1,
+            maxHeight: 3,
+            minWidth: 1,
+            maxWidth: 3,
+            isTimeDependant: false,
+        };
+        _this = _super.call(this, config, clientId, options) || this;
         return _this;
     }
     ImageWidget.prototype.init = function (element) {
         this.hideSpinner();
-        element.style.backgroundImage = "url('" + this.config.imageUrl + "')";
+        element.style.backgroundImage = "url('" + (this.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png') + "')";
         element.style.backgroundRepeat = "no-repeat";
         element.style.backgroundSize = "cover";
     };
     ImageWidget.prototype.reDraw = function () { };
     ImageWidget.prototype.handleClientChange = function (clientId) { };
     ImageWidget.id = "imageWidget";
+    ImageWidget.sidebarSettings = {
+        title: 'Image',
+        description: 'Image',
+        category: 'General',
+        icon: '',
+        defaultWidth: 4,
+        defaultHeight: 3,
+        maxCount: Infinity,
+    };
     return ImageWidget;
 }(Widget));
 var WorkCountByActivityAndStatusWidget = (function (_super) {
     __extends(WorkCountByActivityAndStatusWidget, _super);
-    function WorkCountByActivityAndStatusWidget(options, clientId) {
+    function WorkCountByActivityAndStatusWidget(clientId, options) {
         var _this = this;
-        var config = __assign({}, options, { isConfigurable: getValueOrDefault(options.isConfigurable, false), isResizable: getValueOrDefault(options.isResizable, true), isRemovable: getValueOrDefault(options.isRemovable, true), title: options.title || "Work Counter", width: options.width || 2, height: options.height || 2, minHeight: 1, maxHeight: 3, minWidth: 1, maxWidth: 3, isTimeDependant: true });
-        _this = _super.call(this, config, clientId) || this;
+        var config = {
+            isConfigurable: false,
+            isResizable: true,
+            isRemovable: true,
+            minHeight: 1,
+            maxHeight: 3,
+            minWidth: 1,
+            maxWidth: 3,
+            isTimeDependant: true,
+            maxInstanceCount: 2,
+        };
+        _this = _super.call(this, config, clientId, options) || this;
         _this.dataSource = new DataSource();
         return _this;
     }
@@ -523,7 +525,7 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
     WorkCountByActivityAndStatusWidget.prototype.createTitleElement = function (element) {
         var p = document.createElement('div');
         p.className = 'title';
-        p.innerText = this.config.title;
+        p.innerText = WorkCountByActivityAndStatusWidget.sidebarSettings.title;
         element.appendChild(p);
     };
     WorkCountByActivityAndStatusWidget.prototype.createCounterElement = function (element) {
@@ -534,6 +536,15 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         return el;
     };
     WorkCountByActivityAndStatusWidget.id = "workCountByActivityAndStatusWidget";
+    WorkCountByActivityAndStatusWidget.sidebarSettings = {
+        title: 'Work Counter',
+        description: 'Work Counter',
+        category: 'General',
+        icon: '',
+        defaultWidth: 2,
+        defaultHeight: 2,
+        maxCount: 2,
+    };
     return WorkCountByActivityAndStatusWidget;
 }(Widget));
 //# sourceMappingURL=script.js.map

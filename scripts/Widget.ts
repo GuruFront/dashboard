@@ -3,9 +3,14 @@
  * So each widget has all properties from IWidgetConfiguration and might have it's own additional 
  * properties which also available via this.config
  * */
-abstract class Widget<TConfiguration extends IWidgetConfiguration> {
+abstract class Widget<TOptions> {
     public readonly id: number;
-    public readonly config: TConfiguration;
+
+    public readonly size: ISizeOptions;
+    public readonly position: IPositionOptions;
+    public readonly options: TOptions;
+
+    public readonly config: IWidgetConfiguration;
 
     protected cellElement: HTMLElement;
 
@@ -19,18 +24,21 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
 
     protected readonly widgetSettings: IWidgetEditSettings[];
 
-
-    protected constructor(config: TConfiguration, clientId: number, widgetSettings?: IWidgetEditSettings[]) {
+    protected constructor(config: IWidgetConfiguration, clientId: number, options?: IOptions<TOptions>, widgetSettings?: IWidgetEditSettings[]) {
         this.config = config;
+        this.options = options.options;
+        this.size = {
+            width: options.width,
+            height: options.height,
+        };
+        this.position = {
+            x: options.x,
+            y: options.y,
+        };
         this.id = Math.random();
         this.currentClientId = clientId;
         this.widgetSettings = widgetSettings || [];
-
-        this.subscribeToDateChangedEvent();
-        this.subscribeToClientChangedEvent();
-        this.subscribeToGridEditingEvents();
     }
-
 
     protected abstract init(element: HTMLElement);
 
@@ -50,11 +58,17 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
         if (this.config.isRemovable) {
             this.enableRemoveIcon(element);
         }
+
+        this.subscribeToDateChangedEvent();
+        this.subscribeToClientChangedEvent();
+        this.subscribeToGridEditingEvents();
+
         this.init(element);
     }
 
     protected destroy() {
         this.isDisplayed = false;
+        // TODO: Unsubscribe from events
     }
 
     private subscribeToDateChangedEvent() {
@@ -110,24 +124,32 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
         spinner.style.display = 'none';
     }
 
-    static widgetInitializer(options: IWidgetConfiguration) {
-        let widget: Widget<IWidgetConfiguration>;
-
-        switch (options.id) {
+    static widgetInitializer(id: string, clientId: number, options) {
+        switch (id) {
             case ImageWidget.id:
-                widget = new ImageWidget(options);
-                break;
+                return new ImageWidget(clientId, options);
             case ClockWidget.id:
-                widget = new ClockWidget(options);
-                break;
+                return new ClockWidget(clientId, options);
             case WorkCountByActivityAndStatusWidget.id:
-                widget = new WorkCountByActivityAndStatusWidget(options as IWorkCountByActivityAndStatusWidgetConfiguration);
-                break;
+                return new WorkCountByActivityAndStatusWidget(clientId, options);
             default:
                 return null;
         }
+    }
 
-        return widget;
+    static sidebarSettings: ISideBarSettings;
+
+    static getSidebarSettings(id: string) {
+        switch (id) {
+            case ImageWidget.id:
+                return ImageWidget.sidebarSettings;
+            case ClockWidget.id:
+                return ClockWidget.sidebarSettings;
+            case WorkCountByActivityAndStatusWidget.id:
+                return WorkCountByActivityAndStatusWidget.sidebarSettings;
+            default:
+                return null;
+        }
     }
 
     private enableRemoveIcon(el: HTMLElement): void {
@@ -169,7 +191,7 @@ abstract class Widget<TConfiguration extends IWidgetConfiguration> {
 
         let title = document.createElement("strong");
         title.setAttribute("class", "widget-settings-title");
-        title.innerText = this.config.title;
+        title.innerText = Widget.sidebarSettings.title;
         widgetWrap.appendChild(title);
 
         let form = document.createElement('form');

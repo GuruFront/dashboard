@@ -1,29 +1,33 @@
 /// <reference path="../Widget.ts" />
-class ClockWidget extends Widget<IClockWidgetConfiguration> {
+declare const moment: any;
+class ClockWidget extends Widget<IClockWidgetOptions> {
     public static readonly id = "clockWidget";
 
     private clockElement: HTMLElement;
     private dateElement: HTMLElement;
-    private datePickerElement: HTMLElement;
 
     private interval: number;
 
-    constructor(options: IClockWidgetConfiguration, clientId: number) {
+    public static sidebarSettings: ISideBarSettings = {
+        title: 'Clock',
+        description: 'Clock widget with format and timezone',
+        category: 'General',
+        icon: '',
+        defaultWidth: 4,
+        defaultHeight: 2,
+        maxCount: 1,
+    }; 
 
-        const config: IClockWidgetConfiguration = {
-            ...options, // copy all other properties 
-            isConfigurable: getValueOrDefault(options.isConfigurable, true),
-            isResizable: getValueOrDefault(options.isResizable, true),
-            isRemovable: getValueOrDefault(options.isRemovable, true),
-            title: options.title || "Clock",
-            minWidth: options.minWidth || 2,
-            width: options.width || 4,
-            height: options.height || 2,
-            minHeight: options.minHeight || 2,
+    constructor(clientId: number, options: IOptions<IClockWidgetOptions>) {
+
+        const config: IWidgetConfiguration = {
+            isConfigurable: true,
+            isResizable: true,
+            isRemovable: true,           
+            minWidth: 2,           
+            minHeight: 2,
             isTimeDependant: true,
-            withDate: getValueOrDefault(options.withDate, true),
-            withDatePicker: getValueOrDefault(options.withDatePicker, true),
-            dateFormat: getValueOrDefault(options.dateFormat, 12)
+            maxInstanceCount: 1,
         };
 
         const widgetSettings = [
@@ -31,8 +35,8 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                 name: "dataType",
                 inputType: "radio",
                 title: "Choose data type",
-                values: [12, 24],
-                value: config.dateFormat
+                values: [12, 24],                
+                value: 12
             }, {
                 name: "testCheckBox",
                 inputType: "checkbox",
@@ -51,7 +55,7 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
                 placeholder: "Test input placeholder"
             }];
 
-        super(config, clientId, widgetSettings);
+        super(config, clientId, options, widgetSettings);
     }
 
     protected init(element: HTMLElement) {
@@ -59,13 +63,8 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
 
         element.classList.add("clock-widget");
         this.hideSpinner();
-
-        if (this.config.withDate) {
-            this.dateElement = this.createDateElement(element);
-            if (this.config.withDatePicker) {
-                this.datePickerElement = this.createDatePickerElement(element);
-            }
-        }
+        
+        this.dateElement = this.createDateElement(element);            
 
         this.clockElement = this.createClockElement(element);
         this.startClock();
@@ -84,15 +83,15 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
                     case 'dataType':
-                        this.config.dateFormat = +result[key];
+                        this.options.dateFormat = +result[key];
                         // TODO: it must be changed
-                        this.widgetSettings[0].value = this.config.dateFormat;
-                        console.log("dateFormat -->", this.config.dateFormat);
+                        this.widgetSettings[0].value = this.options.dateFormat;
+                        console.log("dateFormat -->", this.options.dateFormat);
                         break;
                     case 'dateTimezone':
-                        this.config.dateTimezone = result[key];
+                        this.options.dateTimezone = result[key];
                         // TODO: it must be changed
-                        this.widgetSettings[2].value = this.config.dateTimezone;
+                        this.widgetSettings[2].value = this.options.dateTimezone;
                         console.log("dateTimezone -->", result[key]);
                         break;
                     case 'testInputText':
@@ -120,55 +119,11 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
     private createDateElement(element: HTMLElement) {
         const dateElement = document.createElement('div');
         dateElement.className = "date";
-        dateElement.innerText = this.getDateString();
-        if (this.config.withDatePicker) {
-            dateElement.onclick = (ev) => {
-                dateElement.style.display = 'none';
-                this.datePickerElement.style.display = 'block';
-            };
-        }
+        dateElement.innerText = this.getDateString();        
         element.appendChild(dateElement);
         return dateElement;
     }
-
-    private createDatePickerElement(element: HTMLElement) {
-        const datePickerElement = document.createElement('input');
-        datePickerElement.type = 'date';
-        datePickerElement.style.display = 'none';
-        const today = new Date().toISOString().split("T")[0];
-        datePickerElement.value = today;
-        datePickerElement.max = today;
-
-        datePickerElement.onchange = (ev) => {
-            const value = (ev.target as HTMLInputElement).value;
-            const isToday = new Date().toISOString().split("T")[0] === value;
-
-            if (isToday) {
-                this.clockElement.innerText = this.getTimeString();
-                this.startClock();
-            }
-            else {
-                this.stopClock();
-                this.clockElement.innerText = '23:59:59';
-            }
-
-            const date = new Date(value);
-            var event = new CustomEvent('date_changed', {
-                detail: {
-                    date: date,
-                    isToday: isToday
-                }
-            });
-            document.dispatchEvent(event);
-            datePickerElement.style.display = 'none';
-            this.dateElement.style.display = 'block';
-            this.dateElement.innerText = this.getDateString(date);
-        };
-
-        element.appendChild(datePickerElement);
-        return datePickerElement;
-    }
-
+    
     private createClockElement(element: HTMLElement) {
         const clockElement = document.createElement('div');
         clockElement.className = "clock";
@@ -186,10 +141,8 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
 
     private startClock() {
         this.interval = setInterval(() => {
-            this.clockElement.innerText = this.getTimeString();
-            if (this.config.withDate) {
-                this.dateElement.innerText = this.getDateString();
-            }
+            this.clockElement.innerText = this.getTimeString();           
+            this.dateElement.innerText = this.getDateString();
         }, 1000);
     }
 
@@ -200,13 +153,13 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
         } = {};
 
         // dateTimezone
-        if (typeof this.config.dateTimezone !== "undefined") {
-            options.timeZone = this.config.dateTimezone;
+        if (typeof this.options.dateTimezone !== "undefined") {
+            options.timeZone = this.options.dateTimezone;
         }
         // dateFormat
-        if (this.config.dateFormat == 12) {
+        if (this.options.dateFormat == 12) {
             options.hour12 = true;
-        } else if (this.config.dateFormat == 24) {
+        } else if (this.options.dateFormat == 24) {
             options.hour12 = false;
         }
 
@@ -221,9 +174,7 @@ class ClockWidget extends Widget<IClockWidgetConfiguration> {
     }
 }
 
-interface IClockWidgetConfiguration extends IWidgetConfiguration {
-    withDate?: boolean;
-    withDatePicker?: boolean;
+interface IClockWidgetOptions {
     dateFormat?: number;
     dateTimezone?: string;
 }
