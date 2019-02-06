@@ -1,6 +1,6 @@
 /// <reference path="../Widget.ts" />
 class ImageWidget extends Widget<IImageWidgetOptions> {
-    public static readonly id = "imageWidget";
+    public static readonly id: string = "imageWidget";
 
     public static sidebarSettings: ISideBarSettings = {
         title: 'Image',

@@ -44,12 +44,13 @@ var Widget = (function () {
             x: options.x,
             y: options.y,
         };
-        this.id = Math.random();
+        this.uid = (Math.random() * 10000).toFixed(0);
         this.currentClientId = clientId;
         this.widgetSettings = widgetSettings || [];
     }
     Widget.prototype.initBase = function (element) {
         this.cellElement = element;
+        this.cellElement.setAttribute('data-uid', this.uid);
         this.isDisplayed = true;
         if (this.config.isConfigurable && this.widgetSettings) {
             this.enableEditIcon(element);
@@ -112,16 +113,23 @@ var Widget = (function () {
         spinner.style.display = 'none';
     };
     Widget.widgetInitializer = function (id, clientId, options) {
+        options.options = {};
+        var widget;
         switch (id) {
             case ImageWidget.id:
-                return new ImageWidget(clientId, options);
+                widget = new ImageWidget(clientId, options);
+                break;
             case ClockWidget.id:
-                return new ClockWidget(clientId, options);
+                widget = new ClockWidget(clientId, options);
+                break;
             case WorkCountByActivityAndStatusWidget.id:
-                return new WorkCountByActivityAndStatusWidget(clientId, options);
+                widget = new WorkCountByActivityAndStatusWidget(clientId, options);
+                break;
             default:
                 return null;
         }
+        widget.id = id;
+        return widget;
     };
     Widget.getSidebarSettings = function (id) {
         switch (id) {
@@ -319,7 +327,7 @@ var ClockWidget = (function (_super) {
                 inputType: "radio",
                 title: "Choose data type",
                 values: [12, 24],
-                value: 12
+                value: options.options.dateFormat
             }, {
                 name: "testCheckBox",
                 inputType: "checkbox",

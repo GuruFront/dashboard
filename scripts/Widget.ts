@@ -4,7 +4,8 @@
  * properties which also available via this.config
  * */
 abstract class Widget<TOptions> {
-    public readonly id: number;
+    public id: string;
+    public readonly uid: string;
 
     public readonly size: ISizeOptions;
     public readonly position: IPositionOptions;
@@ -35,7 +36,9 @@ abstract class Widget<TOptions> {
             x: options.x,
             y: options.y,
         };
-        this.id = Math.random();
+        // TODO: change to real uid
+        this.uid = (Math.random()* 10000).toFixed(0);
+        
         this.currentClientId = clientId;
         this.widgetSettings = widgetSettings || [];
     }
@@ -49,6 +52,7 @@ abstract class Widget<TOptions> {
 
     public initBase(element: HTMLElement) {
         this.cellElement = element;
+        this.cellElement.setAttribute('data-uid', this.uid);
         this.isDisplayed = true;
 
         if (this.config.isConfigurable && this.widgetSettings) {
@@ -125,16 +129,25 @@ abstract class Widget<TOptions> {
     }
 
     static widgetInitializer(id: string, clientId: number, options) {
+        options.options = {};
+        let widget;
         switch (id) {
             case ImageWidget.id:
-                return new ImageWidget(clientId, options);
+                widget = new ImageWidget(clientId, options);
+                break;
             case ClockWidget.id:
-                return new ClockWidget(clientId, options);
+                widget = new ClockWidget(clientId, options);
+                break;
             case WorkCountByActivityAndStatusWidget.id:
-                return new WorkCountByActivityAndStatusWidget(clientId, options);
+                widget = new WorkCountByActivityAndStatusWidget(clientId, options);
+                break;
             default:
                 return null;
         }
+
+        widget.id = id;
+
+        return widget;
     }
 
     static sidebarSettings: ISideBarSettings;

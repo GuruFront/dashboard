@@ -1,6 +1,6 @@
 /// <reference path="../Widget.ts" />
 class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndStatusWidgetOptions> {
-    public static readonly id = "workCountByActivityAndStatusWidget";
+    public static readonly id: string = "workCountByActivityAndStatusWidget";
 
     private counterElement: HTMLElement;  
 

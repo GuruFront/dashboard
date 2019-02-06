@@ -1,7 +1,7 @@
 /// <reference path="../Widget.ts" />
 declare const moment: any;
 class ClockWidget extends Widget<IClockWidgetOptions> {
-    public static readonly id = "clockWidget";
+    public static readonly id: string = "clockWidget";
 
     private clockElement: HTMLElement;
     private dateElement: HTMLElement;
@@ -16,15 +16,15 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         defaultWidth: 4,
         defaultHeight: 2,
         maxCount: 1,
-    }; 
+    };
 
     constructor(clientId: number, options: IOptions<IClockWidgetOptions>) {
 
         const config: IWidgetConfiguration = {
             isConfigurable: true,
             isResizable: true,
-            isRemovable: true,           
-            minWidth: 2,           
+            isRemovable: true,
+            minWidth: 2,
             minHeight: 2,
             isTimeDependant: true,
             maxInstanceCount: 1,
@@ -35,8 +35,8 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
                 name: "dataType",
                 inputType: "radio",
                 title: "Choose data type",
-                values: [12, 24],                
-                value: 12
+                values: [12, 24],
+                value: options.options.dateFormat
             }, {
                 name: "testCheckBox",
                 inputType: "checkbox",
@@ -63,8 +63,8 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
 
         element.classList.add("clock-widget");
         this.hideSpinner();
-        
-        this.dateElement = this.createDateElement(element);            
+
+        this.dateElement = this.createDateElement(element);
 
         this.clockElement = this.createClockElement(element);
         this.startClock();
@@ -119,11 +119,11 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
     private createDateElement(element: HTMLElement) {
         const dateElement = document.createElement('div');
         dateElement.className = "date";
-        dateElement.innerText = this.getDateString();        
+        dateElement.innerText = this.getDateString();
         element.appendChild(dateElement);
         return dateElement;
     }
-    
+
     private createClockElement(element: HTMLElement) {
         const clockElement = document.createElement('div');
         clockElement.className = "clock";
@@ -141,7 +141,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
 
     private startClock() {
         this.interval = setInterval(() => {
-            this.clockElement.innerText = this.getTimeString();           
+            this.clockElement.innerText = this.getTimeString();
             this.dateElement.innerText = this.getDateString();
         }, 1000);
     }
