@@ -67,6 +67,7 @@ abstract class Widget<TOptions> {
         this.subscribeToDateChangedEvent();
         this.subscribeToClientChangedEvent();
         this.subscribeToGridEditingEvents();
+        this.subscribeToResizeEvent();
 
         this.init(element);
     }
@@ -76,6 +77,14 @@ abstract class Widget<TOptions> {
         // TODO: Unsubscribe from events
     }
 
+    private subscribeToResizeEvent() {
+        this.cellElement.addEventListener('resize_stopped', (ev: CustomEvent) => {
+            console.log('Base class');
+            this.handleResize();
+        });
+    }
+
+    protected handleResize() { }
 
     private subscribeToDateChangedEvent() {
         if (this.config.isTimeDependant) {
