@@ -8,9 +8,9 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
 
     public static sidebarSettings: ISideBarSettings = {
         title: 'Work Counter',
-        description: 'Work Counter',
-        category: 'General',
-        icon: '',
+        description: 'Work Counter widget. Removable. Not configurable. Resizable. Movable. 2*2. 2 instances max',
+        category: 'Work',
+        icon: 'fas fa-info-circle',
         defaultWidth: 2,
         defaultHeight: 2,
         maxCount: 2,

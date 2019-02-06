@@ -11,3 +11,10 @@
 node_moules
 *.idea
 /.vs
+/obj/Debug
+/WidgetDashboard.csproj
+/compilerconfig.json.defaults
+/compilerconfig.json
+/WidgetDashboard.sln
+/WidgetDashboard.csproj.user
+/obj/Release/WidgetDashboard.csproj.CoreCompileInputs.cache

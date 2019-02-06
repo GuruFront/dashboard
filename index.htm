@@ -7,15 +7,15 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <!--grid css-->
-    <link rel="stylesheet" href="css/libs/gridstack.min.css"/>
-    <link rel="stylesheet" href="css/libs/gridstack-extra.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"><!--grid css-->
+    <link rel="stylesheet" href="css/libs/gridstack.min.css" />
+    <link rel="stylesheet" href="css/libs/gridstack-extra.min.css" />
     <!--our styles for dashboard and widgets-->
     <link rel="stylesheet" href="css/dashboard/main.min.css">
     <!--grid require-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.0/lodash.min.js"></script>
     <!--grid js-->
     <script src="scripts/libs/gridstack.js"></script>
     <script src="scripts/libs/gridstack.jQueryUI.min.js"></script>
@@ -30,36 +30,42 @@
 </head>
 
 <body>
-<div class="dashboard">
-    <label>Edit <input type="checkbox" id="editMode"></label>
-    <div class="dashboardEditPanel" id="dashboardEditPanel">
-        <div class="sidebar"></div>
+    <div class="dashboard">
+        <div class="dashboardEditPanel" id="dashboardEditPanel">
+            <div class="sidebar"></div>
+            <div class="buttons">
+                <button class="btn btn-primary" id="saveChanges">Save</button>
+                <button class="btn btn-default" id="cancel">Cancel</button>
+            </div>
+        </div>
+        <div class="grid-container">
+            <label>Edit <input type="checkbox" id="editMode"></label>
+            <div class="grid-stack grid-stack-12" id="grid1"></div>
+        </div>
     </div>
-    <div class="grid-stack grid-stack-12" id="grid1"></div>
-</div>
 
-<div class="grid-item-popup" id="widget-popup">
-    <div class="grid-item-popup__container" id="widget-popup-container">
+    <div class="grid-item-popup" id="widget-popup">
+        <div class="grid-item-popup__container" id="widget-popup-container">
 
+        </div>
     </div>
-</div>
 
-<script type="text/javascript">
-    $(() => {
-        // all allowed widgets
+    <script type="text/javascript">
+        $(() => {
+            // all allowed widgets
             let allAllowedWidgets = ["clockWidget", "imageWidget", "workCountByActivityAndStatusWidget"];
             // saved widgets(default or user-saved)
             let defaultConfig = [
-                {
-                    id: "clockWidget",
-                    x: 0,
-                    y: 0,
-                    width: 3,
-                    height: 2,
-                    options: {
-                        dateFormat: 24
-                    }
-                },
+                //{
+                //    id: "clockWidget",
+                //    x: 0,
+                //    y: 0,
+                //    width: 3,
+                //    height: 2,
+                //    options: {
+                //        dateFormat: 24
+                //    }
+                //},
                 {
                     id: "imageWidget",
                     x: 5,
@@ -74,7 +80,7 @@
 
             let
                 isEditMode = false,
-                clientId = 7,                
+                clientId = 7,
                 mainGrid = $('#grid1'),
                 sideBar = $('.sidebar'),
                 localStorage = window.localStorage
@@ -86,17 +92,19 @@
                 ;
 
             var widgetsDict = {};
+            var categories = [];
             allAllowedWidgets.map(w => {
                 var instances = defaultConfig
                     .filter(x => x.id === w)
                     .map(x => Widget.widgetInitializer(w, clientId, x));
-
                 widgetsDict[w] = {
                     sidebarSettings: Widget.getSidebarSettings(w),
                     gridInstances: instances
-                };                
+                };
+                categories.push(widgetsDict[w].sidebarSettings.category);
             });
-            console.log(widgetsDict);
+
+            categories = _.uniqBy(categories);
 
             // dashboard activation
             mainGrid.gridstack({
@@ -108,44 +116,63 @@
 
             mainGrid
                 .on('dropover', (ev, ui) => ui.helper.hide())
-                .on('dropout',  (ev, ui) => ui.helper.show());
+                .on('dropout', (ev, ui) => ui.helper.show());
 
+            renderCategories();
             renderAfterReload(widgetsDict);
             allowMoveAndResizeItems(isEditMode);
             handleEvents();
 
+            function renderCategories() {
+                categories.forEach(x => {
+                    sideBar
+                        .append(
+                            $('<div>').addClass('panel panel-default')
+                                .append($('<div>').addClass('panel-heading')                                    
+                                    .append($('<div>').addClass('panel-title')
+                                        .append('<i class="fas fa-chevron-circle-up"></i> ' + x)))
+                                .append($('<div>').addClass('panel-collapse collapse in').attr('id', x)
+                                    .append($('<div>').addClass('panel-body'))
+                                )
+                        )
+                });
+            }
+
             // item for render
-            function addToSideBar(id, widget, remove) { 
+            function addToSideBar(id, widget, remove) {
                 var config = widget.sidebarSettings;
                 var count = config.maxCount - widget.gridInstances.length;
                 var isNeededToAdd = remove ? count === 1 : count > 0;
 
                 if (isNeededToAdd) {
-                    var html = $('<div class="grid-stack-item sid" data-widget="' + id + '"><div class="grid-stack-item-content"><div class="widget-content">' +
-                        config.title + '(' + config.defaultWidth + '*' + config.defaultHeight +
-                        ')</span></div></div></div></div></div></div></div>');
+                    var icon = $('<div class="widget-icon"><i class="' + config.icon + '"></i></div>');
+                    var body = $('<div>').addClass('widget-body')
+                        .append($('<div>').addClass('widget-title')
+                            .text(config.title)
+                            .attr('data-widget-count', count == Infinity ? '' : count))
+                        .append($('<hr>'))
+                        .append($('<div>').addClass('widget-description').text(config.description));
 
-                    html.find('.widget-content').attr('data-widget-count', count == Infinity ? '' : count);
-
-                    html.data('_gridstack_node', {
-                        width: config.defaultWidth,
-                        height: config.defaultHeight
-                    });
-
-                    html.draggable({
-                        revert: 'invalid',
-                        handle: '.grid-stack-item-content',
-                        scroll: false,
-                        appendTo: 'body'
-                    });
-
-                    html.appendTo(sideBar);
+                    $('<div class="grid-stack-item sid" data-widget="' + id + '"></div>')
+                        .append(icon)
+                        .append(body)
+                        .data('_gridstack_node', {
+                            width: config.defaultWidth,
+                            height: config.defaultHeight
+                        })
+                        .draggable({
+                            revert: 'invalid',
+                            handle: '.widget-body',
+                            scroll: false,
+                            appendTo: 'body'
+                        })
+                        .appendTo(sideBar.find('#' + config.category).find('.panel-body'));
                 }
                 else if (remove && count > 0) {
-                    $('.sid[data-widget="' + id + '"] .widget-content').attr('data-widget-count', count == Infinity ? '' : count);
+                    $('.sid[data-widget="' + id + '"] .widget-title').attr('data-widget-count', count == Infinity ? '' : count);
                 }
             }
-          
+
             // first render
             function renderAfterReload(widgets) {
                 if (localStorage.getItem('widgets') === null || JSON.parse(localStorage.getItem('widgets')).length === 0) {
@@ -190,13 +217,14 @@
 
             // renderActiveWidgets
             function renderActiveWidgets(activeWidgets, element) {
-                activeWidgets.forEach(widget => {     
-                    var loader = $('<div class="widget-loading-container"><div class="widget-loading">' +
-                        '<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>' +
-                        '</div></div>');
-                    var el = element || $('<div class="grid-stack-item"><div class="grid-stack-item-content"><div class="widget-content"></div></div></div>');
+                activeWidgets.forEach(widget => {
+                    var el = $('<div class="grid-stack-item"><div class="grid-stack-item-content"><div class="widget-content"><div class="widget-loading-container">' +
+                        '<div class="widget-loading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>' +
+                        '</div></div></div></div></div>');
 
-                    el.attr('data-widget', widget.id).find('.widget-content').empty().append(loader);
+                    el = element ? element.empty().html(el.find('.grid-stack-item-content')) : el;
+
+                    el.attr('data-widget', widget.id);
 
                     var grid = mainGrid.data("gridstack");
 
@@ -207,7 +235,7 @@
                             widget.position.x,
                             widget.position.y,
                             widget.size.width,
-                            widget.size.height,                            
+                            widget.size.height,
                         );
                     }
                     else {
@@ -231,7 +259,7 @@
                     grid.maxHeight(el, widget.config.maxHeight);
                     grid.maxWidth(el, widget.config.maxWidth);
                     grid.resizable(el, widget.sidebarSettings.isResizable);
-                    grid.movable(el, widget.sidebarSettings.isMovable);                    
+                    grid.movable(el, widget.sidebarSettings.isMovable);
 
                     widget.initBase(el.find('.widget-content')[0]);
                 });
@@ -274,11 +302,11 @@
                     }
                     else {
                         grid.disable();
-                    }                                  
+                    }
                 }
             }
 
-            // make draggable items in the widget list          
+            // make draggable items in the widget list
 
             function handleEvents() {
                 mainGrid.on('dragstart', () => {
@@ -304,7 +332,7 @@
 
                             addToSideBar(widgetId, widget);
 
-                            renderActiveWidgets([newWidget], items[i].el);                            
+                            renderActiveWidgets([newWidget], items[i].el);
                         }
                         saveWidgetItems();
                     } else {
@@ -314,10 +342,22 @@
                 $('#editMode').on('change', (e) => {
                     isEditMode = $(e.target).is(':checked');
                     allowMoveAndResizeItems(isEditMode);
-                    $("#dashboardEditPanel").css('display', isEditMode ? 'block' : 'none');
+                    $("#dashboardEditPanel").toggleClass('open');
                     $("#grid1").toggleClass('edit-mode-on');
                     $(".widget-icon-delete").css('display', isEditMode ? 'block' : 'none');
                     document.dispatchEvent(new CustomEvent(isEditMode ? 'grid_editing_started' : 'grid_editing_finished'));
+                });
+                $('.panel-heading').click(function () {                    
+                    $(this).find('i').toggleClass('fa-chevron-circle-up fa-chevron-circle-down');
+                    $(this).next().toggleClass("in");
+                });
+                $('#saveChanges').click(function () {
+                    // save grid data to local storage
+                    $('#editMode').prop('checked', false).change();                    
+                });
+                $('#cancel').click(function () {
+                    // discard changes 
+                    $('#editMode').prop('checked', false).change(); 
                 });
                 // remove
                 $('#grid1').on("click", (e) => {
@@ -335,10 +375,10 @@
                             var ind = widgetConfig.gridInstances.findIndex(x => x.uid == uid);
                             if (ind >= 0) {
                                 widgetConfig.gridInstances.splice(ind, 1);
-                            } 
-                            
+                            }
+
                             addToSideBar(widgetId, widgetConfig, true);
-                        }                        
+                        }
 
                         saveWidgetItems();
                     }
