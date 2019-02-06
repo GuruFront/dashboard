@@ -465,7 +465,7 @@ var ClockWidget = (function (_super) {
         defaultWidth: 4,
         defaultHeight: 2,
         maxCount: 2,
-        isResizable: false,
+        isResizable: true,
         isMovable: true,
     };
     return ClockWidget;
