@@ -1,6 +1,8 @@
 
 abstract class Widget<TOptions> {
     public id: string;
+    public sidebarSettings: ISideBarSettings;
+
     public readonly uid: string;
 
     public readonly size: ISizeOptions;
@@ -37,6 +39,9 @@ abstract class Widget<TOptions> {
 
         this.currentClientId = clientId;
         this.widgetSettings = widgetSettings || [];
+
+        this.id = this.constructor['id'];
+        this.sidebarSettings = this.constructor['sidebarSettings'];
     }
 
     protected abstract init(element: HTMLElement);
@@ -127,25 +132,17 @@ abstract class Widget<TOptions> {
     }
 
     static widgetInitializer(id: string, clientId: number, options) {
-        options.options = {};
-        let widget;
+        options.options = options.options || {};
         switch (id) {
             case ImageWidget.id:
-                widget = new ImageWidget(clientId, options);
-                break;
+                return new ImageWidget(clientId, options);
             case ClockWidget.id:
-                widget = new ClockWidget(clientId, options);
-                break;
+                return new ClockWidget(clientId, options);
             case WorkCountByActivityAndStatusWidget.id:
-                widget = new WorkCountByActivityAndStatusWidget(clientId, options);
-                break;
+                return new WorkCountByActivityAndStatusWidget(clientId, options);
             default:
                 return null;
         }
-
-        widget.id = id;
-
-        return widget;
     }
 
     static sidebarSettings: ISideBarSettings;
@@ -207,7 +204,7 @@ abstract class Widget<TOptions> {
 
         let title = document.createElement("strong");
         title.setAttribute("class", "widget-settings-title");
-        title.innerText = Widget.sidebarSettings.title;
+        title.innerText = this.sidebarSettings.title;
         widgetWrap.appendChild(title);
 
         let form = document.createElement('form');

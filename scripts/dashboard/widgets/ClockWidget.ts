@@ -16,14 +16,15 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         defaultWidth: 4,
         defaultHeight: 2,
         maxCount: 1,
+        isResizable: false,
+        isMovable: true,
     };
 
     constructor(clientId: number, options: IOptions<IClockWidgetOptions>) {
 
         const config: IWidgetConfiguration = {
-            isConfigurable: true,
-            isResizable: true,
             isRemovable: true,
+            isConfigurable: true,
             minWidth: 2,
             minHeight: 2,
             isTimeDependant: true,
@@ -60,7 +61,6 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
 
         super(config, clientId, options, widgetSettings);
     }
-
 
     protected init(element: HTMLElement) {
         element.classList.add("clock-widget");

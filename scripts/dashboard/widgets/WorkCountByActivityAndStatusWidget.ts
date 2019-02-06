@@ -2,7 +2,7 @@
 class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndStatusWidgetOptions> {
     public static readonly id: string = "workCountByActivityAndStatusWidget";
 
-    private counterElement: HTMLElement;  
+    private counterElement: HTMLElement;
 
     private dataSource: DataSource;
 
@@ -14,14 +14,15 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
         defaultWidth: 2,
         defaultHeight: 2,
         maxCount: 2,
-    }; 
+        isResizable: true,
+        isMovable: true,
+    };
 
     constructor(clientId: number, options: IOptions<IWorkCountByActivityAndStatusWidgetOptions>) {
 
         const config: IWidgetConfiguration = {
             isConfigurable: false,
-            isResizable: true,
-            isRemovable: true,            
+            isRemovable: true,
             minHeight: 1,
             maxHeight: 3,
             minWidth: 1,
@@ -30,14 +31,14 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
             maxInstanceCount: 2,
         };
 
-        super(config, clientId, options); 
+        super(config, clientId, options);
 
         this.dataSource = new DataSource();
     }
 
     init(element: HTMLElement) {
         element.classList.add("work-count-widget");
-        
+
         this.createTitleElement(element);
         this.counterElement = this.createCounterElement(element);
 
@@ -47,10 +48,10 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
 
         this.dataSource.getData()
             .then(data => {
-                this.hideSpinner(); 
+                this.hideSpinner();
 
                 this.counterElement.innerText = data.toString();
-            });        
+            });
     }
 
     protected reDraw() {
@@ -61,7 +62,7 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
                 this.hideSpinner();
 
                 this.counterElement.innerText = data.toString();
-            }); 
+            });
     }
 
     protected handleClientChange(clientId: number) { }
@@ -80,7 +81,7 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
         element.appendChild(el);
 
         return el;
-    }    
+    }
 }
 
 interface IWorkCountByActivityAndStatusWidgetOptions {

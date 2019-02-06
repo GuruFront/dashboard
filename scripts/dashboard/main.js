@@ -47,6 +47,8 @@ var Widget = (function () {
         this.uid = (Math.random() * 10000).toFixed(0);
         this.currentClientId = clientId;
         this.widgetSettings = widgetSettings || [];
+        this.id = this.constructor['id'];
+        this.sidebarSettings = this.constructor['sidebarSettings'];
     }
     Widget.prototype.initBase = function (element) {
         this.cellElement = element;
@@ -114,23 +116,17 @@ var Widget = (function () {
         spinner.style.display = 'none';
     };
     Widget.widgetInitializer = function (id, clientId, options) {
-        options.options = {};
-        var widget;
+        options.options = options.options || {};
         switch (id) {
             case ImageWidget.id:
-                widget = new ImageWidget(clientId, options);
-                break;
+                return new ImageWidget(clientId, options);
             case ClockWidget.id:
-                widget = new ClockWidget(clientId, options);
-                break;
+                return new ClockWidget(clientId, options);
             case WorkCountByActivityAndStatusWidget.id:
-                widget = new WorkCountByActivityAndStatusWidget(clientId, options);
-                break;
+                return new WorkCountByActivityAndStatusWidget(clientId, options);
             default:
                 return null;
         }
-        widget.id = id;
-        return widget;
     };
     Widget.getSidebarSettings = function (id) {
         switch (id) {
@@ -178,7 +174,7 @@ var Widget = (function () {
         popupContainer.appendChild(widgetWrap);
         var title = document.createElement("strong");
         title.setAttribute("class", "widget-settings-title");
-        title.innerText = Widget.sidebarSettings.title;
+        title.innerText = this.sidebarSettings.title;
         widgetWrap.appendChild(title);
         var form = document.createElement('form');
         form.setAttribute("action", ".");
@@ -319,9 +315,8 @@ var ClockWidget = (function (_super) {
     function ClockWidget(clientId, options) {
         var _this = this;
         var config = {
-            isConfigurable: true,
-            isResizable: true,
             isRemovable: true,
+            isConfigurable: true,
             minWidth: 2,
             minHeight: 2,
             isTimeDependant: true,
@@ -456,6 +451,8 @@ var ClockWidget = (function (_super) {
         defaultWidth: 4,
         defaultHeight: 2,
         maxCount: 1,
+        isResizable: false,
+        isMovable: true,
     };
     return ClockWidget;
 }(Widget));
@@ -465,12 +462,11 @@ var ImageWidget = (function (_super) {
         var _this = this;
         var config = {
             isConfigurable: false,
-            isResizable: true,
             isRemovable: true,
             minHeight: 1,
-            maxHeight: 3,
+            maxHeight: 4,
             minWidth: 1,
-            maxWidth: 3,
+            maxWidth: 4,
             isTimeDependant: false,
         };
         _this = _super.call(this, config, clientId, options) || this;
@@ -493,6 +489,8 @@ var ImageWidget = (function (_super) {
         defaultWidth: 4,
         defaultHeight: 3,
         maxCount: Infinity,
+        isResizable: true,
+        isMovable: false,
     };
     return ImageWidget;
 }(Widget));
@@ -502,7 +500,6 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         var _this = this;
         var config = {
             isConfigurable: false,
-            isResizable: true,
             isRemovable: true,
             minHeight: 1,
             maxHeight: 3,
@@ -561,6 +558,8 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         defaultWidth: 2,
         defaultHeight: 2,
         maxCount: 2,
+        isResizable: true,
+        isMovable: true,
     };
     return WorkCountByActivityAndStatusWidget;
 }(Widget));

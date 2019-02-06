@@ -10,18 +10,19 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
         defaultWidth: 4,
         defaultHeight: 3,
         maxCount: Infinity,
-    }; 
+        isResizable: true,
+        isMovable: false,
+    };
 
     constructor(clientId: number, options: IOptions<IImageWidgetOptions>) {
 
         const config: IWidgetConfiguration = {
             isConfigurable: false,
-            isResizable: true,
-            isRemovable: true,            
+            isRemovable: true,
             minHeight: 1,
-            maxHeight: 3,
+            maxHeight: 4,
             minWidth: 1,
-            maxWidth: 3,
+            maxWidth: 4,
             isTimeDependant: false,
         };
 

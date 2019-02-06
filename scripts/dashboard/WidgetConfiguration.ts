@@ -6,7 +6,7 @@ interface IWidgetConfiguration {
     readonly maxHeight?: number;
 
     readonly isConfigurable: boolean;
-    readonly isResizable: boolean;
+    
     readonly isRemovable: boolean;
 
     readonly isTimeDependant: boolean;

@@ -16,6 +16,9 @@ interface ISideBarSettings {
     defaultWidth: number;
     defaultHeight: number;
 
+    isResizable: boolean;
+    isMovable: boolean;
+
     title: string;
     description: string;
     icon: string;
