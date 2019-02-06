@@ -255,6 +255,7 @@ abstract class Widget<TOptions> {
             new FormData(form).forEach((value, key) => {
                 result[key] = value;
             });
+            console.log(result);
             this.applyNewSettings(result);
         });
 

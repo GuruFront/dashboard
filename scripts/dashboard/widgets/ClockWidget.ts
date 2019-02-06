@@ -18,6 +18,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         maxCount: 1,
         isResizable: false,
         isMovable: true,
+
     };
 
     constructor(clientId: number, options: IOptions<IClockWidgetOptions>) {
@@ -33,7 +34,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
 
         const widgetSettings = [
             {
-                name: "dataType",
+                name: "dateFormat",
                 inputType: "radio",
                 title: "Choose data type",
                 values: [12, 24],
@@ -84,7 +85,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         for (let key in result) {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
-                    case 'dataType':
+                    case 'dateFormat':
                         this.options.dateFormat = +result[key];
                         // TODO: it must be changed
                         this.widgetSettings[0].value = this.options.dateFormat;

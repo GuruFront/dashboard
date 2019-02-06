@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -214,6 +214,7 @@ var Widget = (function () {
             new FormData(form).forEach(function (value, key) {
                 result[key] = value;
             });
+            console.log(result);
             _this.applyNewSettings(result);
         });
         btnCancel.addEventListener("click", function () {
@@ -324,7 +325,7 @@ var ClockWidget = (function (_super) {
         };
         var widgetSettings = [
             {
-                name: "dataType",
+                name: "dateFormat",
                 inputType: "radio",
                 title: "Choose data type",
                 values: [12, 24],
@@ -369,7 +370,7 @@ var ClockWidget = (function (_super) {
         for (var key in result) {
             if (result.hasOwnProperty(key)) {
                 switch (key) {
-                    case 'dataType':
+                    case 'dateFormat':
                         this.options.dateFormat = +result[key];
                         this.widgetSettings[0].value = this.options.dateFormat;
                         console.log("dateFormat -->", this.options.dateFormat);
@@ -500,7 +501,7 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         var _this = this;
         var config = {
             isConfigurable: false,
-            isRemovable: true,
+            isRemovable: false,
             minHeight: 1,
             maxHeight: 3,
             minWidth: 1,

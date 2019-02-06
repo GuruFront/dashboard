@@ -22,7 +22,7 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
 
         const config: IWidgetConfiguration = {
             isConfigurable: false,
-            isRemovable: true,
+            isRemovable: false,
             minHeight: 1,
             maxHeight: 3,
             minWidth: 1,
