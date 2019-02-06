@@ -9,5 +9,5 @@
 *.zip
 .DS_Store?
 node_moules
-.idea
+*.idea
 /.vs

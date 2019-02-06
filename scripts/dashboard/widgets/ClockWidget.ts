@@ -37,12 +37,14 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
                 title: "Choose data type",
                 values: [12, 24],
                 value: options.options.dateFormat
-            }, {
+            },
+            {
                 name: "testCheckBox",
                 inputType: "checkbox",
                 title: "Test CheckBox",
                 values: ["Foo"]
-            }, {
+            },
+            {
                 name: "dateTimezone",
                 inputType: "select",
                 title: "Choose timezone",
@@ -53,14 +55,14 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
                 inputType: "inputText",
                 title: "Test input text",
                 placeholder: "Test input placeholder"
-            }];
+            }
+        ];
 
         super(config, clientId, options, widgetSettings);
     }
 
-    protected init(element: HTMLElement) {
-        //console.log('initializing a сlock', element);
 
+    protected init(element: HTMLElement) {
         element.classList.add("clock-widget");
         this.hideSpinner();
 
@@ -114,7 +116,8 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         console.log(newDate, isToday);
     }
 
-    protected handleClientChange(clientId: number) { }
+    protected handleClientChange(clientId: number) {
+    }
 
     private createDateElement(element: HTMLElement) {
         const dateElement = document.createElement('div');

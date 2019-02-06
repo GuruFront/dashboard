@@ -1,8 +1,4 @@
-/**
- * TConfiguration is a type of configuration settings(must be derived from IWidgetConfiguration).
- * So each widget has all properties from IWidgetConfiguration and might have it's own additional 
- * properties which also available via this.config
- * */
+
 abstract class Widget<TOptions> {
     public id: string;
     public readonly uid: string;
@@ -37,8 +33,8 @@ abstract class Widget<TOptions> {
             y: options.y,
         };
         // TODO: change to real uid
-        this.uid = (Math.random()* 10000).toFixed(0);
-        
+        this.uid = (Math.random() * 10000).toFixed(0);
+
         this.currentClientId = clientId;
         this.widgetSettings = widgetSettings || [];
     }
@@ -75,6 +71,7 @@ abstract class Widget<TOptions> {
         // TODO: Unsubscribe from events
     }
 
+
     private subscribeToDateChangedEvent() {
         if (this.config.isTimeDependant) {
             document.addEventListener('date_changed', (ev: CustomEvent) => {
@@ -85,7 +82,8 @@ abstract class Widget<TOptions> {
         }
     }
 
-    protected handleDateChange(newDate: Date, isToday: boolean) { }
+    protected handleDateChange(newDate: Date, isToday: boolean) {
+    }
 
     private subscribeToClientChangedEvent() {
         document.addEventListener('client_changed', (ev: CustomEvent) => {
@@ -179,24 +177,29 @@ abstract class Widget<TOptions> {
         icon.addEventListener('click', ev => this.renderForm(this.widgetSettings), false);
     }
 
-    // TODO: maybe it's better to just show/hide panle section instead of creating/destroying it?
-    protected openWidgetSettings(): HTMLElement {
+    private handleDisplayPopup(show: boolean): HTMLElement {
         let
-            body: HTMLElement = document.getElementsByTagName('body')[0],
-            popupDiv: HTMLElement = document.createElement('div'),
-            container: HTMLElement = document.createElement('div');
+            popup = document.getElementById("widget-popup"),
+            popupContainer = document.getElementById("widget-popup-container");
 
-        popupDiv.setAttribute("class", "grid-item-popup");
-        container.setAttribute("class", "grid-item-popup__container");
-        popupDiv.appendChild(container);
+        if (popup && popupContainer) {
+            // clear popup
+            while (popupContainer.firstChild) {
+                popupContainer.removeChild(popupContainer.firstChild);
+            }
 
-        body.appendChild(popupDiv);
-        return container;
+            if (show) {
+                popup.style.display = "flex";
+                return popupContainer;
+            } else {
+                popup.style.display = "none";
+            }
+        }
     }
 
     protected renderForm(settings: IWidgetEditSettings[]) {
         let
-            popupContainer: HTMLElement = this.openWidgetSettings(),
+            popupContainer: HTMLElement = this.handleDisplayPopup(true),
             widgetWrap: HTMLElement = document.createElement('div');
 
         widgetWrap.setAttribute("class", "widget-settings-wrap");
@@ -208,8 +211,7 @@ abstract class Widget<TOptions> {
         widgetWrap.appendChild(title);
 
         let form = document.createElement('form');
-        //form.setAttribute("action", "console.log(data)");
-        //form.setAttribute("method", 'POST');
+        form.setAttribute("action", ".");
         widgetWrap.appendChild(form);
 
         // define input type and call render function
@@ -249,26 +251,22 @@ abstract class Widget<TOptions> {
         formButtonsWrap.appendChild(btnCancel);
         form.appendChild(formButtonsWrap);
 
-        // Get new widget settings
+        // send new settings to widget
         form.addEventListener("submit", (e) => {
             e.preventDefault();
             let result = {};
             new FormData(form).forEach((value, key) => {
                 result[key] = value;
             });
-
             this.applyNewSettings(result);
         });
 
-        // Cancel/Remove Popup
-        btnCancel.addEventListener("click", (e) => {
-            let allSettings = document.getElementsByClassName('grid-item-popup');
-            for (let i = 0; allSettings.length > i; i++) {
-                allSettings[i].remove();
-            }
+        // close popup
+        btnCancel.addEventListener("click", () => {
+            this.handleDisplayPopup(false);
         });
 
-        // render input radio
+        // render input checkbox/radio type
         function renderInputCheck(inputEl: IWidgetEditSettings) {
             let
                 values: Array<string | number> = inputEl.values,
@@ -283,7 +281,6 @@ abstract class Widget<TOptions> {
             inputWrap.setAttribute('class', 'settings-input-wrap');
             inputWrap.appendChild(titleHtml);
             form.appendChild(inputWrap);
-
             values.forEach((val: string | number) => {
                 let label = document.createElement('label'),
                     input = document.createElement('input'),
@@ -299,13 +296,14 @@ abstract class Widget<TOptions> {
                 input.setAttribute('value', val.toString());
                 input.checked = val == inputEl.value;
 
+
                 label.appendChild(input);
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
             });
         }
 
-        // render select
+        // render select type
         function renderSelect(inputEl: IWidgetEditSettings) {
             let
                 values: Array<string | number> = inputEl.values,
@@ -333,7 +331,7 @@ abstract class Widget<TOptions> {
             });
         }
 
-        // render input text
+        // render input text type
         function renderInputText(inputEl: IWidgetEditSettings) {
             let
                 name: string = inputEl.name,

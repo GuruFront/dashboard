@@ -1,0 +1,18 @@
+﻿
+.clock-widget {
+  color: rgba($black, 0.9);
+  font-family: 'Open Sans', MS, Arial, sans-serif;
+  font-weight: 700;
+  line-height: normal;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+
+  .clock {
+    font-size: 52pt;
+  }
+
+  .date {
+    font-size: 20pt;
+  }
+}
