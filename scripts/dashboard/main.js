@@ -341,7 +341,8 @@ var ClockWidget = (function (_super) {
                 name: "dateTimezone",
                 inputType: "select",
                 title: "Choose timezone",
-                values: moment.tz.names()
+                values: moment.tz.names(),
+                value: options.options.dateTimezone
             },
             {
                 name: "testInputText",
@@ -451,7 +452,7 @@ var ClockWidget = (function (_super) {
         icon: 'fas fa-clock',
         defaultWidth: 4,
         defaultHeight: 2,
-        maxCount: 1,
+        maxCount: 2,
         isResizable: false,
         isMovable: true,
     };

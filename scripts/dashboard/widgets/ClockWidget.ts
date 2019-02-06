@@ -15,7 +15,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         icon: 'fas fa-clock',
         defaultWidth: 4,
         defaultHeight: 2,
-        maxCount: 1,
+        maxCount: 2,
         isResizable: false,
         isMovable: true,
 
@@ -50,7 +50,8 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
                 name: "dateTimezone",
                 inputType: "select",
                 title: "Choose timezone",
-                values: moment.tz.names()
+                values: moment.tz.names(),
+                value: options.options.dateTimezone
             },
             {
                 name: "testInputText",
