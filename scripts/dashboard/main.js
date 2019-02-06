@@ -316,7 +316,7 @@ var ClockWidget = (function (_super) {
     function ClockWidget(clientId, options) {
         var _this = this;
         var config = {
-            isRemovable: true,
+            isRemovable: false,
             isConfigurable: true,
             minWidth: 2,
             minHeight: 2,
@@ -446,9 +446,9 @@ var ClockWidget = (function (_super) {
     ClockWidget.id = "clockWidget";
     ClockWidget.sidebarSettings = {
         title: 'Clock',
-        description: 'Clock widget with format and timezone',
+        description: 'Clock widget. Not removable. Configurable. Not resizable. Movable. 4*2. Single instance',
         category: 'General',
-        icon: '',
+        icon: 'fas fa-clock',
         defaultWidth: 4,
         defaultHeight: 2,
         maxCount: 1,
@@ -484,9 +484,9 @@ var ImageWidget = (function (_super) {
     ImageWidget.id = "imageWidget";
     ImageWidget.sidebarSettings = {
         title: 'Image',
-        description: 'Image',
+        description: 'Image widget. Removable. Not configurable. Resizable. Not movable. 4*3. Not limited.',
         category: 'General',
-        icon: '',
+        icon: 'fas fa-image',
         defaultWidth: 4,
         defaultHeight: 3,
         maxCount: Infinity,
@@ -553,9 +553,9 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
     WorkCountByActivityAndStatusWidget.id = "workCountByActivityAndStatusWidget";
     WorkCountByActivityAndStatusWidget.sidebarSettings = {
         title: 'Work Counter',
-        description: 'Work Counter',
-        category: 'General',
-        icon: '',
+        description: 'Work Counter widget. Removable. Not configurable. Resizable. Movable. 2*2. 2 instances max',
+        category: 'Work',
+        icon: 'fas fa-info-circle',
         defaultWidth: 2,
         defaultHeight: 2,
         maxCount: 2,

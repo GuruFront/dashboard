@@ -10,9 +10,9 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
 
     public static sidebarSettings: ISideBarSettings = {
         title: 'Clock',
-        description: 'Clock widget with format and timezone',
+        description: 'Clock widget. Not removable. Configurable. Not resizable. Movable. 4*2. Single instance',
         category: 'General',
-        icon: '',
+        icon: 'fas fa-clock',
         defaultWidth: 4,
         defaultHeight: 2,
         maxCount: 1,
@@ -24,7 +24,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
     constructor(clientId: number, options: IOptions<IClockWidgetOptions>) {
 
         const config: IWidgetConfiguration = {
-            isRemovable: true,
+            isRemovable: false,
             isConfigurable: true,
             minWidth: 2,
             minHeight: 2,

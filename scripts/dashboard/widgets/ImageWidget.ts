@@ -4,9 +4,9 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
 
     public static sidebarSettings: ISideBarSettings = {
         title: 'Image',
-        description: 'Image',
+        description: 'Image widget. Removable. Not configurable. Resizable. Not movable. 4*3. Not limited.',
         category: 'General',
-        icon: '',
+        icon: 'fas fa-image',
         defaultWidth: 4,
         defaultHeight: 3,
         maxCount: Infinity,
