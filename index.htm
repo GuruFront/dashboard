@@ -105,9 +105,8 @@
             categories.push(widgetsDict[w].sidebarSettings.category);
         });
 
-        console.log("widgetsDict", widgetsDict);
+        // console.log("widgetsDict", widgetsDict);
         categories = _.uniqBy(categories);
-
 
 
         gridInit();
@@ -116,6 +115,8 @@
         widgetsInit(widgetsDict);
         handleEditMode(isEditMode);
         handleEvents();
+        setGridHeight();
+
 
         function gridInit() {
             // dashboard activation
@@ -124,19 +125,13 @@
                 height: height,
                 float: true,
                 animate: true,
-                currentHeight: height,
                 acceptWidgets: '.grid-stack-item',
             });
-
-            // set height for grid
-            $("#grid1").height((mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin) * height);
-            $("#grid1").data("gs-current-height", height);
-
-
             mainGrid
                 .on('dropover', (ev, ui) => ui.helper.hide())
                 .on('dropout', (ev, ui) => ui.helper.show());
         }
+
         function addTilePlaceholders() {
             var
                 height = mainGrid.data("gridstack").grid.height,
@@ -157,12 +152,18 @@
                 }
             }
         }
+
+        function setGridHeight() {
+            mainGrid.height((mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin) * height);
+            mainGrid.data("data-gs-current-height", height);
+        }
         function checklocalStorage() {
             let localstore = JSON.parse(localStorage.getItem("widgets"));
             if (typeof localstore !== "undefined" && localstore != null) {
                 defaultConfig = localstore;
             }
         }
+
         function renderCategories() {
             categories.forEach(x => {
                 sideBar
@@ -177,6 +178,7 @@
                     )
             });
         }
+
         function addToSideBar(id, widget, remove) {
             var config = widget.sidebarSettings;
             var count = config.maxCount - widget.gridInstances.length;
@@ -210,6 +212,7 @@
                 $('.sid[data-widget="' + id + '"] .widget-title').attr('data-widget-count', count == Infinity ? '' : count);
             }
         }
+
         function widgetsInit(widgets) {
 
             let widgetsDefault = [];
@@ -226,6 +229,7 @@
                 renderWidgets(widgetsDefault);
             }
         }
+
         function renderWidgets(activeWidgets, element) {
             activeWidgets.forEach(widget => {
                 var el = $('<div class="grid-stack-item"><div class="grid-stack-item-content"><div class="widget-content"><div class="widget-loading-container">' +
@@ -278,6 +282,7 @@
                 widget.initBase(el.find('.widget-content')[0]);
             });
         }
+
         function saveGrid() {
             let grid = mainGrid.data("gridstack").grid,
                 activeWidgets = [];
@@ -304,6 +309,7 @@
                 localStorage.setItem('widgets', JSON.stringify(activeWidgets));
             }, 0);
         }
+
         function handleEditMode(mode) {
             let grid = mainGrid.data('gridstack');
             if (grid.grid) {
@@ -321,9 +327,13 @@
                 }
             }
         }
+
         function handleEvents() {
             mainGrid.on('gsresizestop', (event, element) => {
                 $(element).find('.widget-content')[0].dispatchEvent(new CustomEvent('resize_stopped'));
+            });
+            mainGrid.on('change', () => {
+                setGridHeight();
             });
             mainGrid.on('added', (event, items) => {
                 let grid = mainGrid.data('gridstack');
