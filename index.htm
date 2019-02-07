@@ -88,7 +88,8 @@
             height = 10,
             mainGrid = $('#grid1'),
             sideBar = $('.sidebar'),
-            localStorage = window.localStorage;
+            localStorage = window.localStorage,
+            cellHeight = mainGrid.data("gridstack").opts.cellHeight;
 
         checklocalStorage();
 
@@ -115,8 +116,14 @@
             width: width,
             height: height,
             float: true,
+            animate: true,
+            currentHeight: height,
             acceptWidgets: '.grid-stack-item',
         });
+
+        // set height for grid
+        $("#grid1").height((cellHeight + mainGrid.data("gridstack").opts.verticalMargin) * height);
+        $("#grid1").data("gs-current-height", height);
 
 
         mainGrid
@@ -130,11 +137,12 @@
         addTilePlaceholders();
 
 
+
         function addTilePlaceholders() {
             var
                 height = mainGrid.data("gridstack").grid.height,
                 width = mainGrid.data("gridstack").grid.width,
-                rowHight = mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin;
+                rowHight = cellHeight + mainGrid.data("gridstack").opts.verticalMargin;
 
             if (height > 0 && width > 0) {
                 for (var i = 0; i < width; i++) {
