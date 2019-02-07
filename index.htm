@@ -50,7 +50,7 @@
         }
 
         .grid-stack-placeholder{
-            background-color: red;
+            /*background-color: red;*/
             border-left: 10px solid white;
             border-right: 10px solid white;
         }
@@ -353,9 +353,6 @@
         function handleEvents() {
             mainGrid.on('gsresizestop', (event, element) => {
                 $(element).find('.widget-content')[0].dispatchEvent(new CustomEvent('resize_stopped'));
-            });
-            mainGrid.on('dragstop', (event, element) => {
-                debugger
             });
             mainGrid.on('added', (event, items) => {
                 let grid = mainGrid.data('gridstack');
