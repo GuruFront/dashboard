@@ -131,10 +131,10 @@
 
 
         function addTilePlaceholders() {
-
             var
                 height = mainGrid.data("gridstack").grid.height,
-                width = mainGrid.data("gridstack").grid.width;
+                width = mainGrid.data("gridstack").grid.width,
+                rowHight = mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin;
 
             if (height > 0 && width > 0) {
                 for (var i = 0; i < width; i++) {
@@ -142,7 +142,7 @@
                     for (var j = 0; j < height; j++) {
                         var
                             $placeholderCell = $("<div class='grid-placeholder-cell'></div>"),
-                            top = 80 * j;
+                            top = rowHight * j;
                         $placeholderCell.css("left", left + "%");
                         $placeholderCell.css("top", top + "px");
                         $placeholderCell.appendTo(".grid-container");
