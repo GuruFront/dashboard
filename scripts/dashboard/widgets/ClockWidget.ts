@@ -1,5 +1,6 @@
 /// <reference path="../Widget.ts" />
 declare const moment: any;
+
 class ClockWidget extends Widget<IClockWidgetOptions> {
     public static readonly id: string = "clockWidget";
 
@@ -15,7 +16,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         icon: 'fas fa-clock',
         defaultWidth: 4,
         defaultHeight: 2,
-        maxCount: 2,
+        maxCount: 1,
         isResizable: true,
         isMovable: true,
     };
@@ -23,7 +24,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
     constructor(clientId: number, options: IOptions<IClockWidgetOptions>) {
 
         const config: IWidgetConfiguration = {
-            isRemovable: false,
+            isRemovable: true,
             isConfigurable: true,
             minWidth: 2,
             minHeight: 2,
@@ -57,6 +58,12 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
                 inputType: "inputText",
                 title: "Test input text",
                 placeholder: "Test input placeholder"
+            },
+            {
+                name: "testInputNumber",
+                inputType: "inputNumber",
+                title: "Test input number",
+                placeholder: "Test numbers placeholder"
             }
         ];
 
@@ -103,6 +110,9 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
                         break;
                     case 'testInputText':
                         console.log("testInputText -->", result[key]);
+                        break;
+                    case 'testInputNumber':
+                        console.log("testInputNumber -->", result[key]);
                         break;
                     case 'testCheckBox':
                         console.log("testCheckBox -->", result[key]);
@@ -176,7 +186,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
 
     private getDateString(date?: Date): string {
         date = date || new Date();
-        var options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+        var options = {weekday: 'short', year: 'numeric', month: 'short', day: '2-digit'};
 
         return date.toLocaleDateString('en-GB', options);
     }

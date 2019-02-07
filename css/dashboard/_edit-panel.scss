@@ -42,3 +42,9 @@
   display: none;
   flex-direction: column;
 }
+
+.dashboard:not(.open){
+  .grid-item-popup{
+    display: none!important;
+  }
+}

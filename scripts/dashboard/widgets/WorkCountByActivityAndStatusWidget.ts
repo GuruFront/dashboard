@@ -22,7 +22,7 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
 
         const config: IWidgetConfiguration = {
             isConfigurable: false,
-            isRemovable: false,
+            isRemovable: true,
             minHeight: 1,
             maxHeight: 3,
             minWidth: 1,
@@ -53,7 +53,9 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
                 this.counterElement.innerText = data.toString();
             });
     }
-
+    protected handleResize() {
+        console.log('Count');
+    }
     protected reDraw() {
         this.showSpinner();
 

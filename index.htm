@@ -33,10 +33,16 @@
 <body>
 <div class="dashboard">
     <div class="dashboardEditPanel" id="dashboardEditPanel">
-        <div class="sidebar"></div>
+        <div class="sidebar">
+            <label>
+                Gaps
+                <br>
+                <input type="number" id="gridGaps" min="0" max="15">
+            </label>
+        </div>
         <div class="buttons">
-            <button class="btn btn-primary" id="saveChanges">Save</button>
-            <button class="btn btn-default" id="cancel">Cancel</button>
+            <button class="btn btn-primary" id="saveChanges">Done</button>
+            <button class="btn btn-default" id="reset">Reset</button>
         </div>
     </div>
 
@@ -44,31 +50,27 @@
     <div class="grid-container">
         <div class="grid-stack grid-stack-12" id="grid1"></div>
     </div>
-</div>
 
-<div class="grid-item-popup" id="widget-popup">
-    <div class="grid-item-popup__container" id="widget-popup-container">
+    <div class="grid-item-popup" id="widget-popup">
+        <div class="grid-item-popup__container" id="widget-popup-container">
+        </div>
     </div>
 </div>
 
-
 <script type="text/javascript">
     $(() => {
-
         // all allowed widgets
         let allAllowedWidgets = ["clockWidget", "imageWidget", "workCountByActivityAndStatusWidget"];
         // saved widgets(default or user-saved)
-        let defaultConfig = [
-            //{
-            //    id: "clockWidget",
-            //    x: 0,
-            //    y: 0,
-            //    width: 3,
-            //    height: 2,
-            //    options: {
-            //        dateFormat: 24
-            //    }
-            //},
+        let savedConfig;
+        let defaultConfig = savedConfig = [
+            {
+                id: "workCountByActivityAndStatusWidget",
+                x: 0,
+                y: 0,
+                width: 3,
+                height: 2
+            },
             {
                 id: "imageWidget",
                 x: 5,
@@ -76,7 +78,8 @@
                 width: 2,
                 height: 2,
                 options: {
-                    imageUrl: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'
+                    imageUrl: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+                    fit: "contain"
                 }
             }
         ];
@@ -86,57 +89,81 @@
             clientId = 7,
             width = 12,
             height = 10,
-            mainGrid = $('#grid1'),
+            verticalMargin = 5,
+            horizontalMargin = 5,
             sideBar = $('.sidebar'),
-            localStorage = window.localStorage;
+            localStorage = window.localStorage,
+            widgetsDict = {},
+            categories;
 
-        checklocalStorage();
-
-        var widgetsDict = {};
-        var categories = [];
-        allAllowedWidgets.map(w => {
-            var instances = defaultConfig
-                .filter(x => x.id === w)
-                .map(x => Widget.widgetInitializer(w, clientId, x));
-            widgetsDict[w] = {
-                sidebarSettings: Widget.getSidebarSettings(w),
-                gridInstances: instances
-            };
-            categories.push(widgetsDict[w].sidebarSettings.category);
-        });
-
-        // console.log("widgetsDict", widgetsDict);
-        categories = _.uniqBy(categories);
-
-
+        checkLocalStorage();
         gridInit();
-        addTilePlaceholders();
         renderCategories();
         widgetsInit(widgetsDict);
         handleEditMode(isEditMode);
-        handleEvents();
+        addTilePlaceholders();
+        handleCommonEvents();
+        handleGridEvents();
         setGridHeight();
 
-
         function gridInit() {
+            widgetsDict = {};
+            categories = [];
+            allAllowedWidgets.map(w => {
+                var instances = defaultConfig
+                    .filter(x => x.id === w)
+                    .map(x => Widget.widgetInitializer(w, clientId, x));
+                widgetsDict[w] = {
+                    sidebarSettings: Widget.getSidebarSettings(w),
+                    gridInstances: instances
+                };
+                categories.push(widgetsDict[w].sidebarSettings.category);
+            });
+
+            categories = _.uniqBy(categories);
             // dashboard activation
-            mainGrid.gridstack({
+
+            $('#grid1').gridstack({
                 width: width,
                 height: height,
                 float: true,
                 animate: true,
                 acceptWidgets: '.grid-stack-item',
             });
-            mainGrid
+            $('#grid1')
                 .on('dropover', (ev, ui) => ui.helper.hide())
                 .on('dropout', (ev, ui) => ui.helper.show());
         }
 
+        function gridReInit() {
+            // clear sidebar
+            $(".sidebar .panel").remove();
+            // remove grid
+            $('#grid1').data("gridstack").destroy();
+
+            // append new grid selector
+            $('<div class="grid-stack grid-stack-12" id="grid1"></div>').appendTo(".grid-container");
+
+            // init
+            // checkLocalStorage();
+            defaultConfig = savedConfig;
+            gridInit();
+            renderCategories();
+            widgetsInit(widgetsDict);
+            setGridHeight();
+            $(".grid-placeholder-cell").remove();
+            addTilePlaceholders();
+            handleEditMode(false);
+            handleGridEvents();
+
+            localStorage.removeItem("widgets")
+        }
+
         function addTilePlaceholders() {
             var
-                height = mainGrid.data("gridstack").grid.height,
-                width = mainGrid.data("gridstack").grid.width,
-                rowHight = mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin;
+                height = $('#grid1').data("gridstack").grid.height,
+                width = $('#grid1').data("gridstack").grid.width,
+                rowHeight = $('#grid1').data("gridstack").opts.cellHeight + $('#grid1').data("gridstack").opts.verticalMargin;
 
             if (height > 0 && width > 0) {
                 for (var i = 0; i < width; i++) {
@@ -144,20 +171,24 @@
                     for (var j = 0; j < height; j++) {
                         var
                             $placeholderCell = $("<div class='grid-placeholder-cell'></div>"),
-                            top = rowHight * j;
+                            top = rowHeight * j;
                         $placeholderCell.css("left", left + "%");
                         $placeholderCell.css("top", top + "px");
                         $placeholderCell.appendTo(".grid-container");
                     }
                 }
             }
+
+            $(".grid-placeholder-cell").css("border-left-width", horizontalMargin + "px");
+            $(".grid-placeholder-cell").css("border-right-width", horizontalMargin + "px");
         }
 
         function setGridHeight() {
-            mainGrid.height((mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin) * height);
-            mainGrid.data("data-gs-current-height", height);
+            $('#grid1').height(($('#grid1').data("gridstack").opts.cellHeight + $('#grid1').data("gridstack").opts.verticalMargin) * height);
+            $('#grid1').data("data-gs-current-height", height);
         }
-        function checklocalStorage() {
+
+        function checkLocalStorage() {
             let localstore = JSON.parse(localStorage.getItem("widgets"));
             if (typeof localstore !== "undefined" && localstore != null) {
                 defaultConfig = localstore;
@@ -214,7 +245,6 @@
         }
 
         function widgetsInit(widgets) {
-
             let widgetsDefault = [];
 
             for (var widgetId in widgets) {
@@ -224,7 +254,6 @@
                 }
                 widgetsDefault = widgetsDefault.concat(widgetConfig.gridInstances);
             }
-
             if (widgetsDefault.length > 0) {
                 renderWidgets(widgetsDefault);
             }
@@ -244,7 +273,7 @@
 
                 el.attr('data-widget', widget.id);
 
-                var grid = mainGrid.data("gridstack");
+                var grid = $('#grid1').data("gridstack");
 
                 if (element) {
                     el.attr('data-gs-id', widget.uid);
@@ -281,10 +310,14 @@
 
                 widget.initBase(el.find('.widget-content')[0]);
             });
+
+            $("#grid1 .grid-stack-item-content").css("left", horizontalMargin + "px");
+            $("#grid1 .grid-stack-item-content").css("right", horizontalMargin + "px");
+            $("#grid1").data("gridstack").verticalMargin(verticalMargin);
         }
 
         function saveGrid() {
-            let grid = mainGrid.data("gridstack").grid,
+            let grid = $('#grid1').data("gridstack").grid,
                 activeWidgets = [];
             setTimeout(() => {
                 for (let i = 0; grid.nodes.length > i; i++) {
@@ -302,7 +335,6 @@
                             return item.uid === itemData.gsId
                         });
                         newWidget.options = instance.options;
-                        console.log(newWidget);
                         activeWidgets.push(newWidget);
                     }
                 }
@@ -311,13 +343,12 @@
         }
 
         function handleEditMode(mode) {
-            let grid = mainGrid.data('gridstack');
+            let grid = $('#grid1').data('gridstack');
             if (grid.grid) {
                 if (mode) {
                     grid.grid.nodes.forEach(x => {
                         let widgetId = x.el.data('widget');
                         let config = widgetsDict[widgetId];
-                        //console.log(config.sidebarSettings.isResizable);
                         grid.resizable(x.el, config.sidebarSettings.isResizable);
                         grid.movable(x.el, config.sidebarSettings.isMovable);
                     });
@@ -328,15 +359,26 @@
             }
         }
 
-        function handleEvents() {
-            mainGrid.on('gsresizestop', (event, element) => {
+        function handleGridEvents() {
+            $('#grid1').on('gsresizestop', (event, element) => {
+                saveGrid();
                 $(element).find('.widget-content')[0].dispatchEvent(new CustomEvent('resize_stopped'));
             });
-            mainGrid.on('change', () => {
+            $('#grid1').on('change', () => {
                 setGridHeight();
             });
-            mainGrid.on('added', (event, items) => {
-                let grid = mainGrid.data('gridstack');
+
+            $("#grid1").on('dragstop', () => {
+                saveGrid();
+            });
+            $('#grid1').on('removed', () => {
+                saveGrid();
+            });
+            $('#grid1').on('added', (event, items) => {
+
+                saveGrid();
+                setGridHeight();
+                let grid = $('#grid1').data('gridstack');
                 if (isEditMode) {
                     for (let i = 0; i < items.length; i++) {
                         let widgetId = items[i].el.data('widget'),
@@ -346,12 +388,42 @@
                         widget.gridInstances.push(newWidget);
 
                         addToSideBar(widgetId, widget);
-
                         renderWidgets([newWidget], items[i].el);
                     }
                 } else {
                     grid.removeWidget(items[0].el[0], true)
                 }
+            });
+            $('#grid1').on("click", (e) => {
+                var target = $(e.target);
+                if (target.is('div.widget-icon-delete')) {
+
+                    let deletedWidget = target.closest('.grid-stack-item');
+                    let widgetId = deletedWidget.data('widget');
+                    let uid = deletedWidget.data('gs-id');
+
+                    $('#grid1').data("gridstack").removeWidget(deletedWidget);
+
+                    let widgetConfig = widgetsDict[widgetId];
+                    if (widgetConfig) {
+                        var ind = widgetConfig.gridInstances.findIndex(x => x.uid == uid);
+                        if (ind >= 0) {
+                            widgetConfig.gridInstances.splice(ind, 1);
+                        }
+                        addToSideBar(widgetId, widgetConfig, true);
+                    }
+                }
+            });
+        }
+
+        function handleCommonEvents() {
+            $("#gridGaps").on("input", (e) => {
+                // $(".grid-placeholder-cell").css("border-left-width", e.target.value + "px");
+                // $(".grid-placeholder-cell").css("border-right-width", e.target.value + "px");
+
+                $("#grid1 .grid-stack-item-content").css("left", e.target.value + "px");
+                $("#grid1 .grid-stack-item-content").css("right", e.target.value + "px");
+                $("#grid1").data("gridstack").verticalMargin(e.target.value);
             });
             $('#editMode').on('change', (e) => {
                 isEditMode = $(e.target).is(':checked');
@@ -363,6 +435,13 @@
                 //mainGrid.data('gridstack').enableResize(isEditMode, true)
                 document.dispatchEvent(new CustomEvent(isEditMode ? 'grid_editing_started' : 'grid_editing_finished'));
             });
+
+            $("#widget-popup").on("click", (e) => {
+                if (e.target.id === "submitConfigBtn") {
+                    saveGrid();
+                    $(".grid-item-popup").css("display", "none");
+                }
+            });
             $('.panel-heading').click(function () {
                 $(this).find('i').toggleClass('fa-chevron-circle-up fa-chevron-circle-down');
                 $(this).next().toggleClass("in");
@@ -372,28 +451,11 @@
                 saveGrid();
                 $('#editMode').prop('checked', false).change();
             });
-            $('#cancel').click(function () {
-                // discard changes
+            $('#reset').click(function () {
                 $('#editMode').prop('checked', false).change();
-            });
-            $('#grid1').on("click", (e) => {
-                var target = $(e.target);
-                if (target.is('div.widget-icon-delete')) {
-
-                    let deletedWidget = target.closest('.grid-stack-item');
-                    let widgetId = deletedWidget.data('widget');
-                    let uid = deletedWidget.data('gs-id');
-
-                    mainGrid.data("gridstack").removeWidget(deletedWidget);
-
-                    let widgetConfig = widgetsDict[widgetId];
-                    if (widgetConfig) {
-                        var ind = widgetConfig.gridInstances.findIndex(x => x.uid == uid);
-                        if (ind >= 0) {
-                            widgetConfig.gridInstances.splice(ind, 1);
-                        }
-                        addToSideBar(widgetId, widgetConfig, true);
-                    }
+                // discard changes
+                if (confirm("Are you sure you want to reset this dashboard - this cannot be undone ?")) {
+                    gridReInit();
                 }
             });
         }

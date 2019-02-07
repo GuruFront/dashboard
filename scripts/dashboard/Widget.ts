@@ -233,7 +233,10 @@ abstract class Widget<TOptions> {
                     renderSelect(inputEl);
                     break;
                 case 'inputText':
-                    renderInputText(inputEl);
+                    renderInput(inputEl, "text");
+                    break;
+                    case 'inputNumber':
+                    renderInput(inputEl, "number");
                     break;
                 default:
                     console.log('Input type not found');
@@ -249,6 +252,7 @@ abstract class Widget<TOptions> {
             btnCancel: HTMLElement = document.createElement('button');
 
         btnSave.setAttribute("type", "submit");
+        btnSave.setAttribute("id", "submitConfigBtn");
         btnSave.innerText = "Apply";
         btnCancel.setAttribute("type", "button");
         btnCancel.innerText = "Cancel";
@@ -339,7 +343,7 @@ abstract class Widget<TOptions> {
         }
 
         // render input text type
-        function renderInputText(inputEl: IWidgetEditSettings) {
+        function renderInput(inputEl: IWidgetEditSettings, type : string) {
             let
                 name: string = inputEl.name,
                 placeholder: string = inputEl.placeholder,
@@ -355,6 +359,7 @@ abstract class Widget<TOptions> {
 
             let input = document.createElement("input");
             input.setAttribute("name", name);
+            input.setAttribute("type", type);
             if (typeof placeholder !== "undefined") {
                 input.setAttribute("placeholder", placeholder);
             }

@@ -200,7 +200,10 @@ var Widget = (function () {
                     renderSelect(inputEl);
                     break;
                 case 'inputText':
-                    renderInputText(inputEl);
+                    renderInput(inputEl, "text");
+                    break;
+                case 'inputNumber':
+                    renderInput(inputEl, "number");
                     break;
                 default:
                     console.log('Input type not found');
@@ -211,6 +214,7 @@ var Widget = (function () {
         formButtonsWrap.setAttribute("class", "settings-form-btns");
         var btnSave = document.createElement('button'), btnCancel = document.createElement('button');
         btnSave.setAttribute("type", "submit");
+        btnSave.setAttribute("id", "submitConfigBtn");
         btnSave.innerText = "Apply";
         btnCancel.setAttribute("type", "button");
         btnCancel.innerText = "Cancel";
@@ -268,7 +272,7 @@ var Widget = (function () {
                 select.appendChild(option);
             });
         }
-        function renderInputText(inputEl) {
+        function renderInput(inputEl, type) {
             var name = inputEl.name, placeholder = inputEl.placeholder, titleHtml = document.createElement('strong'), inputWrap = document.createElement('div');
             titleHtml.setAttribute('class', 'settings-input-title');
             titleHtml.innerText = inputEl.title;
@@ -277,6 +281,7 @@ var Widget = (function () {
             form.appendChild(inputWrap);
             var input = document.createElement("input");
             input.setAttribute("name", name);
+            input.setAttribute("type", type);
             if (typeof placeholder !== "undefined") {
                 input.setAttribute("placeholder", placeholder);
             }
@@ -325,7 +330,7 @@ var ClockWidget = (function (_super) {
     function ClockWidget(clientId, options) {
         var _this = this;
         var config = {
-            isRemovable: false,
+            isRemovable: true,
             isConfigurable: true,
             minWidth: 2,
             minHeight: 2,
@@ -358,6 +363,12 @@ var ClockWidget = (function (_super) {
                 inputType: "inputText",
                 title: "Test input text",
                 placeholder: "Test input placeholder"
+            },
+            {
+                name: "testInputNumber",
+                inputType: "inputNumber",
+                title: "Test input number",
+                placeholder: "Test numbers placeholder"
             }
         ];
         _this = _super.call(this, config, clientId, options, widgetSettings) || this;
@@ -395,6 +406,9 @@ var ClockWidget = (function (_super) {
                         break;
                     case 'testInputText':
                         console.log("testInputText -->", result[key]);
+                        break;
+                    case 'testInputNumber':
+                        console.log("testInputNumber -->", result[key]);
                         break;
                     case 'testCheckBox':
                         console.log("testCheckBox -->", result[key]);
@@ -464,7 +478,7 @@ var ClockWidget = (function (_super) {
         icon: 'fas fa-clock',
         defaultWidth: 4,
         defaultHeight: 2,
-        maxCount: 2,
+        maxCount: 1,
         isResizable: true,
         isMovable: true,
     };
@@ -488,11 +502,17 @@ var ImageWidget = (function (_super) {
     }
     ImageWidget.prototype.init = function (element) {
         this.hideSpinner();
-        element.style.backgroundImage = "url('" + (this.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png') + "')";
-        element.style.backgroundRepeat = "no-repeat";
-        element.style.backgroundSize = "cover";
+        element.classList.add("image-widget");
+        var $img = document.createElement('img');
+        $img.setAttribute("src", (this.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'));
+        $img.setAttribute("alt", this.sidebarSettings.title);
+        $img.style.objectFit = this.options.fit || "contain";
+        element.appendChild($img);
     };
     ImageWidget.prototype.reDraw = function () { };
+    ImageWidget.prototype.handleResize = function () {
+        console.log('Image');
+    };
     ImageWidget.prototype.handleClientChange = function (clientId) { };
     ImageWidget.id = "imageWidget";
     ImageWidget.sidebarSettings = {
@@ -504,7 +524,7 @@ var ImageWidget = (function (_super) {
         defaultHeight: 3,
         maxCount: Infinity,
         isResizable: true,
-        isMovable: false,
+        isMovable: true,
     };
     return ImageWidget;
 }(Widget));
@@ -514,7 +534,7 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         var _this = this;
         var config = {
             isConfigurable: false,
-            isRemovable: false,
+            isRemovable: true,
             minHeight: 1,
             maxHeight: 3,
             minWidth: 1,
@@ -539,6 +559,9 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
             _this.hideSpinner();
             _this.counterElement.innerText = data.toString();
         });
+    };
+    WorkCountByActivityAndStatusWidget.prototype.handleResize = function () {
+        console.log('Count');
     };
     WorkCountByActivityAndStatusWidget.prototype.reDraw = function () {
         var _this = this;
