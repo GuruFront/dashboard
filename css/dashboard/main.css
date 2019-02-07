@@ -1,4 +1,4 @@
-﻿.widget-settings-title {
+.widget-settings-title {
   font-size: 20px;
   margin-bottom: 15px;
   display: block;
@@ -160,13 +160,11 @@
       .widget-content .widget-loading-container .widget-loading div:nth-child(12) {
         transform: rotate(330deg);
         animation-delay: 0s; }
-
 @keyframes lds-spinner {
   0% {
     opacity: 1; }
   100% {
     opacity: 0; } }
-
 .widget-icon-edit,
 .widget-icon-delete {
   cursor: pointer;
@@ -251,3 +249,5 @@
       .sidebar .grid-stack-item .widget-body .widget-description {
         text-align: left;
         font-size: 12px; }
+
+/*# sourceMappingURL=main.css.map */
