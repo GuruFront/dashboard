@@ -88,15 +88,12 @@
             height = 10,
             mainGrid = $('#grid1'),
             sideBar = $('.sidebar'),
-            localStorage = window.localStorage,
-            cellHeight = mainGrid.data("gridstack").opts.cellHeight;
+            localStorage = window.localStorage;
 
         checklocalStorage();
 
         var widgetsDict = {};
         var categories = [];
-        //console.log("defaultConfig", defaultConfig);
-
         allAllowedWidgets.map(w => {
             var instances = defaultConfig
                 .filter(x => x.id === w)
@@ -108,7 +105,7 @@
             categories.push(widgetsDict[w].sidebarSettings.category);
         });
 
-        //console.log("widgetsDict", widgetsDict);
+        console.log("widgetsDict", widgetsDict);
         categories = _.uniqBy(categories);
 
 
@@ -132,7 +129,7 @@
             });
 
             // set height for grid
-            $("#grid1").height((cellHeight + mainGrid.data("gridstack").opts.verticalMargin) * height);
+            $("#grid1").height((mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin) * height);
             $("#grid1").data("gs-current-height", height);
 
 
@@ -144,7 +141,7 @@
             var
                 height = mainGrid.data("gridstack").grid.height,
                 width = mainGrid.data("gridstack").grid.width,
-                rowHight = cellHeight + mainGrid.data("gridstack").opts.verticalMargin;
+                rowHight = mainGrid.data("gridstack").opts.cellHeight + mainGrid.data("gridstack").opts.verticalMargin;
 
             if (height > 0 && width > 0) {
                 for (var i = 0; i < width; i++) {
