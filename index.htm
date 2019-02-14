@@ -32,7 +32,7 @@
     <script src="scripts/dashboard/main.js"></script>
     <title>Widgets Demo</title>
     <style>
-        input{
+        input {
             width: 100%;
         }
     </style>
@@ -47,12 +47,12 @@
                 <br>
                 <input type="number" id="gridGaps" min="0" max="10">
             </label>
-            <!--<br>-->
-            <!--<label>-->
-                <!--Columns-->
-                <!--<br>-->
-                <!--<input type="number" id="gridColumns" min="6" max="12">-->
-            <!--</label>-->
+            <br>
+            <label>
+                Columns
+                <br>
+                <input type="number" id="gridColumns" min="1" max="12">
+            </label>
             <br>
             <label>
                 Rows
@@ -87,7 +87,8 @@
 <script type="text/javascript">
     $(() => {
 
-        let
+        var
+            gridId = "#grid1",
             // all allowed widgets
             allAllowedWidgets = ["clockWidget", "imageWidget", "workCountByActivityAndStatusWidget"],
             savedConfig,
@@ -131,7 +132,7 @@
         handleEditMode(isEditMode);
         handleCommonEvents();
         handleGridEvents();
-        setGridHeight();
+
         addTilePlaceholders();
 
         function gridInit() {
@@ -158,6 +159,10 @@
                 // animate: true,
                 acceptWidgets: '.grid-stack-item',
             });
+
+
+            $("#grid1").data("gridstack").setGridWidth(width);
+
             $('#grid1')
                 .on('dropover', (ev, ui) => ui.helper.hide())
                 .on('dropout', (ev, ui) => ui.helper.show());
@@ -167,6 +172,8 @@
             $('#gridGaps')[0].value = gridGaps;
             $('#gridCellHeight')[0].value = cellHeight;
             $('#gridRows')[0].value = height;
+            $('#gridColumns')[0].value = width;
+            setGridHeight();
         }
 
         function gridReInit(defaultGrid) {
@@ -178,7 +185,7 @@
             // append new grid selector
             $('<div class="grid-stack" id="grid1"></div>').appendTo(".grid-container");
 
-            if (typeof defaultGrid !== "undefined" && defaultGrid){
+            if (typeof defaultGrid !== "undefined" && defaultGrid) {
                 defaultConfig = savedConfig;
                 gridGaps = savedgridGaps;
             } else {
@@ -370,7 +377,7 @@
                         gaps: $('#grid1').data("gridstack").verticalMargin(),
                         columns: $('#grid1').data("gridstack").grid.width,
                         cellHeight: $("#grid1").data("gridstack").cellHeight(),
-                        rows : height
+                        rows: height
                     }
                 };
             setTimeout(() => {
@@ -394,6 +401,7 @@
                 }
                 dashboard.widgets = activeWidgets;
                 localStorage.setItem('widgets', JSON.stringify(dashboard));
+
             }, 0);
         }
 
@@ -415,23 +423,23 @@
         }
 
         function handleGridEvents() {
-            $('#grid1').on('gsresizestop', (event, element) => {
+            $(gridId).on('gsresizestop', (event, element) => {
                 saveGrid();
                 $(element).find('.widget-content')[0].dispatchEvent(new CustomEvent('resize_stopped'));
             });
-            $('#grid1').on('change', () => {
+            $(gridId).on('change', () => {
                 setGridHeight();
             });
-
-            $("#grid1").on('dragstop', () => {
+            $(gridId).on('dragstop', () => {
                 saveGrid();
-            });
-            $('#grid1').on('removed', () => {
-                saveGrid();
-            });
-            $('#grid1').on('added', (event, items) => {
                 setGridHeight();
-                let grid = $('#grid1').data('gridstack');
+            });
+            $(gridId).on('removed', () => {
+                saveGrid();
+            });
+            $(gridId).on('added', (event, items) => {
+                setGridHeight();
+                let grid = $(gridId).data('gridstack');
                 if (isEditMode) {
                     for (let i = 0; i < items.length; i++) {
                         let widgetId = items[i].el.data('widget'),
@@ -449,7 +457,7 @@
 
                 saveGrid();
             });
-            $('#grid1').on("click", (e) => {
+            $(gridId).on("click", (e) => {
                 var target = $(e.target);
                 if (target.is('div.widget-icon-delete')) {
 
@@ -457,7 +465,7 @@
                     let widgetId = deletedWidget.data('widget');
                     let uid = deletedWidget.data('gs-id');
 
-                    $('#grid1').data("gridstack").removeWidget(deletedWidget);
+                    $(gridId).data("gridstack").removeWidget(deletedWidget);
 
                     let widgetConfig = widgetsDict[widgetId];
                     if (widgetConfig) {
@@ -472,31 +480,36 @@
         }
 
         function handleCommonEvents() {
+
             $("#gridGaps").on("input", (e) => {
-                $("#grid1").data("gridstack").verticalMargin(e.target.value);
+                $(gridId).data("gridstack").verticalMargin(e.target.value);
                 $(".grid-placeholder-cell").remove();
                 addTilePlaceholders();
                 saveGrid();
+                setGridHeight();
             });
 
             $("#gridColumns").on("input", (e) => {
-                $("#grid1").data("gridstack").setGridWidth(e.target.value);
-                 width =  e.target.value;
+                $(gridId).data("gridstack").setGridWidth(e.target.value);
+                width = e.target.value;
                 $(".grid-placeholder-cell").remove();
                 addTilePlaceholders();
                 saveGrid();
+                setGridHeight();
             });
             $("#gridRows").on("input", (e) => {
                 height = e.target.value;
                 saveGrid();
+                setGridHeight();
                 alert("To apply changes reload the page please! ");
             });
 
             $("#gridCellHeight").on("input", (e) => {
-                $("#grid1").data("gridstack").cellHeight(e.target.value);
+                $(gridId).data("gridstack").cellHeight(e.target.value);
                 $(".grid-placeholder-cell").remove();
                 addTilePlaceholders();
                 saveGrid();
+                setGridHeight();
             });
             $('#editMode').on('change', (e) => {
                 isEditMode = $(e.target).is(':checked');
@@ -507,6 +520,7 @@
                 $(".widget-icon-delete").css('display', isEditMode ? 'block' : 'none');
                 //mainGrid.data('gridstack').enableResize(isEditMode, true)
                 document.dispatchEvent(new CustomEvent(isEditMode ? 'grid_editing_started' : 'grid_editing_finished'));
+                setGridHeight();
             });
 
             $("#widget-popup").on("click", (e) => {

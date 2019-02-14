@@ -56,31 +56,3 @@
   z-index: 1;
 }
 
-.grid-placeholder-cell {
-  display: none;
-  z-index: -1;
-  position: absolute;
-  width: $cell-placeholder-width;
-  height: $cell-placeholder-height;
-  background-color: blue;
-  opacity: 0.05;
-  border-left: 10px solid white;
-  border-right: 10px solid white;
-}
-
-.grid-stack .grid-stack-placeholder > .placeholder-content {
-  left: var(--grid-placeholder-gaps);
-  right: var(--grid-placeholder-gaps);
-}
-
-.grid-stack-placeholder {
-  /*background-color: red;*/
-  border-left: $cell-gaps solid white;
-  border-right: $cell-gaps solid white;
-}
-
-@media (min-width: 768px) {
-  .dashboard.open .grid-placeholder-cell {
-    display: block;
-  }
-}
