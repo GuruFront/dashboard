@@ -2,6 +2,10 @@
 //  padding-left: 0;
 //  list-style: none;
 //}
+
+:root {
+  --grid-placeholder-gaps: 0px;
+}
 .dashboard {
   background-color: $dashboard-bg;
   min-height: 100vh;
@@ -65,8 +69,8 @@
 }
 
 .grid-stack .grid-stack-placeholder > .placeholder-content {
-  left: 0;
-  right: 0;
+  left: var(--grid-placeholder-gaps);
+  right: var(--grid-placeholder-gaps);
 }
 
 .grid-stack-placeholder {

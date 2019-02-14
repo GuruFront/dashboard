@@ -1,17 +1,222 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8e94d617-b7b6-4250-990c-376dc39bc3c1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="8e94d617-b7b6-4250-990c-376dc39bc3c1" name="Default Changelist" comment="changes">
+      <change afterPath="$PROJECT_DIR$/css/libs/_variables.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_animations.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_aside.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_bs-overwrite.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_extras.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_footer.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_helper-classes.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_layout.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_mainnav.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_navbar.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/nifty/_page-fixedbar.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/_themes-dark.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/_themes-e-base.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/_themes.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-coffee.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-coffee.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-coffee.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-dark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-dark.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-dark.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-dust.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-dust.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-dust.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-gray.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-gray.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-gray.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-lime.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-lime.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-lime.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-mint.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-mint.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-mint.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-navy.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-navy.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-navy.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-ocean.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-ocean.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-ocean.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-prickly-pear.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-prickly-pear.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-prickly-pear.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-purple.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-purple.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-purple.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-well-red.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-well-red.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-well-red.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-yellow.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-yellow.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-a/theme-yellow.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-coffee.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-coffee.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-coffee.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-dark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-dark.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-dark.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-dust.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-dust.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-dust.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-gray.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-gray.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-gray.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-lime.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-lime.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-lime.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-mint.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-mint.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-mint.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-navy.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-navy.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-navy.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-ocean.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-ocean.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-ocean.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-prickly-pear.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-prickly-pear.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-prickly-pear.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-purple.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-purple.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-purple.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-well-red.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-well-red.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-well-red.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-yellow.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-yellow.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-b/theme-yellow.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-coffee.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-coffee.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-coffee.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-dark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-dark.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-dark.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-dust.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-dust.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-dust.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-gray.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-gray.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-gray.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-lime.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-lime.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-lime.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-mint.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-mint.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-mint.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-navy.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-navy.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-navy.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-ocean.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-ocean.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-ocean.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-prickly-pear.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-prickly-pear.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-prickly-pear.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-purple.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-purple.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-purple.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-well-red.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-well-red.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-well-red.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-yellow.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-yellow.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-c/theme-yellow.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-coffee.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-coffee.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-coffee.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-dark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-dark.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-dark.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-dust.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-dust.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-dust.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-gray.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-gray.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-gray.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-lime.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-lime.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-lime.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-mint.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-mint.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-mint.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-navy.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-navy.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-navy.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-ocean.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-ocean.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-ocean.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-prickly-pear.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-prickly-pear.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-prickly-pear.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-purple.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-purple.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-purple.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-well-red.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-well-red.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-well-red.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-yellow.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-yellow.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-d/theme-yellow.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-coffee.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-coffee.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-coffee.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-dark.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-dark.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-dark.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-dust.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-dust.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-dust.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-gray.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-gray.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-gray.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-lime.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-lime.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-lime.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-mint.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-mint.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-mint.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-navy.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-navy.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-navy.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-ocean.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-ocean.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-ocean.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-prickly-pear.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-prickly-pear.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-prickly-pear.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-purple.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-purple.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-purple.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-well-red.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-well-red.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-well-red.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-yellow.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-yellow.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-e/theme-yellow.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-full/theme-dark-full.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-full/theme-dark-full.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-full/theme-dark-full.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-full/theme-light-full.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-full/theme-light-full.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/css/libs/themes/type-full/theme-light-full.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/libs/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/libs/jquery.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/libs/nifty.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/dashboard/dashboard.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/dashboard/dashboard.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/dashboard/dashboard.min.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/dashboard/dashboard.min.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/dashboard/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/dashboard/_grid.scss" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/_grid.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/dashboard/_sidebar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/_sidebar.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/css/dashboard/main.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/main.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/dashboard/main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/main.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/dashboard/main.min.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/main.min.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/dashboard/widgets/_clock-widget.scss" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/widgets/_clock-widget.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/dashboard/widgets/_work-counter-by-activity-and-status-widget.scss" beforeDir="false" afterPath="$PROJECT_DIR$/css/dashboard/widgets/_work-counter-by-activity-and-status-widget.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.htm" beforeDir="false" afterPath="$PROJECT_DIR$/index.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/dashboard/Widget.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dashboard/Widget.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/dashboard/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dashboard/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/dashboard/main.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dashboard/main.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/dashboard/widgets/ClockWidget.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dashboard/widgets/ClockWidget.ts" afterDir="false" />
@@ -26,6 +231,30 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/../../nifty-v2.9.1 - Copy/demo/index.html">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="594">
+                    <caret line="42" lean-forward="true" selection-start-line="42" selection-end-line="42" />
+                    <folding>
+                      <element signature="n#header#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+                      <element signature="n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+                      <element signature="n#script#12;n#body#0;n#html#0;n#!!top" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-1741485239">
@@ -86,41 +315,104 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="1765166103">
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="htm" value="3" />
+          <entry key="html" value="2" />
+          <entry key="js" value="1" />
+          <entry key="scss" value="13" />
+          <entry key="ts" value="7" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="HTML" value="5" />
+          <entry key="JavaScript" value="1" />
+          <entry key="SCSS" value="13" />
+          <entry key="TypeScript" value="7" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="htm" value="4428" />
+          <entry key="html" value="131" />
+          <entry key="scss" value="429" />
+          <entry key="ts" value="750" />
+          <entry key="txt" value="95" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="HTML" value="4559" />
+          <entry key="PLAIN_TEXT" value="95" />
+          <entry key="SCSS" value="429" />
+          <entry key="TypeScript" value="750" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts">
+        <counts>
+          <entry key="TypeScriptServerServiceImpl" value="2" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/ClockWidget.ts">
+        <entry file="file://$PROJECT_DIR$/css/dashboard/_sidebar.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-144">
-              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+            <state relative-caret-position="234">
+              <caret line="13" column="3" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/scripts/dashboard/Widget.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.htm">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="336" column="119" lean-forward="true" selection-start-line="336" selection-start-column="119" selection-end-line="336" selection-end-column="119" />
+            <state relative-caret-position="414">
+              <caret line="23" column="18" lean-forward="true" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+              <folding>
+                <element signature="n#script#0;n#body#0;n#html#0;n#!!top" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/WorkCountByActivityAndStatusWidget.ts">
+        <entry file="file://$PROJECT_DIR$/css/dashboard/_grid.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+            <state relative-caret-position="237">
+              <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/ClockWidget.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="576">
+              <caret line="59" column="37" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/dashboard/Widget.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="6066">
+              <caret line="362" lean-forward="true" selection-start-line="362" selection-end-line="362" />
+              <folding>
+                <element signature="n#!!block;n#renderSelect#0;n#!!block;n#renderForm#0;n#Widget#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -128,43 +420,116 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/ImageWidget.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="13" column="24" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="24" />
+            <state relative-caret-position="309">
+              <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/WorkCountByActivityAndStatusWidget.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="433">
+              <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/dashboard/widgets/_clock-widget.scss">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="24" column="14" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/css/dashboard/widgets/_work-counter-by-activity-and-status-widget.scss">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="648">
+              <caret line="36" selection-start-line="36" selection-end-line="36" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="SCSS File" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>renderActiveWidgets</find>
-      <find>activeWidgetList</find>
-      <find>widgetsToSave</find>
-      <find>btnSave</find>
-      <find>dataType</find>
-      <find>saveWidgetItems</find>
-      <find>save</find>
-      <find>editMode</find>
-      <find>saveWidgetItems()</find>
-      <find>checklocalStorage</find>
-      <find>defaultConfig</find>
-      <find>render</find>
-      <find>value</find>
-      <find>Cus</find>
+      <find>.clock</find>
+      <find>.date</find>
+      <find>widget</find>
+      <find>widget-popup</find>
+      <find>saveGrid</find>
+      <find>class=&quot;grid-stack&quot;</find>
+      <find>grid-stack</find>
+      <find>rows</find>
+      <find>Width</find>
+      <find>gridColumns</find>
+      <find>widget-img</find>
+      <find>widget-body</find>
+      <find>title</find>
+      <find>widget-title</find>
+      <find>widget-description</find>
+      <find>panel-heading</find>
+      <find>panel`</find>
+      <find>gs-panel-heading</find>
+      <find>gs-panel</find>
+      <find>panel</find>
+      <find>add</find>
+      <find>console.log</find>
+      <find>gridRows</find>
+      <find>main</find>
+      <find>page-co</find>
+      <find>jq</find>
+      <find>&lt;script src=&quot;scripts/libs/jquery.min.js&quot;&gt;&lt;/script&gt;</find>
+      <find>widget-bodyfinput.setAttribute('value', inputEl.value.toString()</find>
+      <find>input.setAttribute('value', inputEl.value.toString()</find>
+      <find>toString()</find>
     </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+    <dirStrings>
+      <dir>C:\Users\ruslan.kofanov\Desktop\New folder (2)\dashboard\css\dashboard</dir>
+    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/scripts/dashboard/widgets/ImageWidget.ts" />
-        <option value="$PROJECT_DIR$/scripts/dashboard/Widget.ts" />
+        <option value="$PROJECT_DIR$/css/dashboard/_widget-common.scss" />
+        <option value="$PROJECT_DIR$/css/dashboard/_variables.scss" />
+        <option value="$PROJECT_DIR$/css/dashboard/_edit-panel.scss" />
+        <option value="$PROJECT_DIR$/css/dashboard/widgets/_image-widget.scss" />
+        <option value="$PROJECT_DIR$/css/dashboard/main.scss" />
+        <option value="$PROJECT_DIR$/css/dashboard/_grid.scss" />
         <option value="$PROJECT_DIR$/scripts/dashboard/widgets/WorkCountByActivityAndStatusWidget.ts" />
-        <option value="$PROJECT_DIR$/index.htm" />
+        <option value="$PROJECT_DIR$/css/dashboard/widgets/_work-counter-by-activity-and-status-widget.scss" />
         <option value="$PROJECT_DIR$/scripts/dashboard/widgets/ClockWidget.ts" />
+        <option value="$PROJECT_DIR$/css/dashboard/widgets/_clock-widget.scss" />
+        <option value="$PROJECT_DIR$/css/libs/nifty.scss" />
+        <option value="$PROJECT_DIR$/scripts/dashboard/widgets/ImageWidget.ts" />
+        <option value="$PROJECT_DIR$/css/dashboard/_sidebar.scss" />
+        <option value="$PROJECT_DIR$/../../nifty-v2.9.1 - Copy/demo/index2.htm" />
+        <option value="$PROJECT_DIR$/scripts/dashboard/Widget.ts" />
+        <option value="$PROJECT_DIR$/index.htm" />
+        <option value="$PROJECT_DIR$/../../nifty-v2.9.1 - Copy/demo/index.html" />
       </list>
     </option>
   </component>
@@ -175,10 +540,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-119" />
-    <option name="y" value="-15" />
-    <option name="width" value="1934" />
-    <option name="height" value="1047" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -193,6 +558,52 @@
               <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
               <item name="dashboard" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="img" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="img" type="462c0819:PsiDirectoryNode" />
+              <item name="icons" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dashboard" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+              <item name="widgets" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -203,12 +614,18 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/ruslan.kofanov/Desktop/dashboard/scripts/dashboard/widgets/ClockWidget.ts" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../vue-dashboard/dashboard" />
+    <property name="list.type.of.created.stylesheet" value="SCSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.gutterIcons" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2018.2.5\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="typescript-compiler-editor-notification" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ruslan.kofanov\Desktop\New folder (2)\dashboard\css\dashboard\widgets" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -234,6 +651,7 @@
       <updated>1547120166524</updated>
       <workItem from="1547120167782" duration="3433000" />
       <workItem from="1549456176464" duration="11737000" />
+      <workItem from="1549615844897" duration="25089000" />
     </task>
     <task id="LOCAL-00001" summary="fixed saving active widgets;">
       <created>1549464837637</created>
@@ -242,11 +660,60 @@
       <option name="project" value="LOCAL" />
       <updated>1549464837637</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="grid placeholder fix">
+      <created>1549534889221</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1549534889225</updated>
+    </task>
+    <task id="LOCAL-00003" summary="grid placeholder">
+      <created>1549535302298</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1549535302298</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix grid height">
+      <created>1549535882103</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1549535882103</updated>
+    </task>
+    <task id="LOCAL-00005" summary="code refactor">
+      <created>1549536719499</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1549536719499</updated>
+    </task>
+    <task id="LOCAL-00006" summary=" small fix">
+      <created>1549536866610</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1549536866610</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix grid height">
+      <created>1549537740069</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1549537740069</updated>
+    </task>
+    <task id="LOCAL-00008" summary="- Edit panel supported type: number input;&#10;- Add reset button - this will clear all user config and return to default dashboard - prompt user &quot;Are you sure you want to reset this dashboard - this cannot be undone?&quot;;&#10;- Auto-save widget config when user presses `Apply` on edit panel&#10;- Remove Widget panel `Save` | `Cancel` buttons, and have just a `Done` button instead - this will save dashboard changes and take us out of edit mode;&#10;&#10;Start with - Can we support dynamic/custom grid+gutter sizing;">
+      <created>1549561494103</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1549561494103</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15170000" />
+    <option name="totallyTimeSpent" value="66315000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -260,12 +727,11 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16122234" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2402529" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Grunt " order="3" side_tool="true" />
       <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info anchor="bottom" id="TypeScript" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -274,13 +740,36 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.329718" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.23535791" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.23752712" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.23535791" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50052685" side_tool="true" weight="0.2570499" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49947312" visible="true" weight="0.16594361" />
+      <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13013698" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="npm" order="2" side_tool="true" />
+      <window_info id="Grunt " order="3" side_tool="true" />
+      <window_info id="Favorites" order="4" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.329718" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.23535791" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50052685" side_tool="true" weight="0.2570499" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49947312" visible="true" weight="0.15184382" />
+      <window_info anchor="bottom" id="TypeScript" order="11" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -326,51 +815,167 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed saving active widgets;" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed saving active widgets;" />
+    <MESSAGE value="grid placeholder fix" />
+    <MESSAGE value="grid placeholder" />
+    <MESSAGE value="code refactor" />
+    <MESSAGE value=" small fix" />
+    <MESSAGE value="fix grid height" />
+    <MESSAGE value="- Edit panel supported type: number input;&#10;- Add reset button - this will clear all user config and return to default dashboard - prompt user &quot;Are you sure you want to reset this dashboard - this cannot be undone?&quot;;&#10;- Auto-save widget config when user presses `Apply` on edit panel&#10;- Remove Widget panel `Save` | `Cancel` buttons, and have just a `Done` button instead - this will save dashboard changes and take us out of edit mode;&#10;&#10;Start with - Can we support dynamic/custom grid+gutter sizing;" />
+    <MESSAGE value="changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/demo/nested.html" />
     <entry file="file://$PROJECT_DIR$/demo/knockout.html" />
     <entry file="file://$PROJECT_DIR$/demo/knockout2.html" />
-    <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/ImageWidget.ts">
+    <entry file="file://$PROJECT_DIR$/css/dashboard/_widget-common.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="13" column="24" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="24" />
+        <state relative-caret-position="324">
+          <caret line="145" column="1" selection-start-line="145" selection-start-column="1" selection-end-line="145" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/WorkCountByActivityAndStatusWidget.ts">
+    <entry file="file://$PROJECT_DIR$/css/dashboard/_variables.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="252">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="3522" column="4" selection-start-line="3522" selection-start-column="4" selection-end-line="3522" selection-end-column="4" />
+        <state relative-caret-position="385">
+          <caret line="17114" column="18" lean-forward="true" selection-start-line="17114" selection-start-column="18" selection-end-line="17114" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.htm">
+    <entry file="file://$PROJECT_DIR$/css/dashboard/widgets/_image-widget.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="336" column="119" lean-forward="true" selection-start-line="336" selection-start-column="119" selection-end-line="336" selection-end-column="119" />
+        <state relative-caret-position="36">
+          <caret line="2" column="9" lean-forward="true" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/dashboard/main.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/dashboard/_edit-panel.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="810">
+          <caret line="45" column="22" selection-start-line="45" selection-start-column="22" selection-end-line="45" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/dashboard/WidgetConfiguration.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/WorkCountByActivityAndStatusWidget.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="433">
+          <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/dashboard/widgets/_work-counter-by-activity-and-status-widget.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="648">
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/dashboard/widgets/_clock-widget.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="24" column="14" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/libs/nifty.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/ClockWidget.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-144">
-          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+        <state relative-caret-position="576">
+          <caret line="59" column="37" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/dashboard/_grid.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="237">
+          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../nifty-v2.9.1 - Copy/demo/scripts/libs/gridstack.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../nifty-v2.9.1 - Copy/demo/index2.htm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="20" column="53" lean-forward="true" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+          <folding>
+            <element signature="n#style#0;n#head#0;n#html#0;n#!!top" />
+            <element signature="n#script#0;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/dashboard/_sidebar.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="3" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/dashboard/widgets/ImageWidget.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/dashboard/Widget.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
+        <state relative-caret-position="6066">
+          <caret line="362" lean-forward="true" selection-start-line="362" selection-end-line="362" />
+          <folding>
+            <element signature="n#!!block;n#renderSelect#0;n#!!block;n#renderForm#0;n#Widget#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../nifty-v2.9.1 - Copy/demo/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="594">
+          <caret line="42" lean-forward="true" selection-start-line="42" selection-end-line="42" />
+          <folding>
+            <element signature="n#header#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#script#12;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.htm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="23" column="18" lean-forward="true" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+          <folding>
+            <element signature="n#script#0;n#body#0;n#html#0;n#!!top" />
+          </folding>
         </state>
       </provider>
     </entry>

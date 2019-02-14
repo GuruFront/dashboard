@@ -8,11 +8,55 @@
   flex-direction: column;
 
   .title {
-    font-size: 16pt;
+    font-size: 18px;
   }
 
   .counter {
     font-weight: 700;
-    font-size: 52pt;
+    font-size: 20px;
+  }
+}
+
+@media(min-width: 768px){
+
+  .grid-stack-item[data-gs-width="3"] {
+    .work-count-widget {
+      .counter, .title {
+        font-size: 25px;
+      }
+    }
+  }
+
+  .grid-stack-item[data-gs-width="4"] {
+    .work-count-widget {
+      .counter, .title {
+        font-size: 30px;
+      }
+    }
+  }
+
+  .grid-stack-item[data-gs-width="5"] {
+    .work-count-widget {
+      .counter, .title {
+        font-size:40px;
+      }
+    }
+  }
+
+  .grid-stack-item[data-gs-height="5"] {
+    .work-count-widget {
+      .counter, .title {
+        font-size: 40px;
+      }
+    }
+  }
+
+  .grid-stack-item[data-gs-height="4"],
+  .grid-stack-item[data-gs-height="3"] {
+    .work-count-widget {
+      .counter, .title {
+        font-size: 35px;
+      }
+    }
   }
 }

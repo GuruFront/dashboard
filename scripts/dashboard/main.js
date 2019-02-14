@@ -282,6 +282,9 @@ var Widget = (function () {
             var input = document.createElement("input");
             input.setAttribute("name", name);
             input.setAttribute("type", type);
+            if (inputEl.value) {
+                input.setAttribute('value', inputEl.value.toString());
+            }
             if (typeof placeholder !== "undefined") {
                 input.setAttribute("placeholder", placeholder);
             }
@@ -334,6 +337,8 @@ var ClockWidget = (function (_super) {
             isConfigurable: true,
             minWidth: 2,
             minHeight: 2,
+            maxWidth: 10,
+            maxHeight: 10,
             isTimeDependant: true,
             maxInstanceCount: 1,
         };
@@ -489,7 +494,7 @@ var ImageWidget = (function (_super) {
     function ImageWidget(clientId, options) {
         var _this = this;
         var config = {
-            isConfigurable: false,
+            isConfigurable: true,
             isRemovable: true,
             minHeight: 1,
             maxHeight: 4,
@@ -497,23 +502,70 @@ var ImageWidget = (function (_super) {
             maxWidth: 4,
             isTimeDependant: false,
         };
-        _this = _super.call(this, config, clientId, options) || this;
+        var widgetSettings = [
+            {
+                name: "fit",
+                inputType: "select",
+                title: "Scaling option",
+                values: ["fill", "contain", "cover", "scale-down", "none"],
+                value: options.options.fit
+            },
+            {
+                name: "imageUrl",
+                inputType: "inputText",
+                title: "src",
+                value: options.options.imageUrl
+            }
+        ];
+        _this = _super.call(this, config, clientId, options, widgetSettings) || this;
         return _this;
     }
+    ImageWidget.prototype.applyNewSettings = function (result) {
+        for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+                switch (key) {
+                    case 'fit':
+                        this.options.fit = result[key];
+                        this.widgetSettings[0].value = this.options.fit;
+                        console.log("objectFit -->", this.options.fit);
+                        break;
+                    case 'imageUrl':
+                        this.options.imageUrl = result[key];
+                        this.widgetSettings[1].value = this.options.imageUrl;
+                        console.log("imageUrl -->", this.options.imageUrl);
+                        break;
+                    default:
+                        console.log("Unknown data from form");
+                        break;
+                }
+            }
+        }
+        this.reDraw();
+    };
     ImageWidget.prototype.init = function (element) {
         this.hideSpinner();
         element.classList.add("image-widget");
         var $img = document.createElement('img');
         $img.setAttribute("src", (this.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'));
         $img.setAttribute("alt", this.sidebarSettings.title);
+        $img.setAttribute("class", "gs-widget-img");
         $img.style.objectFit = this.options.fit || "contain";
         element.appendChild($img);
     };
-    ImageWidget.prototype.reDraw = function () { };
+    ImageWidget.prototype.reDraw = function () {
+        var _this = this;
+        [].slice.call(this.cellElement.childNodes).forEach(function (item) {
+            if (item.classList.contains("gs-widget-img")) {
+                item.style.objectFit = _this.options.fit;
+                item.setAttribute("src", _this.options.imageUrl);
+            }
+        });
+    };
     ImageWidget.prototype.handleResize = function () {
         console.log('Image');
     };
-    ImageWidget.prototype.handleClientChange = function (clientId) { };
+    ImageWidget.prototype.handleClientChange = function (clientId) {
+    };
     ImageWidget.id = "imageWidget";
     ImageWidget.sidebarSettings = {
         title: 'Image',
@@ -535,10 +587,10 @@ var WorkCountByActivityAndStatusWidget = (function (_super) {
         var config = {
             isConfigurable: false,
             isRemovable: true,
-            minHeight: 1,
-            maxHeight: 3,
-            minWidth: 1,
-            maxWidth: 3,
+            minWidth: 2,
+            minHeight: 2,
+            maxWidth: 5,
+            maxHeight: 5,
             isTimeDependant: true,
             maxInstanceCount: 2,
         };

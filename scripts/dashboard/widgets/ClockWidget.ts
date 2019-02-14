@@ -28,6 +28,8 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
             isConfigurable: true,
             minWidth: 2,
             minHeight: 2,
+            maxWidth: 10,
+            maxHeight: 10,
             isTimeDependant: true,
             maxInstanceCount: 1,
         };

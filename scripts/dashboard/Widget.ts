@@ -360,6 +360,12 @@ abstract class Widget<TOptions> {
             let input = document.createElement("input");
             input.setAttribute("name", name);
             input.setAttribute("type", type);
+
+            if (inputEl.value) {
+                input.setAttribute('value', inputEl.value.toString());
+            }
+
+
             if (typeof placeholder !== "undefined") {
                 input.setAttribute("placeholder", placeholder);
             }
