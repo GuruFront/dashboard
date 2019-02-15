@@ -9,9 +9,9 @@
 
 	/*global define*/
 	if (typeof module === 'object' && module.exports) {
-		module.exports = factory(require('scripts/libs/moment')); // Node
+		module.exports = factory(require('js/libs/moment')); // Node
 	} else if (typeof define === 'function' && define.amd) {
-		define(['scripts/libs/moment'], factory);                 // AMD
+		define(['js/libs/moment'], factory);                 // AMD
 	} else {
 		factory(root.moment);                        // Browser
 	}

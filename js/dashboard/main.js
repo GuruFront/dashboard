@@ -60,6 +60,9 @@ var Widget = (function () {
         if (this.config.isRemovable) {
             this.enableRemoveIcon(element);
         }
+        if (this.config.isAllowFullScreenMode) {
+            this.enableFullScreenMode(element);
+        }
         this.subscribeToDateChangedEvent();
         this.subscribeToClientChangedEvent();
         this.subscribeToGridEditingEvents();
@@ -152,6 +155,11 @@ var Widget = (function () {
     Widget.prototype.enableRemoveIcon = function (el) {
         var icon = document.createElement("div");
         icon.setAttribute('class', 'widget-icon-delete');
+        el.appendChild(icon);
+    };
+    Widget.prototype.enableFullScreenMode = function (el) {
+        var icon = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-fullScreen');
         el.appendChild(icon);
     };
     Widget.prototype.enableEditIcon = function (el) {
@@ -335,12 +343,11 @@ var ClockWidget = (function (_super) {
         var config = {
             isRemovable: true,
             isConfigurable: true,
-            minWidth: 2,
-            minHeight: 2,
-            maxWidth: 10,
-            maxHeight: 10,
+            minWidth: 1,
+            minHeight: 1,
             isTimeDependant: true,
             maxInstanceCount: 1,
+            isAllowFullScreenMode: true
         };
         var widgetSettings = [
             {
@@ -481,11 +488,12 @@ var ClockWidget = (function (_super) {
         description: 'Clock widget. Not removable. Configurable. Not resizable. Movable. 4*2. Single instance',
         category: 'General',
         icon: 'fas fa-clock',
-        defaultWidth: 4,
+        defaultWidth: 2,
         defaultHeight: 2,
         maxCount: 1,
         isResizable: true,
         isMovable: true,
+        isRatioScale: true
     };
     return ClockWidget;
 }(Widget));
@@ -501,6 +509,7 @@ var ImageWidget = (function (_super) {
             minWidth: 1,
             maxWidth: 4,
             isTimeDependant: false,
+            isAllowFullScreenMode: true
         };
         var widgetSettings = [
             {
@@ -576,7 +585,7 @@ var ImageWidget = (function (_super) {
         defaultHeight: 3,
         maxCount: Infinity,
         isResizable: true,
-        isMovable: true,
+        isMovable: true
     };
     return ImageWidget;
 }(Widget));

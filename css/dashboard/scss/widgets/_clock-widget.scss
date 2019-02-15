@@ -1,0 +1,29 @@
+﻿.grid-stack-item-content {
+  .clock-widget {
+    color: rgba($black, 0.9);
+    font-family: 'Open Sans', MS, Arial, sans-serif;
+    font-weight: 700;
+    line-height: normal;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px;
+    //font-size: 60px;
+  }
+}
+
+@media(min-width: 768px) {
+  .grid-stack-item[data-gs-width="3"],
+  .grid-stack-item[data-gs-height="3"] {
+    .clock-widget {
+        font-size: 20px;
+    }
+  }
+
+  .grid-stack-item[data-gs-width="6"],
+  .grid-stack-item[data-gs-height="6"] {
+    .clock-widget {
+      font-size: 40px;
+    }
+  }
+}

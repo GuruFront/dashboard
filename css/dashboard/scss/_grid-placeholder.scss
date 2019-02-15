@@ -2,17 +2,15 @@
   display: none;
   z-index: -1;
   position: absolute;
-  //width: $cell-placeholder-width;
-  //height: $cell-placeholder-height;
   background-color: blue;
   opacity: 0.05;
   border-left: 10px solid white;
   border-right: 10px solid white;
 }
 
-.grid-stack .grid-stack-placeholder > .placeholder-content {
-  left: var(--grid-placeholder-gaps);
-  right: var(--grid-placeholder-gaps);
+.grid-stack .grid-stack-placeholder > .placeholder-content{
+  left: 0;
+  right: 0;
 }
 
 .grid-stack-placeholder {

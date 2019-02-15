@@ -14,11 +14,12 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         description: 'Clock widget. Not removable. Configurable. Not resizable. Movable. 4*2. Single instance',
         category: 'General',
         icon: 'fas fa-clock',
-        defaultWidth: 4,
+        defaultWidth: 2,
         defaultHeight: 2,
         maxCount: 1,
         isResizable: true,
         isMovable: true,
+        isRatioScale: true
     };
 
     constructor(clientId: number, options: IOptions<IClockWidgetOptions>) {
@@ -26,12 +27,11 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         const config: IWidgetConfiguration = {
             isRemovable: true,
             isConfigurable: true,
-            minWidth: 2,
-            minHeight: 2,
-            maxWidth: 10,
-            maxHeight: 10,
+            minWidth: 1,
+            minHeight: 1,
             isTimeDependant: true,
             maxInstanceCount: 1,
+            isAllowFullScreenMode: true
         };
 
         const widgetSettings = [

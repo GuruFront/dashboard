@@ -64,6 +64,10 @@ abstract class Widget<TOptions> {
             this.enableRemoveIcon(element);
         }
 
+        if (this.config.isAllowFullScreenMode) {
+            this.enableFullScreenMode(element);
+        }
+
         this.subscribeToDateChangedEvent();
         this.subscribeToClientChangedEvent();
         this.subscribeToGridEditingEvents();
@@ -172,6 +176,12 @@ abstract class Widget<TOptions> {
     private enableRemoveIcon(el: HTMLElement): void {
         let icon: HTMLElement = document.createElement("div");
         icon.setAttribute('class', 'widget-icon-delete');
+        el.appendChild(icon);
+    }
+
+    private enableFullScreenMode(el: HTMLElement): void {
+        let icon: HTMLElement = document.createElement("div");
+        icon.setAttribute('class', 'widget-icon-fullScreen');
         el.appendChild(icon);
     }
 

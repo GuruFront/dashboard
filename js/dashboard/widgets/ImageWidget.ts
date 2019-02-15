@@ -11,7 +11,7 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
         defaultHeight: 3,
         maxCount: Infinity,
         isResizable: true,
-        isMovable: true,
+        isMovable: true
     };
 
     constructor(clientId: number, options: IOptions<IImageWidgetOptions>) {
@@ -23,6 +23,7 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
             minWidth: 1,
             maxWidth: 4,
             isTimeDependant: false,
+            isAllowFullScreenMode: true
         };
 
         const widgetSettings = [

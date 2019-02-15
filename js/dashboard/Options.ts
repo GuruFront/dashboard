@@ -18,6 +18,7 @@ interface ISideBarSettings {
 
     isResizable: boolean;
     isMovable: boolean;
+    isRatioScale?:boolean;
 
     title: string;
     description: string;
