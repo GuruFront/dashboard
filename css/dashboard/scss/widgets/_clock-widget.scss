@@ -1,5 +1,5 @@
 ﻿.grid-stack-item-content {
-  .clock-widget {
+  .clockWidget {
     color: rgba($black, 0.9);
     font-family: 'Open Sans', MS, Arial, sans-serif;
     font-weight: 700;
@@ -8,22 +8,20 @@
     flex-direction: column;
     justify-content: center;
     padding: 5px;
-    //font-size: 60px;
+    font-size: 12px;
   }
-}
-
-@media(min-width: 768px) {
-  .grid-stack-item[data-gs-width="3"],
-  .grid-stack-item[data-gs-height="3"] {
-    .clock-widget {
-        font-size: 20px;
+  .widget-content {
+    &.clockWidget-2 {
+      font-size: 16px;
+      background-color: blueviolet;
     }
-  }
-
-  .grid-stack-item[data-gs-width="6"],
-  .grid-stack-item[data-gs-height="6"] {
-    .clock-widget {
+    &.clockWidget-4 {
       font-size: 40px;
+      background-color: gold;
+    }
+    &.clockWidget-6 {
+      font-size: 40px;
+      background-color: green;
     }
   }
 }

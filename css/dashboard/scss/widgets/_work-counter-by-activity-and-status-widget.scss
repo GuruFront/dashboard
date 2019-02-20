@@ -1,18 +1,29 @@
-﻿.work-count-widget {
-  color: rgba($white, .9);
-  font-family: 'Open Sans', MS, Arial, sans-serif;
-  text-align: center;
-  line-height: normal;
+﻿
+.grid-stack-item-content {
+  .workCountByActivityAndStatusWidget {
+    color: rgba($white, .9);
+    font-family: 'Open Sans', MS, Arial, sans-serif;
+    text-align: center;
+    line-height: normal;
 
-  justify-content: center;
-  flex-direction: column;
+    justify-content: center;
+    flex-direction: column;
 
-  .title {
-    //font-size: 18px;
+    .title {
+      font-size: 18px;
+    }
+
+    .counter {
+      font-weight: 700;
+      font-size: 20px;
+    }
   }
-
-  .counter {
-    font-weight: 700;
-    //font-size: 20px;
+  .widget-content {
+    &.workCountByActivityAndStatusWidget-3 {
+      background-color: blueviolet;
+    }
+    &.workCountByActivityAndStatusWidget-4 {
+      background-color: gold;
+    }
   }
 }

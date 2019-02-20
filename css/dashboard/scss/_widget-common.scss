@@ -153,7 +153,7 @@
 }
 
 .grid-stack-item .grid-stack-item-content {
-  background-color: $widget-bg;
+  background-color: rgba($widget-bg, 0.7);
   color: $widget-default-color;
   text-align: center;
   &:fullscreen {
@@ -176,28 +176,7 @@
   }
 }
 
-.grid-stack-item {
-  font-size: 36px;
+.widget-content {
+  //background-color: gray;
 }
 
-@media(min-width: 768px) {
-  .grid-stack-item[data-gs-width="1"],
-  .grid-stack-item[data-gs-width="2"] {
-    font-size: 16px;
-  }
-
-  .grid-stack-item[data-gs-width="3"],
-  .grid-stack-item[data-gs-height="3"] {
-    font-size: 24px;
-  }
-
-  .grid-stack-item[data-gs-width="4"],
-  .grid-stack-item[data-gs-height="4"] {
-    font-size: 30px;
-  }
-
-  .grid-stack-item[data-gs-width="5"],
-  .grid-stack-item[data-gs-height="5"] {
-    font-size: 36px;
-  }
-}

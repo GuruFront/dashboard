@@ -77,9 +77,8 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
     }
 
     protected init(element: HTMLElement) {
-        element.classList.add("clock-widget");
+        element.classList.add("clockWidget");
         this.hideSpinner();
-
         this.dateElement = this.createDateElement(element);
 
         this.clockElement = this.createClockElement(element);

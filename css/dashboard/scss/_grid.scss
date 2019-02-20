@@ -1,5 +1,9 @@
 .dashboard {
   background-color: $dashboard-bg;
+  background-image: url("../../img/bg.jpg");
+  -webkit-background-size: cover;
+  background-position: center;
+  background-size: cover;
   min-height: 100vh;
   height: 100%;
   display: flex;

@@ -365,7 +365,11 @@
                 grid.movable(el, widget.sidebarSettings.isMovable);
 
                 widget.initBase(el.find('.widget-content')[0]);
+                setWidgetClasses(el[0],widget.size.width);
             });
+
+
+            // setWidgetClasses(items[i].el[0],widgetId,items[i].width);
 
             $(gridId + ".grid-stack-item-content").css("left", gridGaps + "px");
             $(gridId + ".grid-stack-item-content").css("right", gridGaps + "px");
@@ -428,10 +432,25 @@
             }
         }
 
+        function setWidgetClasses(el, width) {
+            var i, gridItem = el.childNodes[0].childNodes[0],
+            widgetId = el.dataset.widget;
+
+            gridItem.classList = "widget-content";
+            for ( i = 0; i < width; i++) {
+                gridItem.classList.add("widget-content" + "-" + (i + 1));
+            }
+            gridItem.classList.add(widgetId);
+            for (i = 0; i < width; i++) {
+                gridItem.classList.add(widgetId + "-" + (i + 1));
+            }
+        }
+
         function handleGridEvents() {
+
             $(gridId).on('gsresizestop', (event, element) => {
 
-
+                console.log("resize");
                 var widgetId = $(element).data("widget"),
                     config = widgetsDict[widgetId],
                     defaultWidth = config.sidebarSettings.defaultWidth,
@@ -439,7 +458,7 @@
                     newWidth = $(element)[0].dataset.gsWidth * 1,
                     diff = 0;
 
-                if  (config.sidebarSettings.isRatioScale){
+                if (config.sidebarSettings.isRatioScale) {
                     if (defaultHeight > defaultWidth) {
                         diff = defaultHeight - defaultWidth;
                     } else if (defaultHeight < defaultWidth) {
@@ -449,11 +468,15 @@
                     $(gridId).data("gridstack").resize($(element), newWidth, newWidth + diff);
                 }
 
-
                 saveGrid();
-                $(element).find('.widget-content')[0].dispatchEvent(new CustomEvent('resize_stopped'));
 
+                // set classes for widgets
+                var widgetContent = $(element).find('.widget-content');
+                widgetContent[0].dispatchEvent(new CustomEvent('resize_stopped'));
+                setWidgetClasses(element, newWidth);
             });
+
+
             $(gridId).on('change', () => {
                 setGridHeight();
             });
@@ -474,14 +497,13 @@
 
                         var newWidget = Widget.widgetInitializer(widgetId, clientId, items[i]);
                         widget.gridInstances.push(newWidget);
-
                         addToSideBar(widgetId, widget);
                         renderWidgets([newWidget], items[i].el);
+
                     }
                 } else {
                     grid.removeWidget(items[0].el[0], true)
                 }
-
 
                 $(gridId + " .grid-stack-item-content").css("left", gridGaps + "px");
                 $(gridId + " .grid-stack-item-content").css("right", gridGaps + "px");

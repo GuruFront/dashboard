@@ -1,8 +1,18 @@
 .grid-stack-item-content {
-  .image-widget {
+  .imageWidget {
     img {
       width: 100%;
       height: 100%;
     }
   }
+  .widget-content {
+    &.imageWidget-1 {
+      //background-color: orange;
+    }
+    &.imageWidget-4 {
+      //background-color: black;
+    }
+  }
 }
+
+

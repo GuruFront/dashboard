@@ -19,9 +19,9 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
             isConfigurable: true,
             isRemovable: true,
             minHeight: 1,
-            maxHeight: 4,
+            // maxHeight: 4,
             minWidth: 1,
-            maxWidth: 4,
+            // maxWidth: 4,
             isTimeDependant: false,
             isAllowFullScreenMode: true
         };
@@ -32,14 +32,14 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
                 inputType: "select",
                 title: "Scaling option",
                 values: ["fill", "contain", "cover", "scale-down", "none"],
-                value: options.options.fit
+                value: options.options.fit || "contain"
             },
             {
                 name: "imageUrl",
                 inputType: "inputText",
                 title: "src",
                 // values: ["fill", "contain", "cover", "scale-down", "none"],
-                value: options.options.imageUrl
+                value: options.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'
             }
         ];
 
@@ -72,7 +72,7 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
 
     protected init(element: HTMLElement) {
         this.hideSpinner();
-        element.classList.add("image-widget");
+        element.classList.add("imageWidget");
 
         let $img = document.createElement('img');
         $img.setAttribute("src", (this.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'))

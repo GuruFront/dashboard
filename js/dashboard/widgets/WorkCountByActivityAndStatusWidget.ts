@@ -37,7 +37,7 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
     }
 
     init(element: HTMLElement) {
-        element.classList.add("work-count-widget");
+        element.classList.add("workCountByActivityAndStatusWidget");
 
         this.createTitleElement(element);
         this.counterElement = this.createCounterElement(element);
@@ -53,9 +53,11 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
                 this.counterElement.innerText = data.toString();
             });
     }
+
     protected handleResize() {
         console.log('Count');
     }
+
     protected reDraw() {
         this.showSpinner();
 
@@ -67,7 +69,8 @@ class WorkCountByActivityAndStatusWidget extends Widget<IWorkCountByActivityAndS
             });
     }
 
-    protected handleClientChange(clientId: number) { }
+    protected handleClientChange(clientId: number) {
+    }
 
     private createTitleElement(element: HTMLElement) {
         const p = document.createElement('div');
