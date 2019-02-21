@@ -1,7 +1,7 @@
 .widget-content {
   display: flex;
   height: 100%;
-
+  overflow: auto;
   .widget-loading-container {
     position: absolute;
     top: 0;

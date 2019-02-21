@@ -8,7 +8,7 @@
   border-right: 10px solid rgba($white, 0.1);
 }
 
-.grid-stack .grid-stack-placeholder > .placeholder-content{
+.grid-stack .grid-stack-placeholder > .placeholder-content {
   left: 0;
   right: 0;
 }
@@ -24,8 +24,6 @@
     display: block;
   }
 }
-
-
 
 .grid-stack.grid-stack-1 ~ .grid-placeholder-cell {
   width: 100%

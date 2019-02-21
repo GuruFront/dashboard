@@ -235,7 +235,7 @@
 
         function setGridHeight() {
             $(gridId).height(($(gridId).data("gridstack").opts.cellHeight + $(gridId).data("gridstack").opts.verticalMargin) * height);
-            $(gridId).data("data-gs-current-height", height);
+            $(gridId)[0].dataset.gsCurrentHeight = height;
         }
 
         function checkLocalStorage() {
