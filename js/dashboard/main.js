@@ -249,8 +249,10 @@ var Widget = (function () {
             inputWrap.appendChild(titleHtml);
             form.appendChild(inputWrap);
             values.forEach(function (val) {
-                var label = document.createElement('label'), input = document.createElement('input'), inputText = document.createElement('span');
+                var label = document.createElement('label'), input = document.createElement('input'), inputText = document.createElement('span'), checkmark = document.createElement('span');
                 label.setAttribute("class", "settings-label");
+                label.setAttribute("class", "checkbox-wrap");
+                checkmark.setAttribute("class", "checkmark");
                 inputText.setAttribute("class", "settings-input-text");
                 inputText.innerText = val.toString();
                 input.setAttribute('name', name);
@@ -258,6 +260,7 @@ var Widget = (function () {
                 input.setAttribute('value', val.toString());
                 input.checked = val == inputEl.value;
                 label.appendChild(input);
+                label.appendChild(checkmark);
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
             });
@@ -489,7 +492,7 @@ var ClockWidget = (function (_super) {
         category: 'General',
         icon: 'fas fa-clock',
         defaultWidth: 2,
-        defaultHeight: 2,
+        defaultHeight: 1,
         maxCount: 1,
         isResizable: true,
         isMovable: true,
@@ -521,7 +524,7 @@ var ImageWidget = (function (_super) {
                 name: "imageUrl",
                 inputType: "inputText",
                 title: "src",
-                value: options.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'
+                value: options.options.imageUrl || 'http://tf-dev01.cloudapp.net/Content/images/dashboard/techfinity-v.png'
             }
         ];
         _this = _super.call(this, config, clientId, options, widgetSettings) || this;
@@ -553,7 +556,7 @@ var ImageWidget = (function (_super) {
         this.hideSpinner();
         element.classList.add("imageWidget");
         var $img = document.createElement('img');
-        $img.setAttribute("src", (this.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'));
+        $img.setAttribute("src", (this.options.imageUrl || 'http://tf-dev01.cloudapp.net/Content/images/dashboard/techfinity-v.png'));
         $img.setAttribute("alt", this.sidebarSettings.title);
         $img.setAttribute("class", "gs-widget-img");
         $img.style.objectFit = this.options.fit || "contain";

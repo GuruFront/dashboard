@@ -1,4 +1,5 @@
 .dashboard {
+  font-family: 'Roboto', sans-serif;
   background-color: $dashboard-bg;
   background-image: url("../../img/bg.jpg");
   -webkit-background-size: cover;
@@ -15,6 +16,7 @@
 
   .dashboardEditPanel {
     flex-shrink: 0;
+    overflow: auto;
     background: rgba($sidebar-bg, .1);
     overflow-x: hidden;
     flex-basis: 0;
@@ -24,19 +26,9 @@
     @media(min-width: 768px){
       display: flex;
     }
-    .buttons {
-      display: flex;
-      padding: 10px;
-      justify-content: space-around;
-
-      button {
-        flex: 1;
-        margin: 0 5px;
-      }
-    }
 
     &.open {
-      flex-basis: 15%;
+      flex-basis: 310px;
       transition: flex-basis 0.2s ease-out;
     }
   }
@@ -62,7 +54,9 @@
   @media(min-width: 768px){
     display: block;
   }
+
 }
+
 
 
 

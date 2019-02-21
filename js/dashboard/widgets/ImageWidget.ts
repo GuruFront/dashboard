@@ -39,7 +39,7 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
                 inputType: "inputText",
                 title: "src",
                 // values: ["fill", "contain", "cover", "scale-down", "none"],
-                value: options.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'
+                value: options.options.imageUrl || 'http://tf-dev01.cloudapp.net/Content/images/dashboard/techfinity-v.png'
             }
         ];
 
@@ -75,7 +75,7 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
         element.classList.add("imageWidget");
 
         let $img = document.createElement('img');
-        $img.setAttribute("src", (this.options.imageUrl || 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'))
+        $img.setAttribute("src", (this.options.imageUrl || 'http://tf-dev01.cloudapp.net/Content/images/dashboard/techfinity-v.png'))
         $img.setAttribute("alt", this.sidebarSettings.title);
         $img.setAttribute("class", "gs-widget-img");
         $img.style.objectFit = this.options.fit || "contain";

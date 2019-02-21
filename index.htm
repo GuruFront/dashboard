@@ -4,8 +4,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--not require css/fonts-->
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700" rel="stylesheet">
+    <!--<link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,600,700" rel="stylesheet">
     <!--<link rel="stylesheet" href="css/libs/nifty.css">-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
@@ -31,17 +31,17 @@
     <!--our main js-->
     <script src="js/dashboard/main.js"></script>
     <title>Widgets Demo</title>
-    <style>
-        input {
-            width: 100%;
-        }
-    </style>
 </head>
 <body>
+
+<i class="fas fa-pencil-alt"></i>
 
 <div class="dashboard">
     <div class="dashboardEditPanel" id="dashboardEditPanel">
         <div class="sidebar">
+            <p class="sidebar__title">
+                Widget Gallery
+            </p>
             <label>
                 Gaps
                 <br>
@@ -66,9 +66,9 @@
                 <input type="number" id="gridRows">
             </label>
         </div>
-        <div class="buttons">
-            <button class="btn btn-primary" id="saveChanges">Done</button>
-            <button class="btn btn-default" id="reset">Reset</button>
+        <div class="dashboardEditPanel-buttons">
+            <button type="button" id="saveChanges">Done</button>
+            <button type="button" id="reset">Reset</button>
         </div>
     </div>
 
@@ -258,7 +258,7 @@
                         $('<div>').addClass('gs-panel gs-panel-default')
                             .append($('<div>').addClass('gs-panel-heading')
                                 .append($('<div>').addClass('gs-panel-title')
-                                    .append('<i class="fas fa-chevron-circle-up"></i> ' + x)))
+                                    .append(x + '<i class="fas fa-caret-up"></i>')))
                             .append($('<div>').addClass('gs-panel-collapse collapse in').attr('id', x)
                                 .append($('<div>').addClass('gs-panel-body'))
                             )
@@ -277,7 +277,6 @@
                     .append($('<div>').addClass('gs-widget-title')
                         .text(config.title)
                         .attr('data-widget-count', count == Infinity ? '' : count))
-                    .append($('<hr>'))
                     .append($('<div>').addClass('gs-widget-description').text(config.description));
 
                 $('<div class="grid-stack-item sid" data-widget="' + id + '"></div>')
@@ -365,7 +364,7 @@
                 grid.movable(el, widget.sidebarSettings.isMovable);
 
                 widget.initBase(el.find('.widget-content')[0]);
-                setWidgetClasses(el[0],widget.size.width);
+                setWidgetClasses(el[0], widget.size.width);
             });
 
 
@@ -434,10 +433,10 @@
 
         function setWidgetClasses(el, width) {
             var i, gridItem = el.childNodes[0].childNodes[0],
-            widgetId = el.dataset.widget;
+                widgetId = el.dataset.widget;
 
             gridItem.classList = "widget-content";
-            for ( i = 0; i < width; i++) {
+            for (i = 0; i < width; i++) {
                 gridItem.classList.add("widget-content" + "-" + (i + 1));
             }
             gridItem.classList.add(widgetId);
@@ -447,25 +446,37 @@
         }
 
         function handleGridEvents() {
+            var
+                oldWidth,
+                oldHeight;
+
+            $(gridId).on('resizestart', function (event, ui) {
+                oldWidth = event.target.dataset.gsWidth * 1;
+                oldHeight = event.target.dataset.gsHeight * 1;
+
+            });
 
             $(gridId).on('gsresizestop', (event, element) => {
 
-                console.log("resize");
                 var widgetId = $(element).data("widget"),
                     config = widgetsDict[widgetId],
                     defaultWidth = config.sidebarSettings.defaultWidth,
                     defaultHeight = config.sidebarSettings.defaultHeight,
                     newWidth = $(element)[0].dataset.gsWidth * 1,
-                    diff = 0;
+                    newHeight = $(element)[0].dataset.gsHeight * 1,
+                    diff = defaultWidth - defaultHeight;
 
-                if (config.sidebarSettings.isRatioScale) {
-                    if (defaultHeight > defaultWidth) {
-                        diff = defaultHeight - defaultWidth;
-                    } else if (defaultHeight < defaultWidth) {
-                        diff = defaultWidth - defaultHeight;
+                if (config.sidebarSettings.isRatioScale && config.sidebarSettings.isResizable) {
+                    var
+                        widthDiff = newWidth - oldWidth,
+                        heightDiff = newHeight - oldHeight;
+
+                    if (widthDiff !== 0 && heightDiff === 0) {
+                        $(gridId).data("gridstack").resize($(element), newWidth, oldHeight + widthDiff);
+                    } else if (widthDiff === 0 && heightDiff !== 0) {
+                        $(gridId).data("gridstack").resize($(element), newHeight + diff, newHeight);
+                    } else if (widthDiff === heightDiff) {
                     }
-
-                    $(gridId).data("gridstack").resize($(element), newWidth, newWidth + diff);
                 }
 
                 saveGrid();
@@ -475,7 +486,6 @@
                 widgetContent[0].dispatchEvent(new CustomEvent('resize_stopped'));
                 setWidgetClasses(element, newWidth);
             });
-
 
             $(gridId).on('change', () => {
                 setGridHeight();
@@ -585,9 +595,6 @@
                     $(".dashboard").removeClass('open');
                     $(gridId).removeClass('edit-mode-on');
                 }
-                // $(".widget-icon-delete").css('display', isEditMode ? 'block' : 'none');
-                // $(".widget-icon-edit").css('display', isEditMode ? 'block' : 'none');
-                //mainGrid.data('gridstack').enableResize(isEditMode, true)
                 document.dispatchEvent(new CustomEvent(isEditMode ? 'grid_editing_started' : 'grid_editing_finished'));
                 setGridHeight();
             });
@@ -599,7 +606,7 @@
                 }
             });
             $('.gs-panel-heading').click(function () {
-                $(this).find('i').toggleClass('fa-chevron-circle-up fa-chevron-circle-down');
+                $(this).find('i').toggleClass('fa-caret-down fa-caret-up');
                 $(this).next().toggleClass("in");
             });
             $('#saveChanges').click(function () {

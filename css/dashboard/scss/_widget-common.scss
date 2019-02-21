@@ -122,17 +122,44 @@
 .widget-icon-delete {
   left: 5px;
   top: 5px;
-  background: url('../../img/icons/close.svg') $white no-repeat center;
-  -webkit-background-size: cover;
-  background-size: 9px;
+  overflow: hidden;
+  border-radius: 100px;
+  width: 14px;
+  height: 14px;
+  background: url('../../img/icons/close.svg') $danger-col no-repeat center;
+  background-size: 6px;
+  background-position: center;
+}
+
+.grid-stack .ui-resizable-handle,
+.widget-icon-edit {
+  color: $white;
+  font-size: 10px !important;
+  font-family: "Font Awesome 5 Free" !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  -webkit-font-smoothing: antialiased !important;
+  display: inline-block;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  line-height: 1 !important;
+}
+
+.grid-stack .ui-resizable-handle {
+  background-image: none !important;
+  width: 10px !important;
+  height: 10px !important;
+  &:after {
+    content: "\f303";
+  }
 }
 
 .widget-icon-edit {
   right: 5px;
   top: 5px;
-  background: url('../../img/icons/widget-edit-icon.svg') $white no-repeat center;
-  -webkit-background-size: cover;
-  background-size: 9px;
+  &:after {
+    content: "\f303";
+  }
 }
 
 .widget-icon-fullScreen {

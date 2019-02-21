@@ -303,11 +303,16 @@ abstract class Widget<TOptions> {
             inputWrap.appendChild(titleHtml);
             form.appendChild(inputWrap);
             values.forEach((val: string | number) => {
+
                 let label = document.createElement('label'),
                     input = document.createElement('input'),
-                    inputText = document.createElement('span');
+                    inputText = document.createElement('span'),
+                    checkmark = document.createElement('span');
 
                 label.setAttribute("class", "settings-label");
+                label.setAttribute("class", "checkbox-wrap");
+
+                checkmark.setAttribute("class", "checkmark");
 
                 inputText.setAttribute("class", "settings-input-text");
                 inputText.innerText = val.toString();
@@ -317,8 +322,9 @@ abstract class Widget<TOptions> {
                 input.setAttribute('value', val.toString());
                 input.checked = val == inputEl.value;
 
-
                 label.appendChild(input);
+                label.appendChild(checkmark);
+
                 label.appendChild(inputText);
                 inputWrap.appendChild(label);
             });

@@ -3,10 +3,20 @@ $black: #000000;
 
 $widget-bg: $black;
 $widget-default-color: #2c3e50;
-$widget-popup-bg: #dbdbdb;
+$widget-popup-bg: $white;
 
 $dashboard-bg: $white;
 
-$sidebar-bg: rgb(0, 255, 0);
+$sidebar-bg: #f2f2f2;
+
+$sidebar-title-col: #2b2283;
+$sidebar-heading-col: #012145;
+
+
+$blue: #184b95;
+
+$gray: #585858;
 
 $cell-gaps: 10px;
+
+$danger-col: #bd0f10;

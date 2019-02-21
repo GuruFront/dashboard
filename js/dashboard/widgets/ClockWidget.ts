@@ -15,7 +15,7 @@ class ClockWidget extends Widget<IClockWidgetOptions> {
         category: 'General',
         icon: 'fas fa-clock',
         defaultWidth: 2,
-        defaultHeight: 2,
+        defaultHeight: 1,
         maxCount: 1,
         isResizable: true,
         isMovable: true,

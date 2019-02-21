@@ -1,41 +1,51 @@
 .sidebar {
   padding: 15px;
   flex: 100;
-
   .gs-panel-body {
-    padding: 0 10px;
-    margin-bottom: 10px;
+    //padding: 0 10px;
     background-color: $white;
   }
 
+  .gs-panel {
+    margin: 0  -15px;
+  }
   .gs-panel-heading {
     cursor: pointer;
+    background-color: $sidebar-heading-col;
+    color: $white;
+    text-transform: uppercase;
+  }
 
+  .gs-panel-title {
+    padding: 3px 8px 5px 3px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    i {
+      display: inline-flex;
+      align-items: center;
+    }
+    .fa-caret-down {
+      color: $black;
+    }
   }
 
   .grid-stack-item {
     cursor: pointer;
     width: 100%;
-    text-align: center;
+    color: $black;
     z-index: 2;
     display: flex;
-    flex-direction: column;
-    padding: 5px 0;
-    margin: 4px 0;
-    border-bottom: 1px solid lightgray;
+    padding: 10px;
+    border-bottom: 1px solid rgba($gray, .1);
     &:last-child {
       border-bottom: none;
     }
 
     .widget-icon {
-      flex: 1 0 20%;
       display: flex;
-      font-size: 20px;
-      margin-right: 10px;
-
-      i {
-        margin: auto;
-      }
+      font-size: 30px;
+      padding-right: 15px;
     }
 
     .gs-widget-body {
@@ -44,8 +54,7 @@
       flex-direction: column;
 
       .gs-widget-title {
-        text-align: center;
-        font-size: 18px;
+        font-size: 12px;
         font-weight: 600;
 
         &:after {
@@ -68,8 +77,34 @@
 
       .gs-widget-description {
         text-align: left;
+        color: $gray;
         font-size: 12px;
       }
     }
   }
 }
+
+.dashboardEditPanel-buttons,
+.sidebar {
+  background-color: $sidebar-bg;
+}
+
+.dashboardEditPanel-buttons {
+  display: flex;
+  padding: 10px 10px 30px 10px;
+  justify-content: space-around;
+
+  button {
+    flex: 1;
+    margin: 0 5px;
+  }
+}
+
+.sidebar__title {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  color: $sidebar-title-col;
+  margin-bottom: 100px;
+}
+
