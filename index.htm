@@ -33,42 +33,41 @@
     <title>Widgets Demo</title>
 </head>
 <body>
-
-<i class="fas fa-pencil-alt"></i>
-
 <div class="dashboard">
     <div class="dashboardEditPanel" id="dashboardEditPanel">
-        <div class="sidebar">
-            <p class="sidebar__title">
-                Widget Gallery
-            </p>
-            <label>
-                Gaps
+        <div class="sidebar-wrap">
+            <div class="sidebar">
+                <p class="sidebar__title">
+                    Widget Gallery
+                </p>
+                <label>
+                    Gaps
+                    <br>
+                    <input type="number" id="gridGaps" min="0" max="10">
+                </label>
                 <br>
-                <input type="number" id="gridGaps" min="0" max="10">
-            </label>
-            <br>
-            <label>
-                Cell height
+                <label>
+                    Cell height
+                    <br>
+                    <input type="number" id="gridCellHeight" min="30">
+                </label>
                 <br>
-                <input type="number" id="gridCellHeight" min="30">
-            </label>
-            <br>
-            <label>
-                Columns
+                <label>
+                    Columns
+                    <br>
+                    <input type="number" id="gridColumns" min="1" max="12">
+                </label>
                 <br>
-                <input type="number" id="gridColumns" min="1" max="12">
-            </label>
-            <br>
-            <label>
-                Rows
-                <br>
-                <input type="number" id="gridRows">
-            </label>
-        </div>
-        <div class="dashboardEditPanel-buttons">
-            <button type="button" id="saveChanges">Done</button>
-            <button type="button" id="reset">Reset</button>
+                <label>
+                    Rows
+                    <br>
+                    <input type="number" id="gridRows">
+                </label>
+            </div>
+            <div class="dashboardEditPanel-buttons">
+                <button type="button" id="saveChanges">Done</button>
+                <button type="button" id="reset">Reset</button>
+            </div>
         </div>
     </div>
 
@@ -229,6 +228,10 @@
             }
             $(".grid-placeholder-cell").css("border-left-width", $(gridId).data("gridstack").opts.verticalMargin + "px");
             $(".grid-placeholder-cell").css("border-right-width", $(gridId).data("gridstack").opts.verticalMargin + "px");
+
+
+            $(gridId + " .ui-resizable-handle").css("right", $(gridId).data("gridstack").opts.verticalMargin + 5 + "px");
+
             $(gridId + " .grid-stack-item-content").css("left", gridGaps + "px");
             $(gridId + " .grid-stack-item-content").css("right", gridGaps + "px");
         }
@@ -559,6 +562,7 @@
                 setGridHeight();
                 $(gridId + " .grid-stack-item-content").css("left", gridGaps + "px");
                 $(gridId + " .grid-stack-item-content").css("right", gridGaps + "px");
+                $(gridId + " .ui-resizable-handle").css("right", $(gridId).data("gridstack").opts.verticalMargin + 5 + "px");
             });
 
             $("#gridColumns").on("input", (e) => {

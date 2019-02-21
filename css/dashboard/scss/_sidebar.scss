@@ -1,3 +1,9 @@
+.sidebar-wrap{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
 .sidebar {
   padding: 15px;
   flex: 100;
@@ -8,6 +14,9 @@
 
   .gs-panel {
     margin: 0  -15px;
+    &:last-child{
+      margin-bottom: 25px;
+    }
   }
   .gs-panel-heading {
     cursor: pointer;
@@ -93,7 +102,7 @@
   display: flex;
   padding: 10px 10px 30px 10px;
   justify-content: space-around;
-
+  flex: 1 1;
   button {
     flex: 1;
     margin: 0 5px;
@@ -107,4 +116,5 @@
   color: $sidebar-title-col;
   margin-bottom: 100px;
 }
+
 

@@ -13,6 +13,9 @@
     width: 100%;
     height: 100%;
   }
+  &.open{
+    padding-left: 315px;
+  }
 
   .dashboardEditPanel {
     flex-shrink: 0;
@@ -23,13 +26,21 @@
     transition: flex-basis 0.2s ease-in;
     display: none;
     flex-direction: column;
+    position: fixed;
+    left: 0;
+    width: 0;
     @media(min-width: 768px){
       display: flex;
     }
 
     &.open {
-      flex-basis: 310px;
-      transition: flex-basis 0.2s ease-out;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 310px;
+      height: 100%;
+      z-index: 1000;
+      transition: left 0.2s ease-out, width 0.2s ease-out;
     }
   }
   .grid-stack{
