@@ -11,7 +11,8 @@ class ImageWidget extends Widget<IImageWidgetOptions> {
         defaultHeight: 3,
         maxCount: Infinity,
         isResizable: true,
-        isMovable: true
+        isMovable: true,
+        isConfigurable: true
     };
 
     constructor(clientId: number, options: IOptions<IImageWidgetOptions>) {

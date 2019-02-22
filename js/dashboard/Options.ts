@@ -25,4 +25,5 @@ interface ISideBarSettings {
     icon: string;
     category: string;
     maxCount: number;
+    isConfigurable?: boolean;
 }

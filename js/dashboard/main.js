@@ -492,11 +492,12 @@ var ClockWidget = (function (_super) {
         category: 'General',
         icon: 'fas fa-clock',
         defaultWidth: 2,
-        defaultHeight: 1,
+        defaultHeight: 2,
         maxCount: 1,
         isResizable: true,
         isMovable: true,
-        isRatioScale: true
+        isRatioScale: true,
+        isConfigurable: true
     };
     return ClockWidget;
 }(Widget));
@@ -586,7 +587,8 @@ var ImageWidget = (function (_super) {
         defaultHeight: 3,
         maxCount: Infinity,
         isResizable: true,
-        isMovable: true
+        isMovable: true,
+        isConfigurable: true
     };
     return ImageWidget;
 }(Widget));

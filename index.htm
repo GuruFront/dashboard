@@ -105,7 +105,7 @@
                     width: 2,
                     height: 2,
                     options: {
-                        imageUrl: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
+                        imageUrl: 'http://tf-dev01.cloudapp.net/Content/images/dashboard/techfinity-v.png',
                         fit: "contain"
                     }
                 }
@@ -217,7 +217,7 @@
                     var left = 100 * i / width;
                     for (var j = 0; j < height; j++) {
                         var
-                            $placeholderCell = $("<div class='grid-placeholder-cell'></div>"),
+                            $placeholderCell = $("<div class='grid-placeholder-cell'><div></div></div>"),
                             top = rowHeight * j;
                         $placeholderCell.css("left", left + "%");
                         $placeholderCell.css("top", top + "px");
@@ -226,9 +226,8 @@
                     }
                 }
             }
-            $(".grid-placeholder-cell").css("border-left-width", $(gridId).data("gridstack").opts.verticalMargin + "px");
-            $(".grid-placeholder-cell").css("border-right-width", $(gridId).data("gridstack").opts.verticalMargin + "px");
-
+            $(".grid-placeholder-cell").css("padding-left", $(gridId).data("gridstack").opts.verticalMargin + "px");
+            $(".grid-placeholder-cell").css("padding-right", $(gridId).data("gridstack").opts.verticalMargin + "px");
 
             $(gridId + " .ui-resizable-handle").css("right", $(gridId).data("gridstack").opts.verticalMargin + 5 + "px");
 
@@ -512,6 +511,10 @@
                         widget.gridInstances.push(newWidget);
                         addToSideBar(widgetId, widget);
                         renderWidgets([newWidget], items[i].el);
+
+                        if  (typeof widget.sidebarSettings.isConfigurable !== "undefined" && widget.sidebarSettings.isConfigurable){
+                            newWidget.renderForm();
+                        }
 
                     }
                 } else {
