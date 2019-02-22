@@ -167,7 +167,7 @@ var Widget = (function () {
         var icon = document.createElement("div");
         icon.setAttribute('class', 'widget-icon-edit');
         el.appendChild(icon);
-        icon.addEventListener('click', function (ev) { return _this.renderForm(_this.widgetSettings); }, false);
+        icon.addEventListener('click', function (ev) { return _this.renderForm(); }, false);
     };
     Widget.prototype.handleDisplayPopup = function (show) {
         var popup = document.getElementById("widget-popup"), popupContainer = document.getElementById("widget-popup-container");
@@ -184,7 +184,7 @@ var Widget = (function () {
             }
         }
     };
-    Widget.prototype.renderForm = function (settings) {
+    Widget.prototype.renderForm = function () {
         var _this = this;
         var popupContainer = this.handleDisplayPopup(true), widgetWrap = document.createElement('div');
         widgetWrap.setAttribute("class", "widget-settings-wrap");
@@ -196,7 +196,7 @@ var Widget = (function () {
         var form = document.createElement('form');
         form.setAttribute("action", ".");
         widgetWrap.appendChild(form);
-        settings.forEach(function (inputEl) {
+        this.widgetSettings.forEach(function (inputEl) {
             switch (inputEl.inputType) {
                 case 'radio':
                     renderInputCheck(inputEl);

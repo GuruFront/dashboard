@@ -190,7 +190,7 @@ abstract class Widget<TOptions> {
         icon.setAttribute('class', 'widget-icon-edit');
         el.appendChild(icon);
 
-        icon.addEventListener('click', ev => this.renderForm(this.widgetSettings), false);
+        icon.addEventListener('click', ev => this.renderForm(), false);
     }
 
     private handleDisplayPopup(show: boolean): HTMLElement {
@@ -213,7 +213,7 @@ abstract class Widget<TOptions> {
         }
     }
 
-    protected renderForm(settings: IWidgetEditSettings[]) {
+    protected renderForm() {
         let
             popupContainer: HTMLElement = this.handleDisplayPopup(true),
             widgetWrap: HTMLElement = document.createElement('div');
@@ -231,7 +231,7 @@ abstract class Widget<TOptions> {
         widgetWrap.appendChild(form);
 
         // define input type and call render function
-        settings.forEach((inputEl) => {
+        this.widgetSettings.forEach((inputEl) => {
             switch (inputEl.inputType) {
                 case 'radio':
                     renderInputCheck(inputEl);
