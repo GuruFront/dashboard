@@ -33,13 +33,21 @@
     <title>Widgets Demo</title>
 </head>
 <body>
-<div class="dashboard">
+<div class="dashboard dashboard_dark">
     <div class="dashboardEditPanel" id="dashboardEditPanel">
         <div class="sidebar-wrap">
             <div class="sidebar">
                 <p class="sidebar__title">
                     Widget Gallery
                 </p>
+                <div>
+                    Themes
+                    <br>
+                    <select name="" id="themes">
+                        <option value="dark" selected>Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
                 <label>
                     Gaps
                     <br>
@@ -113,7 +121,7 @@
             isEditMode = false,
             clientId = 7,
             width = 12,
-            height = 10,
+            height = 9,
             savedgridGaps,
             gridGaps = savedgridGaps = 5,
             cellHeight = 60,
@@ -130,7 +138,7 @@
         handleEditMode(isEditMode);
         handleCommonEvents();
         handleGridEvents();
-
+        handleResolutionChanges();
         addTilePlaceholders();
 
         function gridInit() {
@@ -165,9 +173,9 @@
                 .on('dropover', (ev, ui) => ui.helper.hide())
                 .on('dropout', (ev, ui) => ui.helper.show());
 
-            $(gridId).data("gridstack").cellHeight(cellHeight);
+            // $(gridId).data("gridstack").cellHeight(cellHeight);
             $('#gridGaps')[0].value = gridGaps;
-            $('#gridCellHeight')[0].value = cellHeight;
+            // $('#gridCellHeight')[0].value = cellHeight;
             $('#gridColumns')[0].value = width;
 
             setGridHeight();
@@ -193,6 +201,7 @@
             renderCategories();
             widgetsInit(widgetsDict);
             setGridHeight();
+
             $(".grid-placeholder-cell").remove();
             addTilePlaceholders();
 
@@ -385,7 +394,7 @@
                     gridConfig: {
                         gaps: $(gridId).data("gridstack").verticalMargin(),
                         columns: $(gridId).data("gridstack").grid.width,
-                        cellHeight: $(gridId).data("gridstack").cellHeight(),
+                        // cellHeight: $(gridId).data("gridstack").cellHeight(),
                         rows: height
                     }
                 };
@@ -512,7 +521,7 @@
                         addToSideBar(widgetId, widget);
                         renderWidgets([newWidget], items[i].el);
 
-                        if  (typeof widget.sidebarSettings.isConfigurable !== "undefined" && widget.sidebarSettings.isConfigurable){
+                        if (typeof widget.sidebarSettings.isConfigurable !== "undefined" && widget.sidebarSettings.isConfigurable) {
                             newWidget.renderForm();
                         }
 
@@ -554,7 +563,54 @@
             });
         }
 
+        function handleResolutionChanges() {
+            var windowsWidth = $(window).innerWidth(),
+                newCellHeight;
+
+            switch (windowsWidth) {
+                case ">= 1920":
+                    newCellHeight = 94;
+                    break;
+                case ">= 1920":
+                    newCellHeight = 94;
+                    break;
+            }
+            if (windowsWidth >= 1920) {
+                newCellHeight = 94;
+            } else if (windowsWidth >= 1440) {
+                newCellHeight = 85;
+
+            } else if (windowsWidth >= 1366) {
+                newCellHeight = 71;
+            } else if (windowsWidth >= 1240) {
+                newCellHeight = 100;
+            } else if (windowsWidth >= 1024) {
+                newCellHeight = 71;
+            }
+
+
+            $(gridId).data("gridstack").cellHeight(94);
+            cellHeight = 94;
+            $(".grid-placeholder-cell").remove();
+            addTilePlaceholders();
+            setGridHeight();
+
+        }
+
         function handleCommonEvents() {
+            $("#themes").on("change", function () {
+                if ($(".dashboard").hasClass("dashboard_dark")) {
+                    $(".dashboard").removeClass("dashboard_dark");
+                    $(".dashboard").addClass("dashboard_light");
+                } else if ($(".dashboard").hasClass("dashboard_light")) {
+                    $(".dashboard").removeClass("dashboard_light");
+                    $(".dashboard").addClass("dashboard_dark");
+                }
+            });
+
+            $(window).on("resize", function () {
+                handleResolutionChanges();
+            });
 
             $("#gridGaps").on("input", (e) => {
                 $(gridId).data("gridstack").verticalMargin(e.target.value);

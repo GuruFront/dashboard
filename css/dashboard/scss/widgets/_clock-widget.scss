@@ -13,15 +13,29 @@
   .widget-content {
     &.clockWidget-2 {
       font-size: 16px;
-      background-color: blueviolet;
     }
     &.clockWidget-4 {
       font-size: 40px;
-      background-color: gold;
     }
     &.clockWidget-6 {
       font-size: 40px;
-      background-color: green;
+    }
+  }
+}
+
+.dashboard_light {
+  .grid-stack-item .grid-stack-item-content {
+    .clockWidget {
+      background-color: blueviolet;
+      color: $white;
+    }
+  }
+}
+
+.dashboard_dark {
+  .grid-stack-item .grid-stack-item-content {
+    .clockWidget {
+      background-color: gold;
     }
   }
 }
