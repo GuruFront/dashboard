@@ -33,7 +33,7 @@
     <title>Widgets Demo</title>
 </head>
 <body>
-<div class="dashboard dashboard_dark">
+<div class="dashboard ">
     <div class="dashboardEditPanel" id="dashboardEditPanel">
         <div class="sidebar-wrap">
             <div class="sidebar">
@@ -128,7 +128,8 @@
             sideBar = $('.sidebar'),
             localStorage = window.localStorage,
             widgetsDict = {},
-            categories;
+            categories,
+            theme = "dark";
 
         checkLocalStorage();
         gridInit();
@@ -173,9 +174,8 @@
                 .on('dropover', (ev, ui) => ui.helper.hide())
                 .on('dropout', (ev, ui) => ui.helper.show());
 
-            // $(gridId).data("gridstack").cellHeight(cellHeight);
+            $(".dashboard").addClass( "dashboard_" + theme);
             $('#gridGaps')[0].value = gridGaps;
-            // $('#gridCellHeight')[0].value = cellHeight;
             $('#gridColumns')[0].value = width;
 
             setGridHeight();
@@ -259,6 +259,9 @@
                 width = localstore.gridConfig.columns;
                 cellHeight = localstore.gridConfig.cellHeight;
                 height = localstore.gridConfig.rows;
+                theme = localstore.gridConfig.theme;
+                $("#themes").val(theme);
+                
             }
         }
 
@@ -395,7 +398,8 @@
                         gaps: $(gridId).data("gridstack").verticalMargin(),
                         columns: $(gridId).data("gridstack").grid.width,
                         // cellHeight: $(gridId).data("gridstack").cellHeight(),
-                        rows: height
+                        rows: height,
+                        theme: theme
                     }
                 };
             setTimeout(() => {
@@ -564,41 +568,29 @@
         }
 
         function handleResolutionChanges() {
-            var windowsWidth = $(window).innerWidth(),
-                newCellHeight;
+            var windowsWidth = $(window).innerWidth();
 
-            switch (windowsWidth) {
-                case ">= 1920":
-                    newCellHeight = 94;
-                    break;
-                case ">= 1920":
-                    newCellHeight = 94;
-                    break;
-            }
             if (windowsWidth >= 1920) {
-                newCellHeight = 94;
+                cellHeight = 94;
             } else if (windowsWidth >= 1440) {
-                newCellHeight = 85;
-
+                cellHeight = 85;
             } else if (windowsWidth >= 1366) {
-                newCellHeight = 71;
+                cellHeight = 71;
             } else if (windowsWidth >= 1240) {
-                newCellHeight = 100;
+                cellHeight = 100;
             } else if (windowsWidth >= 1024) {
-                newCellHeight = 71;
+                cellHeight = 71;
             }
 
-
-            $(gridId).data("gridstack").cellHeight(94);
-            cellHeight = 94;
+            $(gridId).data("gridstack").cellHeight(cellHeight);
             $(".grid-placeholder-cell").remove();
             addTilePlaceholders();
             setGridHeight();
-
         }
 
         function handleCommonEvents() {
             $("#themes").on("change", function () {
+
                 if ($(".dashboard").hasClass("dashboard_dark")) {
                     $(".dashboard").removeClass("dashboard_dark");
                     $(".dashboard").addClass("dashboard_light");
@@ -606,6 +598,8 @@
                     $(".dashboard").removeClass("dashboard_light");
                     $(".dashboard").addClass("dashboard_dark");
                 }
+                theme = $("#themes option:selected")[0].value;
+                saveGrid();
             });
 
             $(window).on("resize", function () {
