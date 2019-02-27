@@ -207,19 +207,34 @@
   }
 }
 
+// common css not depending on dashboard theme
 .widget-content {
-  //background-color: gray;
+  background-color: gray;
 }
 
+// common css depending on widgets size and not depending on dashboard theme
+.widget-content-4 {
+  background-color: gray;
+}
+
+// common css depending on dashboard theme
 .dashboard_light {
-  .grid-stack-item .grid-stack-item-content {
+  .widget-content {
     background-color: rgba($white, 0.7);
     color: $black;
   }
+  // common css depending on dashboard theme and widgets size
+  .widget-content-2 {
+    background-color: red;
+  }
+  .widget-content-3 {
+    background-color: rgba($white, 0.7)
+  }
 }
 
+// common css depending on dashboard theme
 .dashboard_dark {
-  .grid-stack-item .grid-stack-item-content {
+  .widget-content {
     background-color: rgba($widget-bg, 0.7);
     color: $white
   }

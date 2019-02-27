@@ -1,9 +1,10 @@
 ﻿@import "variables";
 @import "grid";
 @import "sidebar";
-@import "widget-common";
 @import "edit-panel";
+@import 'grid-placeholder';
+@import "widget-common";
 @import 'widgets/clock-widget';
 @import 'widgets/image-widget';
 @import 'widgets/work-counter-by-activity-and-status-widget';
-@import 'grid-placeholder';
+

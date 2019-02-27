@@ -1,41 +1,42 @@
-﻿.grid-stack-item-content {
-  .clockWidget {
-    color: rgba($black, 0.9);
-    font-family: 'Open Sans', MS, Arial, sans-serif;
-    font-weight: 700;
-    line-height: normal;
-    text-align: center;
-    flex-direction: column;
-    justify-content: center;
-    padding: 5px;
-    font-size: 12px;
-  }
-  .widget-content {
-    &.clockWidget-2 {
-      font-size: 16px;
-    }
-    &.clockWidget-4 {
-      font-size: 40px;
-    }
-    &.clockWidget-6 {
-      font-size: 40px;
-    }
-  }
+﻿// custom styles for this widget
+.clockWidget {
+  color: rgba($black, 0.9);
+  font-family: 'Open Sans', MS, Arial, sans-serif;
+  font-weight: 700;
+  line-height: normal;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px;
+  font-size: 12px;
 }
 
+// custom styles for this widget on size 2 and bigger
+.clockWidget-2 {
+  font-size: 16px;
+}
+
+// custom styles for this widget on size 4 and bigger
+.clockWidget-4 {
+  font-size: 40px;
+}
+
+.clockWidget-6 {
+  font-size: 40px;
+}
+
+
+// custom styles depending on dashboard theme
 .dashboard_light {
-  .grid-stack-item .grid-stack-item-content {
-    .clockWidget {
-      background-color: blueviolet;
-      color: $white;
-    }
+  .clockWidget {
+    background-color: blueviolet;
+    color: $white;
   }
 }
 
+// custom styles depending on dashboard theme
 .dashboard_dark {
-  .grid-stack-item .grid-stack-item-content {
-    .clockWidget {
-      background-color: gold;
-    }
+  .clockWidget {
+    background-color: gold;
   }
 }
