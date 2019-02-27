@@ -174,7 +174,7 @@
                 .on('dropover', (ev, ui) => ui.helper.hide())
                 .on('dropout', (ev, ui) => ui.helper.show());
 
-            $(".dashboard").addClass( "dashboard_" + theme);
+            $(".dashboard").addClass("dashboard_" + theme);
             $('#gridGaps')[0].value = gridGaps;
             $('#gridColumns')[0].value = width;
 
@@ -475,23 +475,29 @@
 
                 var widgetId = $(element).data("widget"),
                     config = widgetsDict[widgetId],
-                    defaultWidth = config.sidebarSettings.defaultWidth,
-                    defaultHeight = config.sidebarSettings.defaultHeight,
-                    newWidth = $(element)[0].dataset.gsWidth * 1,
                     newHeight = $(element)[0].dataset.gsHeight * 1,
-                    diff = defaultWidth - defaultHeight;
+                    newWidth = $(element)[0].dataset.gsWidth * 1;
 
                 if (config.sidebarSettings.isRatioScale && config.sidebarSettings.isResizable) {
                     var
+                        defaultWidth = config.sidebarSettings.defaultWidth,
+                        defaultHeight = config.sidebarSettings.defaultHeight,
+                        diff = defaultWidth - defaultHeight,
                         widthDiff = newWidth - oldWidth,
                         heightDiff = newHeight - oldHeight;
 
                     if (widthDiff !== 0 && heightDiff === 0) {
-                        $(gridId).data("gridstack").resize($(element), newWidth, oldHeight + widthDiff);
+                        if (height >= (oldHeight + widthDiff + $(element)[0].dataset.gsY * 1)) {
+                            newHeight = oldHeight + widthDiff;
+                        } else {
+                            newHeight = oldHeight;
+                            newWidth = oldWidth;
+                        }
                     } else if (widthDiff === 0 && heightDiff !== 0) {
-                        $(gridId).data("gridstack").resize($(element), newHeight + diff, newHeight);
-                    } else if (widthDiff === heightDiff) {
+                        newWidth = newHeight + diff;
                     }
+
+                    $(gridId).data("gridstack").resize($(element), newWidth, newHeight);
                 }
 
                 saveGrid();
@@ -577,12 +583,12 @@
             } else if (windowsWidth >= 1440 && windowsHeight >= 900) {
                 cellHeight = 85;
             } else if (windowsWidth >= 1366 && windowsHeight >= 900) {
-                    cellHeight = 85;
+                cellHeight = 85;
             } else if (windowsWidth >= 1366 && windowsHeight >= 768) {
                 cellHeight = 71;
             } else if (windowsWidth >= 1240 && windowsHeight >= 900) {
                 cellHeight = 100;
-            } else if (windowsWidth >= 1024 ) {
+            } else if (windowsWidth >= 1024) {
                 cellHeight = 71;
             }
 
