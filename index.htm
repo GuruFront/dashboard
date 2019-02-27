@@ -568,17 +568,21 @@
         }
 
         function handleResolutionChanges() {
-            var windowsWidth = $(window).innerWidth();
+            var
+                windowsWidth = $(window).innerWidth(),
+                windowsHeight = $(window).innerHeight();
 
-            if (windowsWidth >= 1920) {
-                cellHeight = 94;
-            } else if (windowsWidth >= 1440) {
+            if (windowsWidth >= 1920 && windowsHeight >= 1080) {
+                cellHeight = 105;
+            } else if (windowsWidth >= 1440 && windowsHeight >= 900) {
                 cellHeight = 85;
-            } else if (windowsWidth >= 1366) {
+            } else if (windowsWidth >= 1366 && windowsHeight >= 900) {
+                    cellHeight = 85;
+            } else if (windowsWidth >= 1366 && windowsHeight >= 768) {
                 cellHeight = 71;
-            } else if (windowsWidth >= 1240) {
+            } else if (windowsWidth >= 1240 && windowsHeight >= 900) {
                 cellHeight = 100;
-            } else if (windowsWidth >= 1024) {
+            } else if (windowsWidth >= 1024 ) {
                 cellHeight = 71;
             }
 
